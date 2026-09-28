@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Konfirmasi peminjaman buku di Charvlibrary.">
+  <title>Checkout Peminjaman - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+<body>
+  <main id="main-content">
+    <section class="checkout-section">
+      <h1>Konfirmasi Peminjaman</h1>
+      <div id="bookSummary"></div>
+      <form id="checkoutForm">
+        <input type="date" id="returnDate" required>
+        <button type="submit" class="btn btn-primary">Konfirmasi</button>
+      </form>
+    </section>
+  </main>
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+</body>
+</html>
