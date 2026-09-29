@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Profil penulis buku di Charvlibrary.">
+  <title>Profil Penulis - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+<body>
+  <main id="main-content">
+    <section class="author-hero">
+      <div class="author-avatar" id="authorAvatar"></div>
+      <h1 id="authorName">Nama Penulis</h1>
+      <p id="authorBio">Bio penulis...</p>
+      <button class="btn btn-primary" id="followBtn">Ikuti</button>
+    </section>
+    <section class="author-books">
+      <h2>Karya-karyanya</h2>
+      <div id="authorBooksGrid" class="grid-books"></div>
+    </section>
+  </main>
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+</body>
+</html>
