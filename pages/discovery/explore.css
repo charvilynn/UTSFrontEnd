@@ -1,4 +1,6 @@
-/* PAGE HEADER */
+/* ==========================================================================
+   PAGE HEADER
+   ========================================================================== */
 
 .explore-header {
   background: var(--color-surface);
@@ -20,7 +22,9 @@
   margin: 0;
 }
 
-/* FILTER BAR */
+/* ==========================================================================
+   FILTER BAR
+   ========================================================================== */
 
 .filter-bar {
   display: flex;
@@ -31,6 +35,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+/* ── Chip group — scrollable horizontally ─────────────────────── */
 .chip-group {
   display: flex;
   gap: var(--space-2);
@@ -39,7 +44,7 @@
   scroll-snap-type: x proximity;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  padding-bottom: 4px; 
+  padding-bottom: 4px; /* prevent cut-off on active chip scale */
 }
 .chip-group::-webkit-scrollbar { display: none; }
 
@@ -88,4 +93,122 @@
   width: 18px;
   height: 18px;
   background: white;
+  border-radius: 50%;
+  top: 3px;
+  left: 3px;
+  transition: transform var(--transition-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.availability-toggle input:checked + .toggle-track {
+  background: var(--color-secondary);
+}
+
+.availability-toggle input:checked + .toggle-track::after {
+  transform: translateX(20px);
+}
+
+.availability-toggle input:focus-visible + .toggle-track {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.toggle-label {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-foreground);
+}
+
+/* Sort select */
+.sort-select {
+  width: auto;
+  min-width: 180px;
+  padding: var(--space-2) var(--space-4);
+  min-height: 40px;
+  font-size: var(--font-size-sm);
+}
+
+/* Result count */
+.result-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted-foreground);
+  margin-bottom: var(--space-6);
+  margin: 0 0 var(--space-6);
+}
+
+.result-count strong {
+  color: var(--color-foreground);
+}
+
+/* ==========================================================================
+   3D TILT CARD EFFECT
+   Kenapa: memberikan kedalaman premium yang menunjukkan originalitas,
+   langsung dibuat dari mouse events vanilla JS — bukan plugin.
+   ========================================================================== */
+
+.tilt-grid .book-card {
+  transform-style: preserve-3d;
+  transition: box-shadow var(--transition-base);
+  /* transition transform diatur di JS supaya tidak konflik dengan hover */
+  will-change: transform;
+}
+
+/* Halus saat mouse keluar */
+.tilt-grid .book-card.tilt-reset {
+  transition: transform 0.6s var(--ease-out), box-shadow var(--transition-base);
+}
+
+/* Glare effect — cahaya pantulan */
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  z-index: 5;
+}
+
+.tilt-grid .book-card:hover .tilt-glare {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   CHIP FILTER ANIMATION
+   Saat filter berubah, chips animasi dan grid re-renders dengan transisi
+   ========================================================================== */
+
+.chip-group .chip {
+  /* spring animation saat active toggle */
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform 0.25s var(--ease-bounce);
+}
+
+/* Grid items yang keluar saat filter berubah */
+.book-card.filter-exit {
+  animation: cardExit 0.2s forwards;
+}
+
+.book-card.filter-enter {
+  animation: cardEnter 0.35s var(--ease-bounce) forwards;
+}
+
+@keyframes cardExit {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.92); }
+}
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: scale(0.88) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
