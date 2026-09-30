@@ -3,23 +3,201 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Jelajahi koleksi buku di Charvlibrary.">
+  <meta name="description" content="Jelajahi koleksi lengkap Charvlibrary. Filter buku berdasarkan genre, penulis, dan ketersediaan.">
   <title>Jelajahi Buku - Charvlibrary</title>
+
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="explore.css">
 </head>
 <body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+          <line x1="14" y1="17" x2="22" y2="17" stroke="#92400E" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="14" y1="20" x2="22" y2="20" stroke="#92400E" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="14" y1="23" x2="19" y2="23" stroke="#92400E" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+
+      <div class="navbar-search" role="search">
+        <svg class="navbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="search" id="navbar-search-input" placeholder="Cari judul, penulis..." aria-label="Cari buku">
+      </div>
+
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="explore.html" class="active" aria-current="page">Jelajahi</a></li>
+          <li><a href="categories.html">Kategori</a></li>
+          <li><a href="../community/blog.html">Blog</a></li>
+          <li><a href="../library/wishlist.html" aria-label="Wishlist" style="position:relative;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="wishlist-count-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--color-error); color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;">0</span>
+          </a></li>
+          <li><a href="../auth/login.html" class="btn btn-primary btn-sm">Masuk</a></li>
+        </ul>
+      </nav>
+
+      <button class="navbar-toggle" aria-expanded="false" aria-controls="mobile-drawer-explore" aria-label="Buka menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <nav id="mobile-drawer-explore" class="navbar-drawer">
+      <ul class="navbar-nav">
+        <li><a href="../../index.html">Beranda</a></li>
+        <li><a href="explore.html">Jelajahi</a></li>
+        <li><a href="categories.html">Kategori</a></li>
+        <li><a href="../community/blog.html">Blog</a></li>
+        <li><a href="../library/wishlist.html">Wishlist</a></li>
+        <li><a href="../auth/login.html">Masuk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="navbar-spacer"></div>
+
   <main id="main-content">
-    <section class="explore-hero">
-      <h1>Jelajahi Koleksi</h1>
+
+    <!-- Page Header -->
+    <section class="explore-header">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">Jelajahi</span>
+        </nav>
+        <h1 class="explore-title">Jelajahi Koleksi</h1>
+        <p class="explore-subtitle">Temukan buku berikutnya dari lebih dari 1.200 judul tersedia.</p>
+      </div>
     </section>
-    <section class="explore-grid">
-      <div id="booksGrid" class="grid-books"></div>
+
+    <section class="explore-main section--sm">
+      <div class="container">
+
+        <!-- Filter & Sort Bar -->
+        <div class="filter-bar" role="search" aria-label="Filter dan sortir buku">
+
+          <!-- Genre Chips -->
+          <div class="chip-group" id="genreChips" role="group" aria-label="Filter berdasarkan genre">
+            <button class="chip active" data-genre="all" aria-pressed="true">Semua</button>
+            <button class="chip" data-genre="Literary Fiction" aria-pressed="false">Literary Fiction</button>
+            <button class="chip" data-genre="Science Fiction" aria-pressed="false">Sci-Fi</button>
+            <button class="chip" data-genre="Self-Help" aria-pressed="false">Self-Help</button>
+            <button class="chip" data-genre="Non-Fiction" aria-pressed="false">Non-Fiction</button>
+            <button class="chip" data-genre="Fantasy" aria-pressed="false">Fantasy</button>
+            <button class="chip" data-genre="Historical Fiction" aria-pressed="false">Sejarah</button>
+            <button class="chip" data-genre="Philosophy" aria-pressed="false">Filsafat</button>
+            <button class="chip" data-genre="Technology" aria-pressed="false">Teknologi</button>
+            <button class="chip" data-genre="Dystopian" aria-pressed="false">Dystopian</button>
+            <button class="chip" data-genre="Mystery" aria-pressed="false">Mystery</button>
+            <button class="chip" data-genre="Biography" aria-pressed="false">Biografi</button>
+            <button class="chip" data-genre="Science" aria-pressed="false">Sains</button>
+            <button class="chip" data-genre="Romance" aria-pressed="false">Romance</button>
+            <button class="chip" data-genre="Horror" aria-pressed="false">Horror</button>
+            <button class="chip" data-genre="Business" aria-pressed="false">Bisnis</button>
+            <button class="chip" data-genre="Indonesian Literature" aria-pressed="false">Sastra Indonesia</button>
+          </div>
+
+          <!-- Availability toggle + Sort -->
+          <div class="filter-controls">
+            <label class="availability-toggle" for="availableOnly">
+              <input type="checkbox" id="availableOnly" name="availableOnly">
+              <span class="toggle-track" aria-hidden="true"></span>
+              <span class="toggle-label">Tersedia saja</span>
+            </label>
+
+            <div class="sort-wrap">
+              <label for="sortBooks" class="sr-only">Urutkan berdasarkan</label>
+              <select id="sortBooks" class="form-select sort-select" aria-label="Urutan buku">
+                <option value="default">Urutkan: Default</option>
+                <option value="rating">Rating Tertinggi</option>
+                <option value="title">Judul A–Z</option>
+                <option value="year">Terbaru</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result count -->
+        <p class="result-count" id="resultCount" aria-live="polite" aria-atomic="true">
+          Menampilkan <strong id="countNum">80</strong> buku
+        </p>
+
+        <!-- Books Grid -->
+        <div class="grid-books tilt-grid" id="booksGrid" aria-label="Daftar buku">
+          <!-- JS render - skeleton dulu, lalu buku asli -->
+        </div>
+
+        <!-- Empty state - tersembunyi, muncul saat hasil 0 -->
+        <div class="empty-state" id="emptyState" hidden aria-live="polite">
+          <svg class="empty-state-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="15" y="10" width="50" height="60" rx="4" stroke="currentColor" stroke-width="2"/>
+            <line x1="25" y1="25" x2="55" y2="25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="25" y1="33" x2="55" y2="33" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="25" y1="41" x2="44" y2="41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="56" cy="56" r="14" fill="var(--color-background)" stroke="currentColor" stroke-width="2"/>
+            <line x1="51" y1="56" x2="61" y2="56" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <h2 class="empty-state-title">Tidak ada buku yang ditemukan</h2>
+          <p class="empty-state-desc">Coba ganti filter atau hapus pilihan genre untuk melihat lebih banyak buku.</p>
+          <button class="btn btn-secondary" id="resetFilter">Tampilkan semua buku</button>
+        </div>
+
+      </div>
     </section>
   </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <p class="footer-brand-name">Charvlibrary</p>
+          <p class="footer-tagline">Perpustakaan digital untuk mahasiswa.</p>
+        </div>
+        <div>
+          <h3 class="footer-section-title">Jelajahi</h3>
+          <ul class="footer-links">
+            <li><a href="explore.html">Semua Buku</a></li>
+            <li><a href="categories.html">Kategori</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-section-title">Akun</h3>
+          <ul class="footer-links">
+            <li><a href="../auth/login.html">Masuk</a></li>
+            <li><a href="../auth/register.html">Daftar</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-section-title">Info</h3>
+          <ul class="footer-links">
+            <li><a href="../support/about.html">Tentang</a></li>
+            <li><a href="../support/contact.html">Kontak</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span class="footer-year"></span> Charvlibrary.</p>
+      </div>
+    </div>
+  </footer>
+
   <script src="../../assets/js/data-books.js"></script>
   <script src="../../assets/js/utils.js"></script>
   <script src="../../assets/js/nav.js"></script>
+  <script src="explore.js"></script>
 </body>
 </html>
