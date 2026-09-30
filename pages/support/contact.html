@@ -169,3 +169,170 @@
                 <div class="form-group">
                   <label class="form-label" for="contactMessage">Pesan <span class="required">*</span></label>
                   <textarea
+                    id="contactMessage"
+                    class="form-input"
+                    rows="5"
+                    placeholder="Ceritakan selengkapnya..."
+                    maxlength="1000"
+                    style="resize:vertical;"
+                    required
+                    aria-describedby="msgErr msgCounter"
+                  ></textarea>
+                  <div style="display:flex;justify-content:space-between;margin-top:4px;">
+                    <p class="form-error-msg" id="msgErr" role="alert"></p>
+                    <p style="font-size:var(--font-size-xs);color:var(--color-muted-foreground);"><span id="msgCount">0</span>/1000</p>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="sendContactBtn" style="width:100%;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  Kirim Pesan
+                </button>
+              </form>
+
+              <!-- Success state -->
+              <div class="contact-success" id="contactSuccess" aria-live="polite">
+                <div class="contact-success-icon" aria-hidden="true">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                  <p style="font-family:var(--font-heading);font-size:var(--font-size-2xl);margin-bottom:var(--space-2);">Pesan Terkirim!</p>
+                  <p style="color:var(--color-muted-foreground);">Kami akan membalas ke email kamu dalam 1-2 hari kerja.</p>
+                </div>
+                <button onclick="resetContactForm()" class="btn btn-secondary">Kirim Pesan Lagi</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info sidebar -->
+          <aside>
+            <div class="contact-info-card fade-up">
+              <h2 class="contact-info-title">Informasi Kontak</h2>
+
+              <div class="contact-info-item">
+                <div class="contact-info-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div>
+                  <p class="contact-info-label">Email</p>
+                  <p class="contact-info-val">support@Charvlibrary-library.id</p>
+                </div>
+              </div>
+
+              <div class="contact-info-item">
+                <div class="contact-info-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                  <p class="contact-info-label">Jam Operasional</p>
+                  <p class="contact-info-val">Senin–Jumat, 08.00–17.00 WIB</p>
+                </div>
+              </div>
+
+              <div class="contact-info-item">
+                <div class="contact-info-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div>
+                  <p class="contact-info-label">Lokasi</p>
+                  <p class="contact-info-val">Universitas, Gedung Perpustakaan Lt. 2</p>
+                </div>
+              </div>
+
+              <div style="padding:var(--space-4);background:var(--color-accent-light);border-radius:var(--radius-lg);border:1px solid rgba(217,119,6,0.15);">
+                <p style="font-size:var(--font-size-sm);color:var(--color-secondary);font-weight:var(--font-weight-medium);margin-bottom:var(--space-1);">Respon Cepat</p>
+                <p style="font-size:var(--font-size-sm);color:var(--color-muted-foreground);">Pertanyaan tentang FAQ? Cek <a href="../community/faq.html" style="color:var(--color-secondary);">halaman FAQ</a> kami - kemungkinan sudah terjawab di sana.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
+        <div><h3 class="footer-section-title">Komunitas</h3><ul class="footer-links"><li><a href="../community/blog.html">Blog</a></li><li><a href="../community/faq.html">FAQ</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="about.html">Tentang</a></li><li><a href="terms-privacy.html">Kebijakan</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Prefill dari user
+      const user = getUser();
+      if (user) {
+        if (user.name)  document.getElementById('contactName').value = user.name;
+        if (user.email) document.getElementById('contactEmail').value = user.email;
+      }
+
+      // Char counter
+      document.getElementById('contactMessage').addEventListener('input', e => {
+        document.getElementById('msgCount').textContent = e.target.value.length;
+      });
+
+      // Form submit
+      document.getElementById('contactForm').addEventListener('submit', e => {
+        e.preventDefault();
+        let valid = true;
+
+        const fields = [
+          { id: 'contactName',    err: 'nameErr',    msg: 'Nama wajib diisi' },
+          { id: 'contactEmail',   err: 'emailErr',   msg: 'Email valid wajib diisi', emailCheck: true },
+          { id: 'contactSubject', err: 'subjectErr', msg: 'Pilih subjek terlebih dahulu' },
+          { id: 'contactMessage', err: 'msgErr',     msg: 'Pesan tidak boleh kosong' },
+        ];
+
+        fields.forEach(({ id, err, msg, emailCheck }) => {
+          const input = document.getElementById(id);
+          const errEl = document.getElementById(err);
+          const val   = input.value.trim();
+
+          if (!val || (emailCheck && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))) {
+            errEl.textContent = emailCheck && val ? 'Format email tidak valid' : msg;
+            errEl.classList.add('visible');
+            input.classList.add('error');
+            valid = false;
+          } else {
+            errEl.textContent = ''; errEl.classList.remove('visible'); input.classList.remove('error');
+          }
+        });
+
+        if (!valid) return;
+
+        const btn = document.getElementById('sendContactBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;"></span> Mengirim...';
+
+        setTimeout(() => {
+          document.getElementById('contactForm').style.display = 'none';
+          document.getElementById('contactSuccess').style.display = 'flex';
+          showToast('Pesan berhasil terkirim!', 'success');
+        }, 1200);
+      });
+
+      initScrollReveal();
+    });
+
+    function resetContactForm() {
+      document.getElementById('contactForm').reset();
+      document.getElementById('contactForm').style.display = '';
+      document.getElementById('contactSuccess').style.display = 'none';
+      document.getElementById('sendContactBtn').disabled = false;
+      document.getElementById('sendContactBtn').innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Kirim Pesan
+      `;
+      document.getElementById('msgCount').textContent = '0';
+    }
+  </script>
+</body>
+</html>
