@@ -172,3 +172,178 @@
     <div class="navbar-inner">
       <a href="../../index.html" class="navbar-brand">
         <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <div style="margin-left:auto; display:flex; gap:var(--space-3);">
+        <a href="blog.html" class="btn btn-ghost btn-sm">← Semua Artikel</a>
+      </div>
+    </div>
+  </header>
+  <div class="navbar-spacer"></div>
+
+  <div id="notFoundState" class="empty-state" hidden>
+    <p class="empty-state-title">Artikel tidak ditemukan</p>
+    <a href="blog.html" class="btn btn-primary">Kembali ke Blog</a>
+  </div>
+
+  <main id="mainContent" hidden>
+    <article>
+      <section class="section--sm">
+        <div class="container">
+          <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-6);">
+            <a href="../../index.html">Beranda</a>
+            <span class="breadcrumb-sep">/</span>
+            <a href="blog.html">Blog</a>
+            <span class="breadcrumb-sep">/</span>
+            <span aria-current="page" id="breadcrumbTitle">Artikel</span>
+          </nav>
+
+          <div class="article-layout">
+            <!-- Main article -->
+            <div>
+              <p class="article-category" id="articleCategory"></p>
+              <h1 class="article-title" id="articleTitle"></h1>
+
+              <div class="article-meta" id="articleMeta">
+                <!-- diisi JS -->
+              </div>
+
+              <div class="article-body" id="articleBody">
+                <!-- diisi JS -->
+              </div>
+
+              <!-- Tags -->
+              <div class="article-tags" id="articleTags"></div>
+
+              <!-- Navigation between articles -->
+              <nav aria-label="Navigasi artikel" style="display:flex; justify-content:space-between; gap:var(--space-4); margin-top:var(--space-10); padding-top:var(--space-6); border-top:1px solid var(--color-border); flex-wrap:wrap;">
+                <div id="prevArticle"></div>
+                <div id="nextArticle"></div>
+              </nav>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="article-sidebar">
+              <!-- Author info -->
+              <div class="sidebar-widget fade-up">
+                <p class="sidebar-widget-title">Tentang Penulis</p>
+                <div id="sidebarAuthor"><!-- diisi JS --></div>
+              </div>
+
+              <!-- Related -->
+              <div class="sidebar-widget fade-up">
+                <p class="sidebar-widget-title">Artikel Terkait</p>
+                <div id="relatedArticles"><!-- diisi JS --></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script>
+    const articleBodies = {
+      1: `
+        <p>Membaca adalah salah satu kegiatan paling berharga yang bisa kita lakukan. Tapi sayangnya, di era digital ini, banyak dari kita yang merasa kesulitan menemukan waktu - atau bahkan motivasi - untuk membuka buku.</p>
+        <blockquote>"A reader lives a thousand lives before he dies. The man who never reads lives only one." - George R.R. Martin</blockquote>
+        <h2>Mulai dengan yang kamu sukai</h2>
+        <p>Kesalahan terbesar yang dilakukan pemula adalah memaksakan diri membaca buku yang "seharusnya dibaca" - buku klasik, buku bisnis, atau buku yang sedang tren - padahal genre itu tidak mereka nikmati.</p>
+        <p>Hal pertama yang perlu kamu lakukan: temukan genre yang benar-benar kamu sukai. Kalau kamu suka misteri, mulai dari sana. Kalau kamu suka sains fiksi, itu juga valid. Tidak ada genre yang lebih "bergengsi" dari yang lain.</p>
+        <h2>Bangun rutinitas membaca</h2>
+        <p>Sama seperti olahraga, membaca butuh konsistensi. Bukan soal berapa lama, tapi soal seberapa sering. Mulai dengan 15-20 menit sehari di waktu yang sama - misalnya sebelum tidur atau saat makan siang.</p>
+        <ul>
+          <li>Letakkan buku di tempat yang terlihat, bukan di laci</li>
+          <li>Kurangi distraksi: matikan notifikasi HP saat membaca</li>
+          <li>Track progres - kepuasan melihat progres membuat kita lebih termotivasi</li>
+        </ul>
+        <h2>Gunakan teknologi untuk membantumu</h2>
+        <p>E-library seperti Charvlibrary hadir untuk memudahkan kamu mengakses ribuan buku kapan saja dan di mana saja. Manfaatkan fitur rekomendasi dan wishlist untuk merencanakan bacaan selanjutnya.</p>
+        <p>Ingat: tidak ada cara yang "salah" untuk membaca. Yang penting kamu menikmati prosesnya dan terus belajar dari setiap halaman yang kamu baca.</p>
+      `,
+      2: `
+        <p>Di antara ribuan buku yang terbit setiap tahun, bagaimana cara menemukan yang benar-benar worth your time? Ini adalah pertanyaan yang sering kita hadapi sebagai pembaca modern.</p>
+        <h2>Masalah kelimpahan pilihan</h2>
+        <p>Paradoks pilihan adalah nyata - semakin banyak opsi yang tersedia, semakin sulit kita membuat keputusan. Di dunia buku, ini berarti kita bisa menghabiskan lebih banyak waktu mencari buku daripada membacanya.</p>
+        <blockquote>"Not all readers are leaders, but all leaders are readers." - Harry S. Truman</blockquote>
+        <h2>Strategi kurasi yang efektif</h2>
+        <p>Berikut beberapa cara yang terbukti membantu menemukan buku yang tepat:</p>
+        <ul>
+          <li><strong>Ikuti penulis favorit:</strong> Kalau kamu suka satu buku dari seorang penulis, coba karya lainnya</li>
+          <li><strong>Rekomendasi dari komunitas:</strong> Bergabung dengan klub buku atau forum online</li>
+          <li><strong>Baca review yang jujur:</strong> Tidak hanya rating bintang, tapi baca juga reviewnya</li>
+          <li><strong>Preview sebelum commit:</strong> Baca 10-20 halaman pertama sebelum memutuskan</li>
+        </ul>
+        <h2>Buat daftar bacaan yang realistis</h2>
+        <p>Tidak ada gunanya punya reading list 200 buku kalau tidak ada satu pun yang kamu baca. Buat daftar yang lebih pendek dan lebih intentional - maksimal 5-10 buku yang benar-benar ingin kamu baca dalam waktu dekat.</p>
+        <p>Gunakan fitur wishlist Charvlibrary untuk mengorganisir daftar ini, dan biarkan sistem rekomendasi kami membantu kamu menemukan buku selanjutnya berdasarkan apa yang sudah kamu nikmati.</p>
+      `,
+      3: `
+        <p>Buku-buku terbaik adalah yang meninggalkan jejak. Jejak dalam cara kita berpikir, merasakan, atau melihat dunia. Ulasan buku sejati bukan sekadar ringkasan - ia adalah percakapan antara pembaca dan karya.</p>
+        <h2>Kenapa ulasan buku penting?</h2>
+        <p>Ulasan buku memiliki kekuatan yang sering kita remehkan. Sebuah ulasan yang ditulis dengan baik bisa:</p>
+        <ul>
+          <li>Membantu pembaca lain memutuskan apakah buku itu untuk mereka</li>
+          <li>Memberikan perspektif baru tentang buku yang sudah kita baca</li>
+          <li>Mendukung penulis yang karyanya layak mendapat perhatian</li>
+          <li>Membangun komunitas pembaca yang lebih aktif dan kritis</li>
+        </ul>
+        <blockquote>"The more that you read, the more things you will know. The more that you learn, the more places you'll go." - Dr. Seuss</blockquote>
+        <h2>Cara menulis ulasan yang bermakna</h2>
+        <p>Ulasan yang baik tidak harus panjang. Yang penting: jujur, spesifik, dan ada perspektif personalmu di dalamnya. Ceritakan bagian mana yang paling berkesan, dan kenapa.</p>
+        <h3>Elemen ulasan yang kuat</h3>
+        <p>Mulai dengan konteks singkat tentang buku. Lanjutkan dengan apa yang berhasil - narasi, karakter, tema - lalu apa yang bisa lebih baik. Akhiri dengan siapa yang akan menikmati buku ini.</p>
+        <p>Bergabunglah dengan komunitas pembaca Charvlibrary dan mulai berbagi ulasanmu. Setiap perspektif berharga.</p>
+      `,
+    };
+
+    const authorColors = { 'Davvin': '#065F46', 'Tim Charvlibrary': '#1E40AF', 'Davvin': '#5B21B6' };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const id   = parseInt(getUrlParam('id')) || 1;
+      const blog = typeof blogData !== 'undefined' ? blogData : [];
+      const article = blog.find(b => b.id === id);
+
+      if (!article) {
+        document.getElementById('notFoundState').hidden = false;
+        return;
+      }
+
+      document.title = `${article.title} - Charvlibrary Blog`;
+      document.getElementById('mainContent').hidden = false;
+      document.getElementById('breadcrumbTitle').textContent = truncateText(article.title, 30);
+      document.getElementById('articleTitle').textContent   = article.title;
+      document.getElementById('articleCategory').textContent = article.category;
+
+      // Meta
+      const avatarColor = authorColors[article.author] || '#92400E';
+      document.getElementById('articleMeta').innerHTML = `
+        <div class="author-chip">
+          <div class="author-avatar-sm" style="background:${avatarColor};">${article.author.charAt(0)}</div>
+          <div>
+            <strong style="display:block;font-size:var(--font-size-sm);color:var(--color-foreground);">${article.author}</strong>
+          </div>
+        </div>
+        <span>${formatDate(article.date)}</span>
+        <span>${article.readTime || '5 menit baca'}</span>
+      `;
+
+      // Body
+      document.getElementById('articleBody').innerHTML = articleBodies[id] || `<p>${article.excerpt}</p><p>Konten artikel selengkapnya akan segera tersedia.</p>`;
+
+      // Tags
+      document.getElementById('articleTags').innerHTML =
+        `<span style="font-size:var(--font-size-sm);color:var(--color-muted-foreground);">Tag:</span>` +
+        [article.category, 'Membaca', 'Buku'].map(t => `
+          <span style="padding:4px 12px;border-radius:9999px;background:var(--color-muted);border:1px solid var(--color-border);font-size:var(--font-size-xs);">${t}</span>
+        `).join('');
+
+      // Sidebar author
+      document.getElementById('sidebarAuthor').innerHTML = `
+        <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3);">
