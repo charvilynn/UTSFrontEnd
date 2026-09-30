@@ -3,21 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Daftar buku favorit Anda di Charvlibrary.">
-  <title>Wishlist - Charvlibrary</title>
+  <meta name="description" content="Daftar buku favorit yang kamu simpan di Charvlibrary.">
+  <title>Wishlist Buku - Charvlibrary</title>
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .wishlist-header {
+      background: var(--color-surface);
+      padding-block: var(--space-10) var(--space-8);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .wishlist-header h1 {
+      font-size: clamp(2rem, 4vw, var(--font-size-4xl));
+      font-weight: var(--font-weight-light);
+      letter-spacing: -0.03em;
+    }
+    .wishlist-count-display {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--color-muted);
+      border-radius: var(--radius-full);
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-muted-foreground);
+      margin-left: var(--space-3);
+    }
+
+    /* Remove button di card */
+    .wishlist-remove-btn {
+      position: absolute;
+      top: var(--space-2);
+      left: var(--space-2);
+      width: 36px; height: 36px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 251, 235, 0.9);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-error);
+      transition: background var(--transition-fast), transform var(--transition-fast);
+      z-index: 10;
+    }
+    .wishlist-remove-btn:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+
+    /* Card exit animation */
+    @keyframes cardRemove {
+      from { opacity: 1; transform: scale(1); }
+      to   { opacity: 0; transform: scale(0.85); }
+    }
+    .book-card.removing {
+      animation: cardRemove 0.3s var(--ease-in) forwards;
+    }
+
+    /* Action bar */
+    .wishlist-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-8);
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .empty-wishlist {
+      text-align: center;
+      padding: var(--space-20) var(--space-8);
+    }
+    .empty-wishlist-icon {
+      font-size: 80px;
+      line-height: 1;
+      margin-bottom: var(--space-4);
+      opacity: 0.3;
+    }
+  </style>
 </head>
 <body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <div class="navbar-search" role="search">
+        <svg class="navbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="navbar-search-input" placeholder="Cari buku..." aria-label="Cari buku">
+      </div>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="../discovery/categories.html">Kategori</a></li>
+          <li><a href="../community/blog.html">Blog</a></li>
+          <li><a href="wishlist.html" class="active" aria-current="page" style="position:relative;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="wishlist-count-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--color-error); color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;">0</span>
+          </a></li>
+          <li><a href="../auth/login.html" class="btn btn-primary btn-sm">Masuk</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-controls="mobile-drawer-wl" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+    <nav id="mobile-drawer-wl" class="navbar-drawer">
+      <ul class="navbar-nav">
+        <li><a href="../../index.html">Beranda</a></li>
+        <li><a href="../discovery/explore.html">Jelajahi</a></li>
+        <li><a href="../discovery/categories.html">Kategori</a></li>
+        <li><a href="wishlist.html">Wishlist</a></li>
+        <li><a href="../auth/login.html">Masuk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="navbar-spacer"></div>
+
   <main id="main-content">
-    <section class="wishlist-section">
-      <h1>Wishlist Saya</h1>
-      <!-- Grid buku akan dirender JS dari localStorage -->
-      <div id="wishlistGrid"></div>
-    </section>
-  </main>
-  <script src="../../assets/js/data-books.js"></script>
-  <script src="../../assets/js/utils.js"></script>
-  <script src="../../assets/js/nav.js"></script>
-</body>
-</html>
+
+    <section class="wishlist-header">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">Wishlist</span>
+        </nav>
+        <h1>
