@@ -3,26 +3,169 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Hubungi tim Charvlibrary.">
+  <meta name="description" content="Hubungi tim Charvlibrary - pertanyaan, saran, atau laporan masalah.">
   <title>Kontak - Charvlibrary</title>
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: var(--space-10);
+      align-items: start;
+    }
+    @media (max-width: 900px) { .contact-layout { grid-template-columns: 1fr; } }
+
+    .contact-hero {
+      margin-bottom: var(--space-10);
+    }
+    .contact-hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: var(--font-weight-light);
+      margin-bottom: var(--space-3);
+    }
+    .contact-hero p { color: var(--color-muted-foreground); font-size: var(--font-size-lg); }
+
+    .contact-form-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-8);
+    }
+    .contact-form-card h2 {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--space-6);
+    }
+
+    /* Success state */
+    .contact-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--space-4);
+      padding: var(--space-8);
+    }
+    .contact-success-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, #10B981, #059669);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      animation: popIn .5s cubic-bezier(.34, 1.56, .64, 1);
+      color: white;
+    }
+    @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .contact-success-icon { animation: none; } }
+
+    /* Info sidebar */
+    .contact-info-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-6);
+      position: sticky;
+      top: calc(var(--navbar-height) + var(--space-4));
+    }
+    .contact-info-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-5);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .contact-info-item {
+      display: flex;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+    .contact-info-icon {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-info-label { font-size: var(--font-size-xs); color: var(--color-muted-foreground); margin-bottom: 2px; }
+    .contact-info-val   { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
+  </style>
 </head>
 <body>
-  <main id="main-content">
-    <section class="contact-section">
-      <h1>Hubungi Kami</h1>
-      <!-- lanjut nanti -->
-      <form id="contactForm">
-        <input type="text" placeholder="Nama" required>
-        <input type="email" placeholder="Email" required>
-        <textarea placeholder="Pesan"></textarea>
-        <button type="submit">Kirim Pesan</button>
-      </form>
-    </section>
-  </main>
-  <script src="../../assets/js/data-books.js"></script>
-  <script src="../../assets/js/utils.js"></script>
-  <script src="../../assets/js/nav.js"></script>
-</body>
-</html>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="about.html">Tentang</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+  <div class="navbar-spacer"></div>
+
+  <main>
+    <section class="section--sm">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-6);">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep">/</span>
+          <span aria-current="page">Kontak</span>
+        </nav>
+
+        <div class="contact-hero fade-up">
+          <h1>Hubungi Kami</h1>
+          <p>Ada pertanyaan, saran, atau laporan masalah? Kami senang mendengar dari kamu.</p>
+        </div>
+
+        <div class="contact-layout">
+          <!-- Form -->
+          <div>
+            <div class="contact-form-card fade-up">
+              <h2>Kirim Pesan</h2>
+
+              <!-- Form state -->
+              <form id="contactForm" novalidate>
+                <div class="form-group">
+                  <label class="form-label" for="contactName">Nama Lengkap <span class="required">*</span></label>
+                  <input type="text" id="contactName" class="form-input" placeholder="Nama kamu" required aria-describedby="nameErr" autocomplete="name">
+                  <p class="form-error-msg" id="nameErr" role="alert"></p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="contactEmail">Email <span class="required">*</span></label>
+                  <input type="email" id="contactEmail" class="form-input" placeholder="nama@email.com" required aria-describedby="emailErr" autocomplete="email">
+                  <p class="form-error-msg" id="emailErr" role="alert"></p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="contactSubject">Subjek <span class="required">*</span></label>
+                  <select id="contactSubject" class="form-input" required aria-describedby="subjectErr">
+                    <option value="">-- Pilih subjek --</option>
+                    <option value="bug">Laporkan Bug / Masalah Teknis</option>
+                    <option value="saran">Saran & Masukan</option>
+                    <option value="peminjaman">Pertanyaan tentang Peminjaman</option>
+                    <option value="akun">Masalah Akun</option>
+                    <option value="kerjasama">Kerjasama & Donasi Buku</option>
+                    <option value="lainnya">Lainnya</option>
+                  </select>
+                  <p class="form-error-msg" id="subjectErr" role="alert"></p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="contactMessage">Pesan <span class="required">*</span></label>
+                  <textarea
