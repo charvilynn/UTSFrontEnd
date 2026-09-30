@@ -137,3 +137,156 @@
           <span aria-current="page">Wishlist</span>
         </nav>
         <h1>
+          Wishlist Kamu
+          <span class="wishlist-count-display" id="wishlistCountDisplay" aria-live="polite">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span id="wishlistNum">0</span> buku
+          </span>
+        </h1>
+      </div>
+    </section>
+
+    <section class="section--sm">
+      <div class="container">
+
+        <!-- Wishlist tidak kosong -->
+        <div id="wishlistContent" hidden>
+          <div class="wishlist-actions">
+            <p style="color: var(--color-muted-foreground); font-size: var(--font-size-sm);">
+              Klik ❤️ pada buku untuk menghapus dari wishlist.
+            </p>
+            <button class="btn btn-ghost btn-sm" id="clearAllBtn" style="color: var(--color-error);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Hapus Semua
+            </button>
+          </div>
+          <div class="grid-books" id="wishlistGrid" aria-label="Buku di wishlist"></div>
+        </div>
+
+        <!-- Wishlist kosong -->
+        <div class="empty-wishlist" id="emptyWishlist" hidden>
+          <div class="empty-wishlist-icon" aria-hidden="true">🤍</div>
+          <h2 class="empty-state-title">Wishlist kamu kosong</h2>
+          <p class="empty-state-desc">Tambahkan buku yang ingin kamu baca dengan menekan ikon ❤️ di card buku.</p>
+          <a href="../discovery/explore.html" class="btn btn-primary" style="margin-top: var(--space-4);">
+            Jelajahi Buku
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Rekomendasi dari genre sama -->
+    <section class="section--sm" id="recommendSection" hidden>
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">Mungkin Juga Kamu Suka</span>
+          <h2 class="section-title" style="font-size: var(--font-size-3xl);">Rekomendasi Untukmu</h2>
+        </div>
+        <div class="grid-books stagger-children" id="recommendGrid"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li><li><a href="../discovery/categories.html">Kategori</a></li></ul></div>
+        <div><h3 class="footer-section-title">Library</h3><ul class="footer-links"><li><a href="wishlist.html">Wishlist</a></li><li><a href="borrow-checkout.html">Pinjam Buku</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li><li><a href="../support/contact.html">Kontak</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderWishlist();
+    });
+
+    function renderWishlist() {
+      const wishlistIds     = getWishlist();
+      const countEl         = document.getElementById('wishlistNum');
+      const contentEl       = document.getElementById('wishlistContent');
+      const emptyEl         = document.getElementById('emptyWishlist');
+      const grid            = document.getElementById('wishlistGrid');
+      const recommendSection= document.getElementById('recommendSection');
+      const recommendGrid   = document.getElementById('recommendGrid');
+
+      if (countEl) countEl.textContent = wishlistIds.length;
+      updateWishlistBadge?.();
+
+      if (wishlistIds.length === 0) {
+        if (contentEl) contentEl.hidden = true;
+        if (emptyEl)   emptyEl.hidden   = false;
+        if (recommendSection) recommendSection.hidden = true;
+        return;
+      }
+
+      if (contentEl) contentEl.hidden = false;
+      if (emptyEl)   emptyEl.hidden   = true;
+
+      const books = wishlistIds.map(id => getBookById(id)).filter(Boolean);
+
+      // render cards dengan tombol hapus custom
+      grid.innerHTML = books.map(book => {
+        const card = renderBookCard(book, '../../');
+        // inject remove button
+        return card.replace(
+          '<div class="book-cover-wrap">',
+          `<div class="book-cover-wrap">
+            <button class="wishlist-remove-btn" data-book-id="${book.id}" aria-label="Hapus ${book.title} dari wishlist" title="Hapus dari wishlist">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>`
+        );
+      }).join('');
+
+      // Handle remove per card
+      grid.querySelectorAll('.wishlist-remove-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const bookId = parseInt(btn.dataset.bookId);
+          const card   = btn.closest('.book-card');
+          const book   = getBookById(bookId);
+
+          card.classList.add('removing');
+          setTimeout(() => {
+            removeFromWishlist(bookId);
+            showToast(`"${book?.title}" dihapus dari wishlist`, 'info');
+            renderWishlist();
+          }, 300);
+        });
+      });
+
+      // Rekomendasi - ambil dari genre buku di wishlist
+      if (books.length > 0) {
+        const genres = [...new Set(books.map(b => b.genre))];
+        const recs = booksData
+          .filter(b => genres.includes(b.genre) && !wishlistIds.includes(b.id))
+          .slice(0, 4);
+
+        if (recs.length > 0 && recommendSection) {
+          recommendSection.hidden = false;
+          recommendGrid.innerHTML = recs.map(b => renderBookCard(b, '../../')).join('');
+        }
+      }
+
+      initScrollReveal();
+    }
+
+    // Clear all
+    document.getElementById('clearAllBtn')?.addEventListener('click', () => {
+      if (!confirm('Hapus semua buku dari wishlist?')) return;
+      saveToStorage('Charvlibrary_wishlist', []);
+      showToast('Semua buku dihapus dari wishlist', 'info');
+      renderWishlist();
+    });
+  </script>
+</body>
+</html>
