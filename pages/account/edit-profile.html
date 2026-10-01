@@ -97,3 +97,123 @@
           <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
           <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
         </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <div style="margin-left:auto; display:flex; gap:var(--space-3);">
+        <a href="profile.html" class="btn btn-ghost btn-sm">← Batal</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="navbar-spacer"></div>
+
+  <main>
+    <div class="section--sm">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-6);">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <a href="profile.html">Profil</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">Edit Profil</span>
+        </nav>
+
+        <h1 style="font-family:var(--font-heading); font-size:var(--font-size-3xl); font-weight:var(--font-weight-light); margin-bottom:var(--space-7);">Edit Profil</h1>
+
+        <div class="edit-layout">
+          <!-- Avatar sidebar -->
+          <aside>
+            <div class="avatar-picker-section fade-up">
+              <div class="avatar-preview" id="avatarPreview">D</div>
+              <p style="font-weight:var(--font-weight-semibold); margin-bottom:var(--space-2);" id="avatarName">Nama Pengguna</p>
+              <p class="avatar-color-label" style="margin-bottom:var(--space-3);">Pilih warna avatar:</p>
+              <div class="avatar-colors" id="avatarColors" role="radiogroup" aria-label="Warna avatar">
+                <!-- diisi JS -->
+              </div>
+              <p class="avatar-color-label">Inisial menyesuaikan nama yang kamu masukkan</p>
+            </div>
+          </aside>
+
+          <!-- Form -->
+          <div>
+            <form id="editProfileForm" novalidate>
+              <!-- Info pribadi -->
+              <div class="form-card fade-up" style="margin-bottom:var(--space-5);">
+                <h2>Informasi Pribadi</h2>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="editFirstName">Nama Depan <span class="required">*</span></label>
+                    <input type="text" id="editFirstName" class="form-input" placeholder="Nama depan" required aria-describedby="firstNameErr">
+                    <p class="form-error-msg" id="firstNameErr" role="alert"></p>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="editLastName">Nama Belakang</label>
+                    <input type="text" id="editLastName" class="form-input" placeholder="Nama belakang (opsional)">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="editEmail">Email <span class="required">*</span></label>
+                  <input type="email" id="editEmail" class="form-input" placeholder="nama@email.com" required aria-describedby="emailErr">
+                  <p class="form-error-msg" id="emailErr" role="alert"></p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="editBio">Bio <span style="font-weight:normal; color:var(--color-muted-foreground);">(opsional)</span></label>
+                  <textarea
+                    id="editBio"
+                    class="form-input"
+                    rows="3"
+                    placeholder="Ceritakan sedikit tentang dirimu sebagai pembaca..."
+                    maxlength="200"
+                    style="resize:vertical;"
+                    aria-describedby="bioCounter"
+                  ></textarea>
+                  <p class="char-counter" id="bioCounter" aria-live="polite"><span id="bioCount">0</span>/200</p>
+                </div>
+              </div>
+
+              <!-- Password section -->
+              <div class="form-card fade-up" style="margin-bottom:var(--space-5);">
+                <h2>Ganti Password</h2>
+                <p style="font-size:var(--font-size-sm); color:var(--color-muted-foreground); margin-bottom:var(--space-5);">Biarkan kosong jika tidak ingin mengubah password.</p>
+
+                <div class="form-group">
+                  <label class="form-label" for="currentPassword">Password Saat Ini</label>
+                  <input type="password" id="currentPassword" class="form-input" placeholder="••••••••" autocomplete="current-password">
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="newPassword">Password Baru</label>
+                    <input type="password" id="newPassword" class="form-input" placeholder="••••••••" autocomplete="new-password" aria-describedby="newPassErr">
+                    <p class="form-error-msg" id="newPassErr" role="alert"></p>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Konfirmasi Password</label>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="••••••••" autocomplete="new-password" aria-describedby="confirmPassErr">
+                    <p class="form-error-msg" id="confirmPassErr" role="alert"></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div style="display:flex; justify-content:flex-end; gap:var(--space-3);">
+                <a href="profile.html" class="btn btn-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary" id="saveBtn">
+                  Simpan Perubahan
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    const avatarColors = [
