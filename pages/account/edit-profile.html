@@ -3,26 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Edit profil pengguna Charvlibrary.">
+  <meta name="description" content="Edit informasi profil akunmu di Charvlibrary.">
   <title>Edit Profil - Charvlibrary</title>
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .edit-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+    @media (max-width: 768px) { .edit-layout { grid-template-columns: 1fr; } }
+
+    /* Avatar section */
+    .avatar-picker-section {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      text-align: center;
+      position: sticky;
+      top: calc(var(--navbar-height) + var(--space-4));
+    }
+    .avatar-preview {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 40px;
+      font-weight: var(--font-weight-semibold);
+      color: white;
+      margin: 0 auto var(--space-5);
+      transition: background var(--transition-base);
+    }
+    .avatar-colors {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+    .avatar-color-swatch {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform var(--transition-fast), border-color var(--transition-fast);
+    }
+    .avatar-color-swatch:hover { transform: scale(1.15); }
+    .avatar-color-swatch.active { border-color: var(--color-foreground); transform: scale(1.1); }
+    .avatar-color-label { font-size: var(--font-size-xs); color: var(--color-muted-foreground); }
+
+    /* Form section */
+    .form-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-7);
+    }
+    .form-card h2 {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+
+    .char-counter {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted-foreground);
+      text-align: right;
+      margin-top: 4px;
+    }
+    .char-counter.near-limit { color: var(--color-accent); }
+    .char-counter.at-limit   { color: var(--color-error); }
+  </style>
 </head>
 <body>
-  <main id="main-content">
-    <section class="edit-profile-section">
-      <h1>Edit Profil</h1>
-      <form id="editProfileForm">
-        <div class="avatar-upload"></div>
-        <input type="text" id="displayName" placeholder="Nama Lengkap">
-        <textarea id="bio" placeholder="Bio singkat..."></textarea>
-        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-      </form>
-    </section>
-  </main>
-  <script src="../../assets/js/data-books.js"></script>
-  <script src="../../assets/js/utils.js"></script>
-  <script src="../../assets/js/nav.js"></script>
-</body>
-</html>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
