@@ -3,28 +3,202 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Buat akun Charvlibrary baru.">
-  <title>Daftar - Charvlibrary</title>
+  <meta name="description" content="Buat akun Charvlibrary gratis dan mulai meminjam buku digital favoritmu.">
+  <title>Daftar Akun - Charvlibrary</title>
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    body { min-height: 100vh; }
+
+    .auth-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - var(--navbar-height));
+    }
+    @media (max-width: 768px) { .auth-layout { grid-template-columns: 1fr; } }
+
+    .auth-visual {
+      background: linear-gradient(145deg, #0F4C81 0%, #1E3A5F 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-12);
+      position: relative;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) { .auth-visual { display: none; } }
+
+    .auth-visual::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .auth-visual::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .auth-visual-perks {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .auth-perk {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+    }
+
+    .auth-perk-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.9);
+      flex-shrink: 0;
+    }
+
+    .auth-perk-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-lg);
+      color: rgba(255,255,255,0.9);
+      margin-bottom: var(--space-1);
+    }
+
+    .auth-perk-desc {
+      font-size: var(--font-size-sm);
+      color: rgba(255,255,255,0.55);
+      margin: 0;
+    }
+
+    .auth-visual-heading {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-light);
+      color: rgba(255,255,255,0.9);
+      margin-bottom: var(--space-8);
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .auth-form-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-10) var(--space-8);
+      background: var(--color-background);
+      overflow-y: auto;
+    }
+
+    .auth-form-wrap {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      text-decoration: none;
+      margin-bottom: var(--space-6);
+    }
+    .auth-logo-name {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-secondary);
+    }
+
+    .auth-title  { font-family: var(--font-heading); font-size: var(--font-size-3xl); font-weight: var(--font-weight-light); margin-bottom: var(--space-1); }
+    .auth-subtitle { color: var(--color-muted-foreground); margin-bottom: var(--space-6); }
+
+    .auth-form { display: flex; flex-direction: column; gap: var(--space-4); }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    .input-with-toggle { position: relative; }
+    .input-with-toggle .form-input { padding-right: var(--space-12); }
+    .password-toggle {
+      position: absolute;
+      right: var(--space-3);
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-muted-foreground);
+      padding: var(--space-2);
+      border-radius: var(--radius-sm);
+      transition: color var(--transition-fast);
+    }
+    .password-toggle:hover { color: var(--color-foreground); }
+
+    /* Password strength meter */
+    .pwd-strength {
+      margin-top: var(--space-2);
+    }
+    .pwd-strength-bar {
+      height: 4px;
+      border-radius: var(--radius-full);
+      background: var(--color-border);
+      overflow: hidden;
+      margin-bottom: var(--space-1);
+    }
+    .pwd-strength-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease, background 0.3s ease;
+      width: 0%;
+    }
+    .pwd-strength-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted-foreground);
+    }
+
+    .terms-check {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+    .terms-check input[type="checkbox"] {
+      width: 18px; height: 18px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      cursor: pointer;
+      accent-color: var(--color-accent);
+    }
+    .terms-check label {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+      cursor: pointer;
+    }
+    .terms-check a { color: var(--color-secondary); }
+
+    .auth-switch {
+      text-align: center;
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+      margin-top: var(--space-4);
+    }
+    .auth-switch a { color: var(--color-secondary); font-weight: var(--font-weight-semibold); }
+  </style>
 </head>
 <body>
-  <main id="main-content">
-    <section class="auth-section">
-      <h1>Buat Akun</h1>
-      <form id="registerForm">
-        <input type="text" id="fullName" placeholder="Nama Lengkap" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Kata Sandi" required>
-        <input type="password" id="confirmPassword" placeholder="Konfirmasi Kata Sandi" required>
-        <button type="submit" class="btn btn-primary">Daftar</button>
-      </form>
-      <p>Sudah punya akun? <a href="login.html">Masuk</a></p>
-    </section>
-  </main>
-  <script src="../../assets/js/data-books.js"></script>
-  <script src="../../assets/js/utils.js"></script>
-  <script src="../../assets/js/nav.js"></script>
-</body>
-</html>
