@@ -3,21 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Blog dan artikel seputar buku dari komunitas Charvlibrary.">
+  <meta name="description" content="Blog Charvlibrary - artikel, rekomendasi buku, dan tips membaca dari komunitas.">
   <title>Blog - Charvlibrary</title>
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
-</head>
-<body>
-  <main id="main-content">
-    <section class="blog-section">
-      <h1>Blog Charvlibrary</h1>
-      <!-- lanjut  -->
-      <div id="blogGrid"></div>
-    </section>
-  </main>
-  <script src="../../assets/js/data-books.js"></script>
-  <script src="../../assets/js/utils.js"></script>
-  <script src="../../assets/js/nav.js"></script>
-</body>
-</html>
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .blog-hero {
+      background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-background) 100%);
+      padding-block: var(--space-12) var(--space-8);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    /* Layout: featured + grid */
+    .blog-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-10);
+      align-items: start;
+    }
+    @media (max-width: 768px) { .blog-layout { grid-template-columns: 1fr; } }
+
+    /* Featured post - card besar */
+    .blog-featured {
+      background: var(--color-card);
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-book);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: box-shadow var(--transition-base), transform var(--transition-base);
+    }
+    .blog-featured:hover {
+      box-shadow: var(--shadow-book-hover);
+      transform: translateY(-3px);
+    }
+
+    .blog-featured-img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+    }
+
+    .blog-featured-body {
+      padding: var(--space-8);
+    }
+
+    .blog-category {
+      display: inline-block;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: var(--space-3);
+    }
+
+    .blog-featured-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.25;
+      margin-bottom: var(--space-4);
+      color: var(--color-foreground);
+    }
+
+    .blog-featured-excerpt {
+      color: var(--color-muted-foreground);
+      line-height: var(--line-height-relaxed);
+      margin-bottom: var(--space-5);
+    }
+
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+    }
+
+    .blog-author-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--color-secondary);
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      flex-shrink: 0;
+    }
+
+    .blog-read-time {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    /* Sidebar posts list */
+    .blog-sidebar-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-5);
+      padding-bottom: var(--space-3);
+      border-bottom: 2px solid var(--color-accent);
+    }
+
+    .blog-sidebar-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .blog-sidebar-item {
+      display: flex;
+      gap: var(--space-3);
+      text-decoration: none;
+      color: inherit;
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      transition: background var(--transition-fast);
+    }
+    .blog-sidebar-item:hover { background: var(--color-muted); }
+
+    .blog-sidebar-img {
+      width: 70px;
+      height: 70px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .blog-sidebar-info { flex: 1; }
