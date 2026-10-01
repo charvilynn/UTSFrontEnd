@@ -137,3 +137,188 @@
         <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom: var(--space-6);">
           <a href="../../index.html">Beranda</a>
           <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <a href="../discovery/explore.html">Jelajahi</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">Pinjam Buku</span>
+        </nav>
+
+        <!-- Steps indicator -->
+        <div class="checkout-steps" aria-label="Langkah peminjaman">
+          <div class="step active">
+            <span class="step-num">1</span>
+            <span class="step-label">Konfirmasi</span>
+          </div>
+          <div class="step-connector" role="none"></div>
+          <div class="step pending">
+            <span class="step-num">2</span>
+            <span class="step-label">Selesai</span>
+          </div>
+        </div>
+
+        <div class="checkout-layout">
+
+          <!-- Form konfirmasi -->
+          <div>
+            <div class="checkout-card fade-up">
+              <h1 class="checkout-card-title">Konfirmasi Peminjaman</h1>
+
+              <div class="book-checkout-info" id="bookInfo">
+                <!-- diisi JS -->
+              </div>
+
+              <form id="checkoutForm" novalidate>
+
+                <div class="form-group">
+                  <label class="form-label" for="borrowerName">Nama Peminjam</label>
+                  <input type="text" id="borrowerName" class="form-input" placeholder="Nama lengkap kamu" required aria-describedby="borrowerNameError">
+                  <p class="form-error-msg" id="borrowerNameError" role="alert"></p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="borrowerEmail">Email</label>
+                  <input type="email" id="borrowerEmail" class="form-input" placeholder="email@contoh.com" required aria-describedby="borrowerEmailError">
+                  <p class="form-error-msg" id="borrowerEmailError" role="alert"></p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="borrowNotes">Catatan (opsional)</label>
+                  <textarea id="borrowNotes" class="form-input" rows="3" placeholder="Ada hal yang perlu kami ketahui?" style="resize: vertical;"></textarea>
+                </div>
+
+                <div style="padding: var(--space-4); background: var(--color-accent-light); border-radius: var(--radius-md); border: 1px solid rgba(217, 119, 6, 0.2); margin-bottom: var(--space-5);">
+                  <p style="font-size: var(--font-size-sm); color: var(--color-secondary);">
+                    <strong>Perhatian:</strong> Buku dipinjam selama <strong>14 hari</strong>. Pengembalian terlambat dikenakan denda Rp 1.000/hari.
+                  </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" style="width: 100%;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                  Konfirmasi Peminjaman
+                </button>
+
+              </form>
+            </div>
+          </div>
+
+          <!-- Order summary -->
+          <aside>
+            <div class="checkout-card fade-up" style="position: sticky; top: calc(var(--navbar-height) + var(--space-6));">
+              <h2 class="checkout-card-title">Ringkasan Peminjaman</h2>
+              <div class="checkout-detail-list" id="checkoutSummary">
+                <!-- diisi JS -->
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const bookId = parseInt(getUrlParam('id'));
+      const book   = getBookById(bookId);
+
+      if (!book) {
+        document.getElementById('notFound').hidden = false;
+        return;
+      }
+
+      document.getElementById('main-content').hidden = false;
+      document.title = `Pinjam "${book.title}" - Charvlibrary`;
+
+      // Prefill dari user
+      const user = getUser();
+      if (user) {
+        const nameInput = document.getElementById('borrowerName');
+        const emailInput = document.getElementById('borrowerEmail');
+        if (nameInput && user.name) nameInput.value = user.name;
+        if (emailInput && user.email) emailInput.value = user.email;
+      }
+
+      // Book info
+      const today      = new Date();
+      const returnDate = new Date(today.getTime() + 14 * 24 * 60 * 60 * 1000);
+
+      document.getElementById('bookInfo').innerHTML = `
+        <img src="${book.cover}" alt="Sampul ${book.title}" class="book-checkout-cover">
+        <div>
+          <p class="book-checkout-title">${book.title}</p>
+          <p class="book-checkout-author">${book.author}</p>
+          <span class="badge badge--genre">${book.genre}</span>
+        </div>
+      `;
+
+      document.getElementById('checkoutSummary').innerHTML = `
+        <div class="checkout-detail-row">
+          <span class="checkout-detail-label">Judul Buku</span>
+          <span class="checkout-detail-value" style="text-align:right;max-width:180px;">${truncateText(book.title, 30)}</span>
+        </div>
+        <div class="checkout-detail-row">
+          <span class="checkout-detail-label">Tanggal Pinjam</span>
+          <span class="checkout-detail-value">${formatDate(today.toISOString().split('T')[0])}</span>
+        </div>
+        <div class="checkout-detail-row">
+          <span class="checkout-detail-label">Batas Kembali</span>
+          <span class="checkout-detail-value" style="color:var(--color-accent);">${formatDate(returnDate.toISOString().split('T')[0])}</span>
+        </div>
+        <div class="checkout-detail-row">
+          <span class="checkout-detail-label">Durasi</span>
+          <span class="checkout-detail-value">14 hari</span>
+        </div>
+        <div class="checkout-detail-row">
+          <span class="checkout-detail-label">Biaya</span>
+          <span class="checkout-detail-value" style="color:var(--color-success);">Gratis</span>
+        </div>
+      `;
+
+      // Form submit
+      document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        let ok = true;
+
+        const name  = document.getElementById('borrowerName');
+        const email = document.getElementById('borrowerEmail');
+
+        const errName  = document.getElementById('borrowerNameError');
+        const errEmail = document.getElementById('borrowerEmailError');
+
+        if (!name.value.trim()) {
+          errName.textContent = 'Nama peminjam wajib diisi';
+          errName.classList.add('visible');
+          name.classList.add('error');
+          ok = false;
+        } else {
+          errName.textContent = ''; errName.classList.remove('visible'); name.classList.remove('error');
+        }
+
+        if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+          errEmail.textContent = 'Email valid wajib diisi';
+          errEmail.classList.add('visible');
+          email.classList.add('error');
+          ok = false;
+        } else {
+          errEmail.textContent = ''; errEmail.classList.remove('visible'); email.classList.remove('error');
+        }
+
+        if (!ok) return;
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;"></span> Memproses...';
+
+        setTimeout(() => {
+          borrowBook(book.id);
+          window.location.href = `borrow-confirmation.html?id=${book.id}`;
+        }, 1000);
+      });
+
+      initScrollReveal();
+    });
+  </script>
+</body>
+</html>
