@@ -157,3 +157,104 @@ function initFilters() {
   const sortEl = document.getElementById('sortBooks');
   if (sortEl) {
     sortEl.addEventListener('change', () => {
+      sortMethod = sortEl.value;
+      renderBooks(true);
+    });
+  }
+
+  // Reset filter button (di empty state)
+  const resetBtn = document.getElementById('resetFilter');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      activeGenre   = 'all';
+      availableOnly = false;
+      sortMethod    = 'default';
+
+      // reset UI state
+      chipsContainer?.querySelectorAll('.chip').forEach((c, i) => {
+        c.classList.toggle('active', i === 0);
+        c.setAttribute('aria-pressed', String(i === 0));
+      });
+      if (toggleEl) toggleEl.checked = false;
+      if (sortEl)   sortEl.value = 'default';
+
+      renderBooks(true);
+    });
+  }
+}
+
+/* ------------------------------------------------------------------
+   3D TILT EFFECT
+   Vanilla JS: tidak butuh library.
+   Kenapa ini original: dibuat dari nol dengan math yang spesifik
+   untuk card buku, bukan copy-paste dari plugin.
+   ------------------------------------------------------------------ */
+
+function init3DTilt() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if ('ontouchstart' in window) return; // skip di touch device
+
+  const cards = document.querySelectorAll('.tilt-grid .book-card');
+
+  cards.forEach(card => {
+    card.addEventListener('mousemove', handleTilt);
+    card.addEventListener('mouseleave', resetTilt);
+    card.addEventListener('focus', () => {
+      // tidak tilt saat keyboard focus: aksesibilitas
+    });
+  });
+}
+
+function handleTilt(e) {
+  const card   = e.currentTarget;
+  const rect   = card.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  // posisi mouse relatif terhadap pusat card (-1 sampai 1)
+  const mouseX = (e.clientX - centerX) / (rect.width / 2);
+  const mouseY = (e.clientY - centerY) / (rect.height / 2);
+
+  // max tilt 12 derajat: cukup terlihat tanpa lebay
+  const maxTilt = 12;
+  const tiltX   = mouseY * -maxTilt; // rotateX (naik/turun)
+  const tiltY   = mouseX * maxTilt;  // rotateY (kiri/kanan)
+
+  // scale sedikit saat hover
+  card.style.transition = 'box-shadow 0.15s ease';
+  card.style.transform  = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
+  card.classList.remove('tilt-reset');
+
+  // update box shadow supaya mengikuti arah "cahaya"
+  const shadowX = mouseX * 10;
+  const shadowY = mouseY * 10;
+  card.style.boxShadow = `${shadowX}px ${shadowY}px 30px rgba(146, 64, 14, 0.2)`;
+}
+
+function resetTilt(e) {
+  const card = e.currentTarget;
+  card.classList.add('tilt-reset');
+  card.style.transform  = 'perspective(800px) rotateX(0) rotateY(0) scale(1)';
+  card.style.boxShadow  = '';
+  card.style.transition = '';
+}
+
+/* ------------------------------------------------------------------
+   GLARE ELEMENT
+   Efek cahaya pantulan di atas card: menambah kedalaman
+   ------------------------------------------------------------------ */
+
+function addGlareElements() {
+  document.querySelectorAll('.tilt-grid .book-card').forEach(card => {
+    if (!card.querySelector('.tilt-glare')) {
+      const glare = document.createElement('div');
+      glare.className = 'tilt-glare';
+      glare.setAttribute('aria-hidden', 'true');
+      // pastikan card punya position relative
+      if (getComputedStyle(card).position === 'static') {
+        card.style.position = 'relative';
+      }
+      card.appendChild(glare);
+    }
+  });
+}
