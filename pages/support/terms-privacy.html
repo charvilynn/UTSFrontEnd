@@ -3,27 +3,167 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Syarat penggunaan dan kebijakan privasi Charvlibrary.">
-  <title>Syarat dan Privasi - Charvlibrary</title>
+  <meta name="description" content="Syarat & Ketentuan dan Kebijakan Privasi Charvlibrary.">
+  <title>Syarat & Kebijakan Privasi - Charvlibrary</title>
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    /* Reading progress */
+    .reading-progress {
+      position: fixed;
+      top: var(--navbar-height);
+      left: 0; right: 0;
+      height: 3px;
+      background: var(--color-border);
+      z-index: 200;
+    }
+    .reading-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
+      width: 0%;
+      transition: width .1s linear;
+    }
+
+    .terms-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-10);
+      align-items: start;
+    }
+    @media (max-width: 900px) { .terms-layout { grid-template-columns: 1fr; } }
+
+    /* Tab switcher */
+    .terms-tabs {
+      display: flex;
+      gap: var(--space-1);
+      margin-bottom: var(--space-8);
+      background: var(--color-muted);
+      border-radius: var(--radius-lg);
+      padding: 4px;
+      width: fit-content;
+    }
+    .terms-tab {
+      padding: var(--space-2) var(--space-5);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--color-foreground);
+      transition: all var(--transition-fast);
+    }
+    .terms-tab.active {
+      background: var(--color-card);
+      box-shadow: var(--shadow-sm);
+      color: var(--color-secondary);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    /* TOC sidebar */
+    .toc-sidebar {
+      position: sticky;
+      top: calc(var(--navbar-height) + var(--space-6));
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4);
+    }
+    .toc-title {
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--color-muted-foreground);
+      padding: var(--space-2) var(--space-3);
+      margin-bottom: var(--space-2);
+    }
+    .toc-link {
+      display: block;
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--font-size-sm);
+      color: var(--color-foreground);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast);
+      border-left: 2px solid transparent;
+    }
+    .toc-link:hover { background: var(--color-muted); color: var(--color-secondary); }
+    .toc-link.active { border-left-color: var(--color-accent); color: var(--color-secondary); font-weight: var(--font-weight-medium); }
+
+    /* Doc content */
+    .doc-section { margin-bottom: var(--space-10); scroll-margin-top: calc(var(--navbar-height) + var(--space-6)); }
+    .doc-section h2 {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .doc-section p {
+      color: var(--color-muted-foreground);
+      line-height: var(--line-height-relaxed);
+      margin-bottom: var(--space-4);
+    }
+    .doc-section ul {
+      padding-left: var(--space-6);
+      margin-bottom: var(--space-4);
+      color: var(--color-muted-foreground);
+      line-height: var(--line-height-relaxed);
+    }
+    .doc-section li { margin-bottom: var(--space-2); }
+
+    .terms-doc { display: none; }
+    .terms-doc.active { display: block; }
+
+    .last-updated {
+      display: inline-block;
+      font-size: var(--font-size-xs);
+      background: var(--color-muted);
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      color: var(--color-muted-foreground);
+      margin-bottom: var(--space-6);
+    }
+  </style>
 </head>
 <body>
-  <main id="main-content">
-    <div class="terms-layout">
-      <aside class="terms-toc" id="toc">
-        <h2>Daftar Isi</h2>
-        <nav id="tocNav"></nav>
-      </aside>
-      <article class="terms-content" id="termsContent">
-        <h1>Syarat Penggunaan dan Privasi</h1>
-        <!-- dilanjutkan nanti -->
-      </article>
+
+  <div class="reading-progress">
+    <div class="reading-progress-fill" id="readingProgressFill"></div>
+  </div>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="about.html">Tentang</a></li>
+          <li><a href="contact.html">Kontak</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-label="Buka menu"><span></span><span></span><span></span></button>
     </div>
-  </main>
-  <script src="../../assets/js/data-books.js"></script>
-  <script src="../../assets/js/utils.js"></script>
-  <script src="../../assets/js/nav.js"></script>
-</body>
-</html>
+  </header>
+  <div class="navbar-spacer"></div>
+
+  <main>
+    <div style="background:var(--color-surface);padding-block:var(--space-8);border-bottom:1px solid var(--color-border);margin-bottom:var(--space-8);">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-4);">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep">/</span>
+          <span aria-current="page">Syarat & Kebijakan</span>
+        </nav>
+        <h1 style="font-family:var(--font-heading);font-size:clamp(1.75rem,3vw,var(--font-size-4xl));font-weight:var(--font-weight-light);margin-bottom:var(--space-4);">Syarat & Kebijakan Privasi</h1>
