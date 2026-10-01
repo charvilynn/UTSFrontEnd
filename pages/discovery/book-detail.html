@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Detail buku di Charvlibrary - informasi lengkap, rating, dan proses peminjaman.">
+  <title>Detail Buku - Charvlibrary</title>
+
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="book-detail.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <div class="navbar-search" role="search">
+        <svg class="navbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="navbar-search-input" placeholder="Cari buku..." aria-label="Cari buku">
+      </div>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="explore.html">Jelajahi</a></li>
+          <li><a href="categories.html">Kategori</a></li>
+          <li><a href="../library/wishlist.html" aria-label="Wishlist" style="position:relative;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="wishlist-count-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--color-error); color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;">0</span>
+          </a></li>
+          <li><a href="../auth/login.html" class="btn btn-primary btn-sm">Masuk</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-controls="mobile-drawer-detail" aria-label="Buka menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav id="mobile-drawer-detail" class="navbar-drawer">
+      <ul class="navbar-nav">
+        <li><a href="../../index.html">Beranda</a></li>
+        <li><a href="explore.html">Jelajahi</a></li>
+        <li><a href="categories.html">Kategori</a></li>
+        <li><a href="../library/wishlist.html">Wishlist</a></li>
+        <li><a href="../auth/login.html">Masuk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="navbar-spacer"></div>
+
+  <main id="main-content">
+
+    <!-- Loading state - visible sementara JS belum load data -->
+    <div id="bookLoading" class="container" style="padding-block: var(--space-20); text-align: center;">
+      <div class="spinner" style="margin: 0 auto;"></div>
+      <p style="margin-top: var(--space-4); color: var(--color-muted-foreground);">Memuat detail buku...</p>
+    </div>
+
+    <!-- Error state - muncul kalau ID tidak ditemukan -->
+    <div id="bookError" class="empty-state" hidden>
+      <svg class="empty-state-icon" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+        <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="2"/>
+        <line x1="30" y1="30" x2="50" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <line x1="50" y1="30" x2="30" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <h1 class="empty-state-title">Buku tidak ditemukan</h1>
+      <p class="empty-state-desc">ID buku tidak valid atau buku telah dihapus dari koleksi.</p>
+      <a href="explore.html" class="btn btn-primary">Kembali ke Jelajahi</a>
+    </div>
+
+    <!-- Book Detail Content - diisi JS -->
+    <article id="bookContent" hidden>
+
+      <!-- Breadcrumb -->
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <a href="explore.html">Jelajahi</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <span id="breadcrumbTitle" aria-current="page">Detail Buku</span>
+        </nav>
+      </div>
+
+      <!-- Main detail section -->
+      <section class="book-detail-hero">
+        <div class="container book-detail-layout">
+
+          <!-- Book cover dengan 3D flip effect -->
+          <div class="book-flip-wrap" id="bookFlipWrap" aria-hidden="true">
