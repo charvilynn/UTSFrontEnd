@@ -167,3 +167,210 @@
           <span aria-current="page">Syarat & Kebijakan</span>
         </nav>
         <h1 style="font-family:var(--font-heading);font-size:clamp(1.75rem,3vw,var(--font-size-4xl));font-weight:var(--font-weight-light);margin-bottom:var(--space-4);">Syarat & Kebijakan Privasi</h1>
+
+        <!-- Tab switcher -->
+        <div class="terms-tabs" role="tablist" aria-label="Pilih dokumen">
+          <button class="terms-tab active" role="tab" aria-selected="true" data-doc="terms" onclick="switchDoc(this, 'terms')">Syarat & Ketentuan</button>
+          <button class="terms-tab" role="tab" aria-selected="false" data-doc="privacy" onclick="switchDoc(this, 'privacy')">Kebijakan Privasi</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="section--sm">
+      <div class="container">
+        <div class="terms-layout">
+
+          <!-- TOC sidebar -->
+          <nav class="toc-sidebar" aria-label="Daftar isi" id="tocSidebar">
+            <p class="toc-title">Isi Dokumen</p>
+            <!-- diisi JS -->
+          </nav>
+
+          <!-- Document content -->
+          <div>
+
+            <!-- Terms of Service -->
+            <div id="doc-terms" class="terms-doc active" role="tabpanel">
+              <span class="last-updated">Terakhir diperbarui: 1 September 2026</span>
+
+              <div class="doc-section" id="terms-s1">
+                <h2>1. Penerimaan Ketentuan</h2>
+                <p>Dengan mengakses dan menggunakan layanan Charvlibrary ("Layanan"), kamu menyatakan setuju dengan Syarat dan Ketentuan ini. Jika kamu tidak menyetujui ketentuan ini, mohon untuk tidak menggunakan Layanan.</p>
+                <p>Charvlibrary adalah platform perpustakaan digital yang disediakan untuk civitas akademika. Penggunaan Layanan tunduk pada ketentuan yang berlaku di institusi kamu.</p>
+              </div>
+
+              <div class="doc-section" id="terms-s2">
+                <h2>2. Penggunaan Layanan</h2>
+                <p>Kamu diizinkan menggunakan Layanan untuk keperluan akademik dan personal yang sah. Penggunaan yang dilarang meliputi:</p>
+                <ul>
+                  <li>Menyebarluaskan konten buku yang dipinjam kepada pihak ketiga</li>
+                  <li>Menggunakan otomatisasi atau scraping untuk mengakses koleksi</li>
+                  <li>Membuat akun ganda atau meminjamkan akun kepada orang lain</li>
+                  <li>Mengupload atau mendistribusikan konten yang melanggar hak cipta</li>
+                </ul>
+              </div>
+
+              <div class="doc-section" id="terms-s3">
+                <h2>3. Akun Pengguna</h2>
+                <p>Kamu bertanggung jawab menjaga kerahasiaan kata sandi dan keamanan akun. Segala aktivitas yang terjadi di bawah akunmu menjadi tanggung jawabmu sepenuhnya.</p>
+                <p>Charvlibrary berhak menangguhkan atau menghapus akun yang melanggar ketentuan ini tanpa pemberitahuan sebelumnya.</p>
+              </div>
+
+              <div class="doc-section" id="terms-s4">
+                <h2>4. Peminjaman Buku</h2>
+                <p>Setiap pengguna dapat meminjam maksimal 5 buku secara bersamaan dengan masa pinjam 14 hari. Keterlambatan pengembalian dikenakan denda sesuai dengan ketentuan yang berlaku.</p>
+                <ul>
+                  <li>Masa pinjam: 14 hari kalender per buku</li>
+                  <li>Maksimum pinjaman: 5 buku bersamaan</li>
+                  <li>Denda keterlambatan: Rp 1.000 per hari per buku</li>
+                </ul>
+              </div>
+
+              <div class="doc-section" id="terms-s5">
+                <h2>5. Perubahan Ketentuan</h2>
+                <p>Charvlibrary berhak mengubah Syarat dan Ketentuan ini sewaktu-waktu. Perubahan akan diberitahukan melalui notifikasi di platform atau email. Penggunaan Layanan setelah perubahan dianggap sebagai persetujuan terhadap ketentuan baru.</p>
+              </div>
+            </div>
+
+            <!-- Privacy Policy -->
+            <div id="doc-privacy" class="terms-doc" role="tabpanel">
+              <span class="last-updated">Terakhir diperbarui: 1 September 2026</span>
+
+              <div class="doc-section" id="privacy-s1">
+                <h2>1. Informasi yang Kami Kumpulkan</h2>
+                <p>Kami mengumpulkan informasi yang kamu berikan saat mendaftar dan menggunakan Layanan, meliputi:</p>
+                <ul>
+                  <li>Nama lengkap dan alamat email</li>
+                  <li>Riwayat peminjaman dan aktivitas baca</li>
+                  <li>Preferensi genre dan wishlist</li>
+                  <li>Data teknis seperti alamat IP dan jenis perangkat</li>
+                </ul>
+              </div>
+
+              <div class="doc-section" id="privacy-s2">
+                <h2>2. Penggunaan Informasi</h2>
+                <p>Informasi yang kami kumpulkan digunakan untuk:</p>
+                <ul>
+                  <li>Menyediakan dan meningkatkan kualitas Layanan</li>
+                  <li>Memberikan rekomendasi buku yang personal</li>
+                  <li>Mengirimkan notifikasi terkait peminjaman dan event</li>
+                  <li>Keamanan dan deteksi penyalahgunaan</li>
+                </ul>
+                <p>Kami tidak menjual atau membagikan data pribadi kamu kepada pihak ketiga untuk tujuan komersial.</p>
+              </div>
+
+              <div class="doc-section" id="privacy-s3">
+                <h2>3. Keamanan Data</h2>
+                <p>Kami menerapkan langkah-langkah keamanan teknis dan organisasional yang wajar untuk melindungi data pribadi kamu dari akses yang tidak sah, kehilangan, atau pengungkapan.</p>
+                <p>Data disimpan di server yang berlokasi di Indonesia dan diproses sesuai dengan peraturan perlindungan data yang berlaku.</p>
+              </div>
+
+              <div class="doc-section" id="privacy-s4">
+                <h2>4. Hak Pengguna</h2>
+                <p>Kamu memiliki hak untuk:</p>
+                <ul>
+                  <li>Mengakses dan mengunduh data pribadimu</li>
+                  <li>Memperbarui informasi yang tidak akurat</li>
+                  <li>Meminta penghapusan akun dan data terkait</li>
+                  <li>Menolak pemrosesan data untuk tujuan pemasaran</li>
+                </ul>
+                <p>Untuk menggunakan hak-hak ini, hubungi kami melalui <a href="contact.html" style="color:var(--color-secondary);">halaman kontak</a>.</p>
+              </div>
+
+              <div class="doc-section" id="privacy-s5">
+                <h2>5. Cookie & Penyimpanan Lokal</h2>
+                <p>Charvlibrary menggunakan localStorage browser untuk menyimpan preferensi dan data sesi kamu secara lokal. Data ini tidak dikirimkan ke server kami dan hanya dapat diakses dari perangkat kamu sendiri.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
+        <div><h3 class="footer-section-title">Komunitas</h3><ul class="footer-links"><li><a href="../community/faq.html">FAQ</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="about.html">Tentang</a></li><li><a href="contact.html">Kontak</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    let activeDoc = 'terms';
+
+    const tocData = {
+      terms: [
+        { id: 'terms-s1', label: '1. Penerimaan Ketentuan' },
+        { id: 'terms-s2', label: '2. Penggunaan Layanan' },
+        { id: 'terms-s3', label: '3. Akun Pengguna' },
+        { id: 'terms-s4', label: '4. Peminjaman Buku' },
+        { id: 'terms-s5', label: '5. Perubahan Ketentuan' },
+      ],
+      privacy: [
+        { id: 'privacy-s1', label: '1. Informasi yang Dikumpulkan' },
+        { id: 'privacy-s2', label: '2. Penggunaan Informasi' },
+        { id: 'privacy-s3', label: '3. Keamanan Data' },
+        { id: 'privacy-s4', label: '4. Hak Pengguna' },
+        { id: 'privacy-s5', label: '5. Cookie & Penyimpanan' },
+      ],
+    };
+
+    function renderTOC(doc) {
+      const sidebar = document.getElementById('tocSidebar');
+      sidebar.innerHTML = '<p class="toc-title">Isi Dokumen</p>' +
+        tocData[doc].map(item => `
+          <a href="#${item.id}" class="toc-link" data-target="${item.id}">${item.label}</a>
+        `).join('');
+
+      // Highlight active TOC item on scroll
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+            document.querySelector(`.toc-link[data-target="${entry.target.id}"]`)?.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+
+      tocData[doc].forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el) observer.observe(el);
+      });
+    }
+
+    function switchDoc(btn, doc) {
+      document.querySelectorAll('.terms-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      document.querySelectorAll('.terms-doc').forEach(d => d.classList.remove('active'));
+      document.getElementById(`doc-${doc}`).classList.add('active');
+      activeDoc = doc;
+      renderTOC(doc);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTOC('terms');
+
+      // Reading progress
+      window.addEventListener('scroll', () => {
+        const body   = document.body;
+        const total  = body.scrollHeight - window.innerHeight;
+        const pct    = Math.min(100, (window.scrollY / total) * 100);
+        document.getElementById('readingProgressFill').style.width = `${pct}%`;
+      });
+    });
+  </script>
+</body>
+</html>
