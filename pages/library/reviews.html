@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Beri ulasan dan baca review buku di Charvlibrary.">
+  <title>Ulasan Buku - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .reviews-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: var(--space-8);
+      align-items: start;
+    }
+    @media (max-width: 900px) { .reviews-layout { grid-template-columns: 1fr; } }
+
+    /* Book header */
+    .book-review-header {
+      display: flex;
+      gap: var(--space-5);
+      padding: var(--space-6);
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      margin-bottom: var(--space-7);
+    }
+    .book-review-cover {
+      width: 80px; height: 112px;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      flex-shrink: 0;
+    }
+    .book-review-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-1);
+    }
+    .book-review-meta { color: var(--color-muted-foreground); font-size: var(--font-size-sm); margin-bottom: var(--space-3); }
+
+    /* Star rating input */
+    .star-rating-input {
+      display: flex;
+      gap: var(--space-1);
+      margin-bottom: var(--space-2);
+    }
+    .star-btn {
+      background: none; border: none;
+      font-size: 32px;
+      cursor: pointer;
+      color: var(--color-border);
+      transition: color var(--transition-fast), transform var(--transition-fast);
+      padding: 4px;
+      line-height: 1;
+    }
+    .star-btn:hover,
+    .star-btn.active  { color: #F59E0B; }
+    .star-btn:hover   { transform: scale(1.2); }
+
+    .star-label {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+      min-height: 20px;
+      margin-bottom: var(--space-4);
+    }
+
+    /* Review form card */
+    .review-form-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      margin-bottom: var(--space-8);
+    }
+    .review-form-card h2 {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--space-5);
+    }
+
+    .review-char-counter {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted-foreground);
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    /* Review list items */
+    .review-item {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      margin-bottom: var(--space-4);
+    }
+    .review-item-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+    .review-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-base);
+      color: white;
+      flex-shrink: 0;
+    }
+    .reviewer-name  { font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); }
+    .reviewer-date  { font-size: var(--font-size-xs); color: var(--color-muted-foreground); }
+    .review-stars   { color: #F59E0B; letter-spacing: 1px; font-size: 15px; }
+    .review-text    { font-size: var(--font-size-sm); line-height: var(--line-height-relaxed); color: var(--color-foreground); }
+
+    /* Sidebar: rating summary */
+    .rating-summary-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      position: sticky;
+      top: calc(var(--navbar-height) + var(--space-4));
+    }
+    .big-rating {
+      font-family: var(--font-heading);
+      font-size: 64px;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-secondary);
+      line-height: 1;
+      text-align: center;
+    }
+    .rating-stars-display {
+      text-align: center;
+      font-size: 24px;
+      color: #F59E0B;
+      margin-bottom: var(--space-1);
+    }
+    .rating-count { text-align: center; font-size: var(--font-size-sm); color: var(--color-muted-foreground); margin-bottom: var(--space-5); }
+
+    .rating-bar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+      font-size: var(--font-size-xs);
+    }
+    .rating-bar-label { width: 16px; text-align: right; color: var(--color-muted-foreground); }
+    .rating-bar-track { flex: 1; height: 6px; background: var(--color-border); border-radius: var(--radius-full); overflow: hidden; }
+    .rating-bar-fill  { height: 100%; background: #F59E0B; border-radius: var(--radius-full); transition: width .6s var(--ease-out); }
+    .rating-bar-count { width: 20px; color: var(--color-muted-foreground); }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+  <div class="navbar-spacer"></div>
+
+  <div id="notFoundState" class="empty-state" hidden>
+    <p class="empty-state-title">Buku tidak ditemukan</p>
+    <a href="../discovery/explore.html" class="btn btn-primary">Kembali ke Jelajahi</a>
+  </div>
+
+  <main id="mainContent" hidden>
+    <section class="section--sm">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-6);">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep">/</span>
+          <a href="../discovery/explore.html">Jelajahi</a>
+          <span class="breadcrumb-sep">/</span>
+          <span aria-current="page" id="breadcrumbTitle">Ulasan</span>
+        </nav>
+
+        <!-- Book header -->
+        <div class="book-review-header fade-up" id="bookHeader">
+          <!-- diisi JS -->
