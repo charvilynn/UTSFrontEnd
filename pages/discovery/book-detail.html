@@ -97,3 +97,117 @@
 
           <!-- Book cover dengan 3D flip effect -->
           <div class="book-flip-wrap" id="bookFlipWrap" aria-hidden="true">
+            <div class="book-flip-inner" id="bookFlipInner">
+              <div class="book-flip-front">
+                <img id="bookCoverImg" src="" alt="" class="book-detail-cover">
+              </div>
+              <div class="book-flip-back">
+                <div class="book-flip-back-content">
+                  <p class="book-flip-back-text">Siap membaca?</p>
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Book info -->
+          <div class="book-detail-info fade-up">
+
+            <div class="book-detail-meta">
+              <span class="badge badge--genre" id="bookGenre"></span>
+              <span id="bookAvailBadge"></span>
+            </div>
+
+            <h1 class="book-detail-title" id="bookTitle"></h1>
+            <p class="book-detail-author" id="bookAuthor"></p>
+
+            <!-- Rating -->
+            <div class="book-detail-rating">
+              <div id="bookStars"></div>
+              <span id="bookRatingNum" class="book-detail-rating-num"></span>
+              <span id="bookRatingCount" class="book-detail-rating-count"></span>
+            </div>
+
+            <!-- Metadata grid -->
+            <div class="book-meta-grid">
+              <div class="book-meta-item">
+                <span class="book-meta-label">Penerbit</span>
+                <span class="book-meta-value" id="bookPublisher"></span>
+              </div>
+              <div class="book-meta-item">
+                <span class="book-meta-label">Tahun</span>
+                <span class="book-meta-value" id="bookYear"></span>
+              </div>
+              <div class="book-meta-item">
+                <span class="book-meta-label">Halaman</span>
+                <span class="book-meta-value" id="bookPages"></span>
+              </div>
+              <div class="book-meta-item">
+                <span class="book-meta-label">ISBN</span>
+                <span class="book-meta-value" id="bookIsbn" style="font-size: var(--font-size-sm);"></span>
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="chip-group" id="bookTags"></div>
+
+            <!-- Sinopsis -->
+            <div class="book-synopsis">
+              <h2 class="book-synopsis-title">Sinopsis</h2>
+              <p id="bookSynopsis"></p>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="book-detail-actions">
+              <button class="btn btn-primary btn-lg" id="borrowBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+                Pinjam Buku
+              </button>
+              <button class="btn btn-secondary btn-lg" id="wishlistBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" id="wishlistIcon">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                <span id="wishlistBtnText">Tambah ke Wishlist</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Related books -->
+      <section class="section--sm related-section" aria-labelledby="related-title">
+        <div class="container">
+          <h2 class="section-title" id="related-title" style="font-size: var(--font-size-3xl); margin-bottom: var(--space-8);">Buku Serupa</h2>
+          <div class="grid-books stagger-children" id="relatedBooks"></div>
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="explore.html">Semua Buku</a></li><li><a href="categories.html">Kategori</a></li></ul></div>
+        <div><h3 class="footer-section-title">Akun</h3><ul class="footer-links"><li><a href="../auth/login.html">Masuk</a></li><li><a href="../library/wishlist.html">Wishlist</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li><li><a href="../support/contact.html">Kontak</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script src="book-detail.js"></script>
+</body>
+</html>
