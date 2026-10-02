@@ -307,3 +307,125 @@
     const extendedBlogData = [
       ...blogData,
       {
+        id: 4,
+        title: "Review: Project Hail Mary - Buku Sci-Fi Terbaik 2021",
+        category: "Ulasan",
+        author: "Davvin",
+        authorAvatar: "A",
+        date: "2026-08-20",
+        readTime: 7,
+        excerpt: "Andy Weir kembali dengan karya yang mendebarkan. Bukan hanya tentang sains, tapi juga persahabatan.",
+        cover: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&q=80",
+        featured: false
+      },
+      {
+        id: 5,
+        title: "5 Genre Buku yang Wajib Kamu Eksplorasi di 2026",
+        category: "Tips",
+        author: "Davvin",
+        authorAvatar: "A",
+        date: "2026-08-15",
+        readTime: 5,
+        excerpt: "Jangan hanya baca genre yang itu-itu saja. Keluar dari zona nyaman dan temukan bacaan baru yang mengejutkan.",
+        cover: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80",
+        featured: false
+      }
+    ];
+
+    let activeCategory = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderBlog();
+      initChips();
+    });
+
+    function renderBlog() {
+      const filtered = activeCategory === 'all'
+        ? extendedBlogData
+        : extendedBlogData.filter(a => a.category === activeCategory);
+
+      const featured = filtered.find(a => a.featured) || filtered[0];
+      const sidebar  = filtered.filter(a => a.id !== featured?.id).slice(0, 3);
+      const more     = filtered.filter(a => a.id !== featured?.id && !sidebar.find(s => s.id === a.id));
+
+      // Featured
+      const fp = document.getElementById('featuredPost');
+      if (featured) {
+        fp.innerHTML = `
+          <a href="blog-detail.html?id=${featured.id}" class="blog-featured fade-up">
+            <img src="${featured.cover}" alt="Gambar artikel: ${featured.title}" class="blog-featured-img" loading="eager">
+            <div class="blog-featured-body">
+              <span class="blog-category">${featured.category}</span>
+              <h2 class="blog-featured-title">${featured.title}</h2>
+              <p class="blog-featured-excerpt">${featured.excerpt}</p>
+              <div class="blog-meta">
+                <div class="blog-author-avatar" aria-hidden="true">${featured.authorAvatar}</div>
+                <span>${featured.author}</span>
+                <span>·</span>
+                <span>${formatDate(featured.date)}</span>
+                <span class="blog-read-time">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  ${featured.readTime} menit baca
+                </span>
+              </div>
+            </div>
+          </a>
+        `;
+      } else {
+        fp.innerHTML = '<p class="text-muted">Tidak ada artikel di kategori ini.</p>';
+      }
+
+      // Sidebar
+      const sb = document.getElementById('sidebarPosts');
+      sb.innerHTML = sidebar.map(a => `
+        <a href="blog-detail.html?id=${a.id}" class="blog-sidebar-item fade-up">
+          <img src="${a.cover}" alt="" class="blog-sidebar-img" loading="lazy">
+          <div class="blog-sidebar-info">
+            <span class="blog-category">${a.category}</span>
+            <p class="blog-sidebar-item-title">${a.title}</p>
+            <p class="blog-sidebar-meta">${formatDate(a.date)} · ${a.readTime} menit</p>
+          </div>
+        </a>
+      `).join('') || '<p class="text-muted" style="font-size: var(--font-size-sm);">Tidak ada artikel lain.</p>';
+
+      // More grid
+      const mg = document.getElementById('moreGrid');
+      if (more.length > 0) {
+        document.getElementById('morePosts').hidden = false;
+        mg.innerHTML = more.map(a => `
+          <a href="blog-detail.html?id=${a.id}" class="blog-card fade-up">
+            <img src="${a.cover}" alt="" class="blog-card-img" loading="lazy">
+            <div class="blog-card-body">
+              <span class="blog-category">${a.category}</span>
+              <h3 class="blog-card-title">${a.title}</h3>
+              <div class="blog-meta" style="margin-top: var(--space-3);">
+                <span style="font-size: var(--font-size-xs); color: var(--color-muted-foreground);">${formatDate(a.date)} · ${a.readTime} menit baca</span>
+              </div>
+            </div>
+          </a>
+        `).join('');
+      } else {
+        document.getElementById('morePosts').hidden = true;
+      }
+
+      initScrollReveal();
+    }
+
+    function initChips() {
+      const chips = document.getElementById('blogChips');
+      chips?.addEventListener('click', e => {
+        const chip = e.target.closest('.chip');
+        if (!chip) return;
+        chips.querySelectorAll('.chip').forEach(c => {
+          c.classList.remove('active');
+          c.setAttribute('aria-pressed', 'false');
+        });
+        chip.classList.add('active');
+        chip.setAttribute('aria-pressed', 'true');
+        activeCategory = chip.dataset.cat;
+        renderBlog();
+      });
+    }
+  </script>
+</body>
+</html>
