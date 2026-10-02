@@ -3,27 +3,268 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Profil penulis buku di Charvlibrary.">
+  <meta name="description" content="Profil penulis dan karya-karyanya di koleksi Charvlibrary.">
   <title>Profil Penulis - Charvlibrary</title>
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    /* Author hero */
+    .author-hero {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding-block: var(--space-12);
+      margin-bottom: var(--space-10);
+    }
+    .author-hero-inner {
+      display: flex;
+      gap: var(--space-8);
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .author-avatar-lg {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 48px;
+      font-weight: var(--font-weight-bold);
+      color: white;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-lg);
+    }
+    .author-name {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: var(--font-weight-light);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-2);
+    }
+    .author-specialty {
+      color: var(--color-accent);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      margin-bottom: var(--space-4);
+    }
+    .author-bio {
+      color: var(--color-muted-foreground);
+      line-height: var(--line-height-relaxed);
+      max-width: 60ch;
+      margin-bottom: var(--space-5);
+    }
+    .author-stats {
+      display: flex;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+    }
+    .author-stat { text-align: center; }
+    .author-stat-val {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-secondary);
+      line-height: 1;
+    }
+    .author-stat-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted-foreground);
+      margin-top: 4px;
+    }
+
+    /* Social links */
+    .author-socials {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      margin-top: var(--space-4);
+    }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      font-size: var(--font-size-sm);
+      color: var(--color-foreground);
+      text-decoration: none;
+      transition: all var(--transition-fast);
+    }
+    .social-link:hover {
+      border-color: var(--color-secondary);
+      color: var(--color-secondary);
+    }
+
+    /* Books section */
+    .books-section-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+  </style>
 </head>
 <body>
-  <main id="main-content">
-    <section class="author-hero">
-      <div class="author-avatar" id="authorAvatar"></div>
-      <h1 id="authorName">Nama Penulis</h1>
-      <p id="authorBio">Bio penulis...</p>
-      <button class="btn btn-primary" id="followBtn">Ikuti</button>
-    </section>
-    <section class="author-books">
-      <h2>Karya-karyanya</h2>
-      <div id="authorBooksGrid" class="grid-books"></div>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <div class="navbar-search" role="search">
+        <svg class="navbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="navbar-search-input" placeholder="Cari buku..." aria-label="Cari buku">
+      </div>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+  <div class="navbar-spacer"></div>
+
+  <div id="notFoundState" class="empty-state" hidden>
+    <p class="empty-state-title">Penulis tidak ditemukan</p>
+    <a href="../discovery/explore.html" class="btn btn-primary">Kembali ke Jelajahi</a>
+  </div>
+
+  <main id="mainContent" hidden>
+    <!-- Author Hero -->
+    <div class="author-hero">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-6);">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep">/</span>
+          <a href="../discovery/explore.html">Jelajahi</a>
+          <span class="breadcrumb-sep">/</span>
+          <span aria-current="page">Penulis</span>
+        </nav>
+        <div class="author-hero-inner">
+          <div class="author-avatar-lg" id="authorAvatar" aria-hidden="true"></div>
+          <div style="flex:1;">
+            <p class="author-specialty" id="authorSpecialty"></p>
+            <h1 class="author-name" id="authorName"></h1>
+            <p class="author-bio" id="authorBio"></p>
+            <div class="author-stats" id="authorStats"></div>
+            <div class="author-socials" id="authorSocials"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Books by author -->
+    <section class="section--sm">
+      <div class="container">
+        <h2 class="books-section-title" id="booksSectionTitle">Karya Penulis</h2>
+        <div id="authorBooksGrid" class="book-grid">
+          <!-- diisi JS -->
+        </div>
+        <div id="noBooksState" hidden class="empty-state" style="background:var(--color-muted);border-radius:var(--radius-xl);">
+          <p class="empty-state-title">Belum ada buku di koleksi kami</p>
+          <p class="empty-state-desc">Karya dari penulis ini belum tersedia di Charvlibrary.</p>
+        </div>
+      </div>
     </section>
   </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
+        <div><h3 class="footer-section-title">Komunitas</h3><ul class="footer-links"><li><a href="blog.html">Blog</a></li><li><a href="events.html">Event</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
   <script src="../../assets/js/data-books.js"></script>
   <script src="../../assets/js/utils.js"></script>
   <script src="../../assets/js/nav.js"></script>
+  <script>
+    const authorBios = {
+      'George Orwell': { bio: 'Eric Arthur Blair, dikenal dengan nama pena George Orwell, adalah novelis, esais, dan kritikus sosial Inggris. Karya-karyanya yang paling terkenal mencerminkan kepedulian mendalam terhadap keadilan sosial dan perlawanan terhadap totalitarisme.', specialty: 'Fiksi Distopia · Esais Sosial', colors: ['#1E40AF'], socials: [] },
+      'Harper Lee': { bio: 'Harper Lee adalah penulis Amerika yang dikenal melalui novelnya yang memenangkan Pulitzer Prize. Karyanya mengeksplorasi tema rasisme dan ketidakadilan sosial di Amerika Selatan dengan kejernihan moral yang jarang tertandingi.', specialty: 'Literary Fiction · Realisme Sosial', colors: ['#065F46'], socials: [] },
+      'Gabriel García Márquez': { bio: 'Penulis Colombia yang merupakan salah satu tokoh terkemuka dalam sastra Latin Amerika dan pelopor realisme magis. Dianugerahi Nobel Prize dalam Sastra pada tahun 1982.', specialty: 'Realisme Magis · Sastra Dunia', colors: ['#92400E'], socials: [] },
+    };
+
+    const avatarColorList = ['#92400E','#065F46','#1E40AF','#5B21B6','#991B1B','#0F766E'];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const authorParam = decodeURIComponent(getUrlParam('author') || '');
+      const books = booksData.filter(b => b.author === authorParam);
+
+      if (!authorParam) {
+        document.getElementById('notFoundState').hidden = false;
+        return;
+      }
+
+      document.title = `${authorParam} - Charvlibrary`;
+      document.getElementById('mainContent').hidden = false;
+
+      const info = authorBios[authorParam] || {
+        bio: `${authorParam} adalah penulis berbakat yang karyanya telah memperkaya koleksi Charvlibrary. Kunjungi halaman detail buku untuk menemukan karya-karya terbaiknya.`,
+        specialty: 'Penulis',
+        colors: [avatarColorList[Math.abs([...authorParam].reduce((s, c) => s + c.charCodeAt(0), 0)) % avatarColorList.length]],
+        socials: [],
+      };
+
+      const avatarColor = info.colors[0] || '#92400E';
+      document.getElementById('authorAvatar').style.background = avatarColor;
+      document.getElementById('authorAvatar').textContent = authorParam.charAt(0).toUpperCase();
+      document.getElementById('authorName').textContent = authorParam;
+      document.getElementById('authorSpecialty').textContent = info.specialty;
+      document.getElementById('authorBio').textContent = info.bio;
+
+      const avgRating = books.length > 0
+        ? (books.reduce((s, b) => s + (b.rating || 4), 0) / books.length).toFixed(1)
+        : '—';
+
+      document.getElementById('authorStats').innerHTML = `
+        <div class="author-stat">
+          <p class="author-stat-val">${books.length}</p>
+          <p class="author-stat-label">Buku di Charvlibrary</p>
+        </div>
+        <div class="author-stat">
+          <p class="author-stat-val">${avgRating}</p>
+          <p class="author-stat-label">Rata-rata Rating</p>
+        </div>
+        <div class="author-stat">
+          <p class="author-stat-val">${books.reduce((s, b) => s + (b.pages || 300), 0).toLocaleString('id')}</p>
+          <p class="author-stat-label">Total Halaman</p>
+        </div>
+      `;
+
+      if (info.socials && info.socials.length > 0) {
+        document.getElementById('authorSocials').innerHTML = info.socials.map(s =>
+          `<a href="#" class="social-link">${s}</a>`
+        ).join('');
+      }
+
+      // Books grid
+      document.getElementById('booksSectionTitle').textContent = `Karya ${authorParam} (${books.length})`;
+      if (books.length === 0) {
+        document.getElementById('noBooksState').hidden = false;
+      } else {
+        document.getElementById('authorBooksGrid').innerHTML = books.map(b => renderBookCard(b)).join('');
+      }
+
+      initScrollReveal();
+    });
+  </script>
 </body>
 </html>
