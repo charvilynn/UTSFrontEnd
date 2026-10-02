@@ -72,3 +72,128 @@
     }
     .return-countdown.safe   { background: rgba(16, 185, 129, 0.1); color: #065F46; }
     .return-countdown.warn   { background: rgba(245, 158, 11, 0.15); color: #92400E; }
+    .return-countdown.danger { background: rgba(220, 38, 38, 0.1); color: #B91C1C; }
+
+    .borrow-actions {
+      display: flex;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    /* Sidebar stats */
+    .stats-sidebar {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      position: sticky;
+      top: calc(var(--navbar-height) + var(--space-4));
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-block: var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-row-label { font-size: var(--font-size-sm); color: var(--color-muted-foreground); }
+    .stat-row-val { font-weight: var(--font-weight-bold); color: var(--color-secondary); }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <div class="navbar-search" role="search">
+        <svg class="navbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="navbar-search-input" placeholder="Cari buku..." aria-label="Cari buku">
+      </div>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="profile.html" class="active" aria-current="page">Profil</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-controls="mobile-drawer-borrow" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+    <nav id="mobile-drawer-borrow" class="navbar-drawer">
+      <ul class="navbar-nav">
+        <li><a href="../../index.html">Beranda</a></li>
+        <li><a href="../discovery/explore.html">Jelajahi</a></li>
+        <li><a href="profile.html">Profil</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="navbar-spacer"></div>
+
+  <main id="main-content">
+    <div class="page-header">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <a href="profile.html">Profil</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">Buku Dipinjam</span>
+        </nav>
+        <h1>Buku yang Sedang Dipinjam</h1>
+      </div>
+    </div>
+
+    <section class="section--sm">
+      <div class="container">
+        <div class="borrow-layout">
+
+          <!-- Borrow list -->
+          <div>
+            <!-- Active list -->
+            <div id="activeBorrowList" style="display:flex; flex-direction:column; gap:var(--space-4);"></div>
+
+            <!-- Empty state -->
+            <div id="emptyBorrow" hidden class="empty-state" style="background:var(--color-muted); border-radius:var(--radius-xl);">
+              <div class="empty-state-icon" aria-hidden="true">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+              </div>
+              <p class="empty-state-title">Belum ada buku dipinjam</p>
+              <p class="empty-state-desc">Mulai pinjam buku dari koleksi kami. Gratis untuk semua mahasiswa!</p>
+              <a href="../discovery/explore.html" class="btn btn-primary">Jelajahi Buku</a>
+            </div>
+
+            <!-- Returned section (collapsed by default) -->
+            <div id="returnedSection" hidden style="margin-top:var(--space-8);">
+              <button
+                id="toggleReturned"
+                class="btn btn-ghost btn-sm"
+                style="margin-bottom:var(--space-4); display:flex; align-items:center; gap:var(--space-2);"
+                aria-expanded="false"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                Lihat Riwayat yang Sudah Dikembalikan
+              </button>
+              <div id="returnedList" hidden style="display:flex; flex-direction:column; gap:var(--space-3);"></div>
+            </div>
+          </div>
+
+          <!-- Sidebar stats -->
+          <aside>
+            <div class="stats-sidebar fade-up">
+              <h2 style="font-family:var(--font-heading); font-size:var(--font-size-lg); margin-bottom:var(--space-4);">Ringkasan</h2>
+              <div class="stat-row">
+                <span class="stat-row-label">Sedang dipinjam</span>
+                <span class="stat-row-val" id="sidebarActive">0</span>
+              </div>
