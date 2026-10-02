@@ -8,16 +8,67 @@
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
-</head>
-<body>
-  <main id="main-content">
-    <section class="borrowed-section">
-      <h1>Buku Dipinjam</h1>
-      <div id="borrowedList"></div>
-    </section>
-  </main>
-  <script src="../../assets/js/data-books.js"></script>
-  <script src="../../assets/js/utils.js"></script>
-  <script src="../../assets/js/nav.js"></script>
-</body>
-</html>
+  <style>
+    .page-header {
+      background: var(--color-surface);
+      padding-block: var(--space-8);
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: var(--space-8);
+    }
+    .page-header h1 {
+      font-size: clamp(1.75rem, 3vw, var(--font-size-4xl));
+      font-weight: var(--font-weight-light);
+    }
+
+    .borrow-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: var(--space-8);
+      align-items: start;
+    }
+    @media (max-width: 768px) { .borrow-layout { grid-template-columns: 1fr; } }
+
+    /* Borrow card */
+    .borrow-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      display: flex;
+      gap: var(--space-4);
+      transition: box-shadow var(--transition-base);
+    }
+    .borrow-card:hover { box-shadow: var(--shadow-md); }
+
+    .borrow-cover {
+      width: 72px; height: 100px;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+
+    .borrow-info { flex: 1; min-width: 0; }
+    .borrow-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .borrow-author { font-size: var(--font-size-sm); color: var(--color-muted-foreground); margin-bottom: var(--space-3); }
+
+    /* Countdown */
+    .return-countdown {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+    }
+    .return-countdown.safe   { background: rgba(16, 185, 129, 0.1); color: #065F46; }
+    .return-countdown.warn   { background: rgba(245, 158, 11, 0.15); color: #92400E; }

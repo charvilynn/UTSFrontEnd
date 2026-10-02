@@ -217,3 +217,137 @@
   <script src="../../assets/js/nav.js"></script>
   <script>
     const avatarColors = [
+      '#92400E','#065F46','#1E40AF','#5B21B6','#991B1B','#0F766E'
+    ];
+    let selectedColor = avatarColors[0];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = getUser() || { name: 'Pengguna', email: '', bio: '', avatarColor: avatarColors[0] };
+      const [firstName, ...rest] = (user.name || '').split(' ');
+
+      // Prefill form
+      document.getElementById('editFirstName').value = firstName || '';
+      document.getElementById('editLastName').value  = rest.join(' ') || '';
+      document.getElementById('editEmail').value     = user.email || '';
+      document.getElementById('editBio').value       = user.bio || '';
+
+      selectedColor = user.avatarColor || avatarColors[0];
+
+      // Render avatar colors
+      const colorsEl = document.getElementById('avatarColors');
+      colorsEl.innerHTML = avatarColors.map(c => `
+        <button
+          type="button"
+          class="avatar-color-swatch${c === selectedColor ? ' active' : ''}"
+          style="background:${c};"
+          data-color="${c}"
+          aria-label="Pilih warna avatar"
+          aria-pressed="${c === selectedColor}"
+        ></button>
+      `).join('');
+
+      updateAvatarPreview(firstName || 'U', selectedColor);
+      document.getElementById('avatarName').textContent = user.name || 'Nama Pengguna';
+
+      // Color picker
+      colorsEl.addEventListener('click', e => {
+        const swatch = e.target.closest('.avatar-color-swatch');
+        if (!swatch) return;
+        selectedColor = swatch.dataset.color;
+        document.querySelectorAll('.avatar-color-swatch').forEach(s => {
+          s.classList.toggle('active', s.dataset.color === selectedColor);
+          s.setAttribute('aria-pressed', s.dataset.color === selectedColor);
+        });
+        const fname = document.getElementById('editFirstName').value || 'U';
+        updateAvatarPreview(fname, selectedColor);
+      });
+
+      // Live avatar update on name change
+      document.getElementById('editFirstName').addEventListener('input', e => {
+        const val = e.target.value || 'U';
+        updateAvatarPreview(val, selectedColor);
+        document.getElementById('avatarName').textContent =
+          `${val} ${document.getElementById('editLastName').value}`.trim() || 'Nama Pengguna';
+      });
+      document.getElementById('editLastName').addEventListener('input', () => {
+        const fn = document.getElementById('editFirstName').value || 'U';
+        const ln = document.getElementById('editLastName').value;
+        document.getElementById('avatarName').textContent = `${fn} ${ln}`.trim() || 'Nama Pengguna';
+      });
+
+      // Bio counter
+      const bioField = document.getElementById('editBio');
+      const bioCount = document.getElementById('bioCount');
+      const bioCounter = document.getElementById('bioCounter');
+      bioField.addEventListener('input', () => {
+        const len = bioField.value.length;
+        bioCount.textContent = len;
+        bioCounter.className = 'char-counter' + (len >= 200 ? ' at-limit' : len >= 160 ? ' near-limit' : '');
+      });
+      bioCount.textContent = bioField.value.length;
+
+      // Form submit
+      document.getElementById('editProfileForm').addEventListener('submit', e => {
+        e.preventDefault();
+        let valid = true;
+
+        const fn = document.getElementById('editFirstName').value.trim();
+        const em = document.getElementById('editEmail').value.trim();
+        const np = document.getElementById('newPassword').value;
+        const cp = document.getElementById('confirmPassword').value;
+
+        const fnErr = document.getElementById('firstNameErr');
+        const emErr = document.getElementById('emailErr');
+        const npErr = document.getElementById('newPassErr');
+        const cpErr = document.getElementById('confirmPassErr');
+
+        if (!fn) {
+          fnErr.textContent = 'Nama depan wajib diisi'; fnErr.classList.add('visible');
+          document.getElementById('editFirstName').classList.add('error');
+          valid = false;
+        } else { fnErr.textContent = ''; fnErr.classList.remove('visible'); document.getElementById('editFirstName').classList.remove('error'); }
+
+        if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+          emErr.textContent = 'Email valid wajib diisi'; emErr.classList.add('visible');
+          document.getElementById('editEmail').classList.add('error');
+          valid = false;
+        } else { emErr.textContent = ''; emErr.classList.remove('visible'); document.getElementById('editEmail').classList.remove('error'); }
+
+        if (np && np.length < 6) {
+          npErr.textContent = 'Password minimal 6 karakter'; npErr.classList.add('visible');
+          valid = false;
+        } else { npErr.textContent = ''; npErr.classList.remove('visible'); }
+
+        if (np && np !== cp) {
+          cpErr.textContent = 'Password tidak cocok'; cpErr.classList.add('visible');
+          valid = false;
+        } else { cpErr.textContent = ''; cpErr.classList.remove('visible'); }
+
+        if (!valid) return;
+
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;"></span> Menyimpan...';
+
+        const ln = document.getElementById('editLastName').value.trim();
+        const bio = document.getElementById('editBio').value.trim();
+        const updatedUser = { name: `${fn} ${ln}`.trim(), email: em, bio, avatarColor: selectedColor };
+
+        setTimeout(() => {
+          saveUser(updatedUser);
+          showToast('Profil berhasil diperbarui!', 'success');
+          setTimeout(() => { window.location.href = 'profile.html'; }, 800);
+        }, 900);
+      });
+
+      initScrollReveal();
+    });
+
+    function updateAvatarPreview(name, color) {
+      const el = document.getElementById('avatarPreview');
+      el.style.background = color;
+      el.textContent = name.charAt(0).toUpperCase();
+    }
+  </script>
+</body>
+</html>
