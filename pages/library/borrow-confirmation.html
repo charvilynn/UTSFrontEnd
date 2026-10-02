@@ -3,23 +3,209 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Peminjaman buku berhasil dikonfirmasi.">
+  <meta name="description" content="Peminjaman buku berhasil di Charvlibrary.">
   <title>Peminjaman Berhasil - Charvlibrary</title>
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .success-page {
+      min-height: calc(100vh - var(--navbar-height));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-8);
+    }
+
+    .success-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-12);
+      text-align: center;
+      max-width: 560px;
+      width: 100%;
+      box-shadow: var(--shadow-xl);
+    }
+
+    /* Animasi checkmark */
+    .success-checkmark {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-6);
+      animation: popIn 0.5s var(--ease-bounce) forwards;
+    }
+
+    @keyframes popIn {
+      0%   { transform: scale(0); opacity: 0; }
+      70%  { transform: scale(1.15); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .success-checkmark { animation: none; }
+    }
+
+    .success-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-light);
+      margin-bottom: var(--space-3);
+    }
+
+    .success-subtitle {
+      color: var(--color-muted-foreground);
+      margin-bottom: var(--space-8);
+    }
+
+    .success-book-card {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: var(--color-muted);
+      border-radius: var(--radius-lg);
+      text-align: left;
+      margin-bottom: var(--space-6);
+    }
+
+    .success-book-cover {
+      width: 60px; height: 84px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+
+    .return-date-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-5);
+      background: var(--color-accent-light);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(217, 119, 6, 0.2);
+      margin-bottom: var(--space-8);
+    }
+
+    .return-date-label {
+      font-size: var(--font-size-xs);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--color-accent);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-2);
+    }
+
+    .return-date-value {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-secondary);
+    }
+
+    .success-actions {
+      display: flex;
+      gap: var(--space-3);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  </style>
 </head>
 <body>
-  <main id="main-content">
-    <section class="confirmation-section">
-      <div class="success-icon"></div>
-      <h1>Peminjaman Berhasil!</h1>
-      <p id="returnDateInfo">Buku harus dikembalikan sebelum: <strong id="returnDate"></strong></p>
-      <a href="../../index.html" class="btn btn-primary">Kembali ke Beranda</a>
-    </section>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="navbar-spacer"></div>
+
+  <main id="main-content" class="success-page">
+    <div class="success-card" role="main">
+
+      <div class="success-checkmark" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" aria-hidden="true">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+
+      <h1 class="success-title">Peminjaman Berhasil!</h1>
+      <p class="success-subtitle" id="successSubtitle">Buku kamu siap dibaca. Selamat menikmati!</p>
+
+      <!-- Info buku yang dipinjam -->
+      <div class="success-book-card" id="successBookCard">
+        <!-- diisi JS -->
+      </div>
+
+      <!-- Tanggal kembali -->
+      <div class="return-date-box">
+        <p class="return-date-label">Batas Pengembalian</p>
+        <p class="return-date-value" id="returnDateEl">—</p>
+      </div>
+
+      <!-- Actions -->
+      <div class="success-actions">
+        <a href="../discovery/explore.html" class="btn btn-secondary">Jelajahi Buku Lain</a>
+        <a href="../account/my-borrowed-books.html" class="btn btn-primary">Lihat Buku Dipinjam</a>
+      </div>
+
+    </div>
   </main>
+
   <script src="../../assets/js/data-books.js"></script>
   <script src="../../assets/js/utils.js"></script>
-  <script src="../../assets/js/nav.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const bookId = parseInt(getUrlParam('id'));
+      const book   = getBookById(bookId);
+
+      if (!book) {
+        window.location.href = '../discovery/explore.html';
+        return;
+      }
+
+      document.title = `"${book.title}" Berhasil Dipinjam - Charvlibrary`;
+
+      const borrowed = getBorrowedBooks();
+      const record   = borrowed.find(b => b.bookId === bookId);
+      const returnDate = record?.returnDate || (() => {
+        const d = new Date();
+        d.setDate(d.getDate() + 14);
+        return d.toISOString().split('T')[0];
+      })();
+
+      document.getElementById('successSubtitle').textContent =
+        `"${truncateText(book.title, 40)}" siap dibaca. Selamat menikmati!`;
+
+      document.getElementById('successBookCard').innerHTML = `
+        <img src="${book.cover}" alt="Sampul ${book.title}" class="success-book-cover">
+        <div>
+          <p style="font-family:var(--font-heading);font-size:var(--font-size-lg);font-weight:var(--font-weight-semibold);margin-bottom:var(--space-1);">${book.title}</p>
+          <p style="font-size:var(--font-size-sm);color:var(--color-muted-foreground);margin-bottom:var(--space-2);">${book.author}</p>
+          <span class="badge badge--available">Dipinjam</span>
+        </div>
+      `;
+
+      document.getElementById('returnDateEl').textContent = formatDate(returnDate);
+
+      // Hapus dari wishlist kalau ada
+      if (typeof removeFromWishlist === 'function') {
+        removeFromWishlist(bookId);
+      }
+    });
+  </script>
 </body>
 </html>
