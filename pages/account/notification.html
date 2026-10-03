@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Notifikasi dan pemberitahuan akun Charvlibrary kamu.">
+  <title>Notifikasi - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .notif-header {
+      background: var(--color-surface);
+      padding-block: var(--space-8);
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: var(--space-6);
+    }
+    .notif-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+    }
+    .notif-header h1 {
+      font-size: clamp(1.75rem, 3vw, var(--font-size-4xl));
+      font-weight: var(--font-weight-light);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .unread-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 26px; height: 26px;
+      background: var(--color-accent);
+      color: white;
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      padding-inline: 6px;
+    }
+
+    /* Notif item */
+    .notif-item {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+      transition: background var(--transition-fast);
+      position: relative;
+      cursor: pointer;
+    }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item:hover { background: var(--color-muted); }
+    .notif-item.unread { background: var(--color-accent-light); }
+    .notif-item.unread::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--color-accent);
+      border-radius: 0 2px 2px 0;
+    }
+    .notif-item.removing {
+      animation: slideOut .3s ease forwards;
+    }
+    @keyframes slideOut {
+      to { opacity: 0; transform: translateX(40px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .notif-item.removing { animation: none; opacity: 0; }
+      .notif-item { transition: none; }
+    }
+
+    .notif-icon-wrap {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .notif-icon-wrap.borrow   { background: rgba(59, 130, 246, 0.12); color: #1E40AF; }
+    .notif-icon-wrap.reminder { background: rgba(245, 158, 11, 0.12); color: #92400E; }
+    .notif-icon-wrap.event    { background: rgba(139, 92, 246, 0.12); color: #5B21B6; }
+    .notif-icon-wrap.info     { background: rgba(16, 185, 129, 0.12); color: #065F46; }
+
+    .notif-content { flex: 1; min-width: 0; }
+    .notif-title {
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-size-sm);
+      margin-bottom: 3px;
+    }
+    .notif-body {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+      line-height: var(--line-height-relaxed);
+    }
+    .notif-time {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted-foreground);
+      margin-top: var(--space-1);
+      white-space: nowrap;
+    }
+
+    .notif-group-label {
+      font-size: var(--font-size-xs);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--color-muted-foreground);
+      padding: var(--space-3) var(--space-5);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .notif-container {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    /* Filter chips */
+    .notif-filters {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-5);
+    }
+    .filter-chip {
+      padding: var(--space-1) var(--space-4);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      border: 1px solid var(--color-border);
+      background: var(--color-card);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-weight: var(--font-weight-medium);
+    }
+    .filter-chip:hover { border-color: var(--color-accent); }
+    .filter-chip.active {
+      background: var(--color-secondary);
+      border-color: var(--color-secondary);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
