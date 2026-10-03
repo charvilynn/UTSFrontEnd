@@ -94,4 +94,173 @@
     }
     .admin-stat-card {
       background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      transition: box-shadow var(--transition-base);
     }
+    .admin-stat-card:hover { box-shadow: var(--shadow-md); }
+    .admin-stat-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: var(--space-3);
+      font-size: 22px;
+    }
+    .admin-stat-val {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-secondary);
+      line-height: 1;
+    }
+    .admin-stat-label { font-size: var(--font-size-sm); color: var(--color-muted-foreground); margin-top: 4px; }
+    .admin-stat-change {
+      font-size: var(--font-size-xs);
+      margin-top: var(--space-1);
+      font-weight: var(--font-weight-semibold);
+    }
+    .admin-stat-change.up   { color: #10B981; }
+    .admin-stat-change.down { color: #EF4444; }
+
+    .admin-table-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      margin-bottom: var(--space-6);
+    }
+    .admin-table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+    .admin-table-title { font-weight: var(--font-weight-semibold); }
+    table { width: 100%; border-collapse: collapse; font-size: var(--font-size-sm); }
+    th { padding: var(--space-3) var(--space-4); text-align: left; font-weight: var(--font-weight-semibold); color: var(--color-muted-foreground); font-size: var(--font-size-xs); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--color-border); background: var(--color-muted); }
+    td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border); }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--color-muted); }
+
+    .admin-panel { display: none; }
+    .admin-panel.active { display: block; }
+  </style>
+</head>
+<body>
+
+  <div id="adminLoginGate" style="min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;background:var(--color-background);" hidden>
+    <div style="max-width:380px;width:100%;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-2xl);padding:var(--space-8);">
+      <h1 style="font-family:var(--font-heading);font-size:var(--font-size-2xl);margin-bottom:var(--space-6);">Admin Login</h1>
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label class="form-label" for="adminUser">Username</label>
+          <input type="text" id="adminUser" class="form-input" placeholder="admin" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="adminPass">Password</label>
+          <input type="password" id="adminPass" class="form-input" placeholder="••••••" autocomplete="current-password">
+        </div>
+        <p id="adminLoginErr" style="color:var(--color-error);font-size:var(--font-size-sm);margin-bottom:var(--space-4);display:none;"></p>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Masuk sebagai Admin</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="adminApp" style="display:none;flex:1;">
+    <aside class="admin-sidebar" aria-label="Navigasi admin">
+      <a href="../../index.html" class="admin-brand">
+        <svg width="28" height="28" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+        </svg>
+        <span class="admin-brand-name">Charvlibrary</span>
+        <span class="admin-brand-badge">Admin</span>
+      </a>
+
+      <p class="admin-nav-group-label">Overview</p>
+      <button class="admin-nav-item active" data-panel="dashboard" onclick="switchPanel(this, 'dashboard')">
+        <svg class="admin-nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+
+      <p class="admin-nav-group-label" style="margin-top:var(--space-4);">Manajemen</p>
+      <button class="admin-nav-item" data-panel="books" onclick="switchPanel(this, 'books')">
+        <svg class="admin-nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Buku
+      </button>
+      <button class="admin-nav-item" data-panel="users" onclick="switchPanel(this, 'users')">
+        <svg class="admin-nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Pengguna
+      </button>
+      <button class="admin-nav-item" data-panel="borrows" onclick="switchPanel(this, 'borrows')">
+        <svg class="admin-nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Peminjaman
+      </button>
+
+      <div style="margin-top:auto;padding-top:var(--space-4);border-top:1px solid var(--color-border);">
+        <button class="admin-nav-item" onclick="adminLogout()">
+          <svg class="admin-nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Keluar
+        </button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+
+      <div id="panel-dashboard" class="admin-panel active">
+        <h1 class="admin-page-title">Dashboard</h1>
+
+        <div class="admin-stats-grid" id="adminStats">
+        </div>
+
+        <div class="admin-table-card">
+          <div class="admin-table-header">
+            <p class="admin-table-title">Buku Terpopuler</p>
+            <button class="btn btn-ghost btn-sm" onclick="switchPanel(document.querySelector('[data-panel=books]'), 'books')">Lihat Semua →</button>
+          </div>
+          <table aria-label="Buku terpopuler">
+            <thead>
+              <tr>
+                <th>Judul</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Rating</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="popularBooksTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="panel-books" class="admin-panel">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6);">
+          <h1 class="admin-page-title" style="margin:0;">Manajemen Buku</h1>
+          <button class="btn btn-primary btn-sm" onclick="showToast('Fitur tambah buku akan datang!', 'info')">+ Tambah Buku</button>
+        </div>
+
+        <div style="margin-bottom:var(--space-4);">
+          <input type="search" id="bookSearch" class="form-input" placeholder="Cari judul atau penulis..." style="max-width:320px;" aria-label="Cari buku">
+        </div>
+
+        <div class="admin-table-card">
+          <table aria-label="Daftar semua buku">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Judul</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Rating</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="allBooksTable"></tbody>
+          </table>
+        </div>
+      </div>
