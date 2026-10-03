@@ -264,3 +264,166 @@
           </table>
         </div>
       </div>
+
+      <div id="panel-users" class="admin-panel">
+        <h1 class="admin-page-title">Manajemen Pengguna</h1>
+        <div class="admin-table-card">
+          <table aria-label="Daftar pengguna">
+            <thead><tr><th>#</th><th>Nama</th><th>Email</th><th>Bergabung</th><th>Status</th></tr></thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="panel-borrows" class="admin-panel">
+        <h1 class="admin-page-title">Peminjaman Aktif</h1>
+        <div class="admin-table-card">
+          <table aria-label="Daftar peminjaman aktif">
+            <thead><tr><th>Pengguna</th><th>Buku</th><th>Tanggal Pinjam</th><th>Jatuh Tempo</th><th>Status</th></tr></thead>
+            <tbody id="borrowsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script>
+    const ADMIN_USER = 'admin';
+    const ADMIN_PASS = 'Charvlibrary2024';
+
+    function checkAdminAuth() {
+      const authed = sessionStorage.getItem('Charvlibrary_admin_authed');
+      if (authed) {
+        showAdmin();
+      } else {
+        document.getElementById('adminLoginGate').hidden = false;
+        document.getElementById('adminApp').style.display = 'none';
+      }
+    }
+
+    function showAdmin() {
+      document.getElementById('adminLoginGate').hidden = true;
+      document.getElementById('adminApp').style.display = 'flex';
+      populateAdmin();
+    }
+
+    document.getElementById('adminLoginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const user = document.getElementById('adminUser').value.trim();
+      const pass = document.getElementById('adminPass').value;
+      const errEl = document.getElementById('adminLoginErr');
+
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        sessionStorage.setItem('Charvlibrary_admin_authed', '1');
+        showAdmin();
+      } else {
+        errEl.textContent = 'Username atau password salah';
+        errEl.style.display = 'block';
+      }
+    });
+
+    function adminLogout() {
+      sessionStorage.removeItem('Charvlibrary_admin_authed');
+      window.location.reload();
+    }
+
+    function switchPanel(btn, panelId) {
+      document.querySelectorAll('.admin-nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(`panel-${panelId}`).classList.add('active');
+    }
+
+    function populateAdmin() {
+      const books = booksData || [];
+
+      document.getElementById('adminStats').innerHTML = [
+        { icon: '📚', label: 'Total Buku', val: books.length, change: '+2 bulan ini', dir: 'up', bg: '#FFFBEB' },
+        { icon: '👥', label: 'Pengguna Aktif', val: 128, change: '+12 minggu ini', dir: 'up', bg: '#EFF6FF' },
+        { icon: '📖', label: 'Dipinjam', val: 43, change: '-3 dari kemarin', dir: 'down', bg: '#F0FDF4' },
+        { icon: '⚠️', label: 'Terlambat', val: 5, change: '+2 hari ini', dir: 'down', bg: '#FFF7ED' },
+      ].map(s => `
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon" style="background:${s.bg};">${s.icon}</div>
+          <p class="admin-stat-val">${s.val}</p>
+          <p class="admin-stat-label">${s.label}</p>
+          <p class="admin-stat-change ${s.dir}">${s.change}</p>
+        </div>
+      `).join('');
+
+      const popular = [...books].sort((a, b) => b.rating - a.rating).slice(0, 5);
+      document.getElementById('popularBooksTable').innerHTML = popular.map(b => `
+        <tr>
+          <td style="font-weight:var(--font-weight-medium);">${b.title}</td>
+          <td>${b.author}</td>
+          <td><span class="badge badge--genre">${b.genre}</span></td>
+          <td>⭐ ${b.rating || '4.0'}</td>
+          <td><span class="badge badge--available">Tersedia</span></td>
+        </tr>
+      `).join('');
+
+      let displayBooks = [...books];
+      function renderBooksTable(list) {
+        document.getElementById('allBooksTable').innerHTML = list.map(b => `
+          <tr>
+            <td style="color:var(--color-muted-foreground);">#${b.id}</td>
+            <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${b.title}</td>
+            <td>${b.author}</td>
+            <td>${b.genre}</td>
+            <td>⭐ ${b.rating || '4.0'}</td>
+            <td><span class="badge badge--available">Tersedia</span></td>
+            <td>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Edit: ${b.title.replace(/'/g, '')}', 'info')">Edit</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+      renderBooksTable(displayBooks);
+
+      document.getElementById('bookSearch').addEventListener('input', e => {
+        const q = e.target.value.toLowerCase();
+        renderBooksTable(books.filter(b => b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)));
+      });
+
+      const mockUsers = [
+        { name: 'Chandra Widjaja', email: 'chandra@uni.ac.id', joined: '2026-09-01' },
+        { name: 'Aaron Pratama',   email: 'aaron@uni.ac.id',   joined: '2026-09-01' },
+        { name: 'Davvin',   email: 'Davvin@uni.ac.id',   joined: '2026-09-02' },
+        { name: 'Olivian Reza',    email: 'olivian@uni.ac.id', joined: '2026-09-02' },
+        { name: 'Livi Hartono',    email: 'livi@uni.ac.id',    joined: '2026-09-03' },
+      ];
+      document.getElementById('usersTable').innerHTML = mockUsers.map((u, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td style="font-weight:var(--font-weight-medium);">${u.name}</td>
+          <td>${u.email}</td>
+          <td>${formatDate(u.joined)}</td>
+          <td><span class="badge badge--available">Aktif</span></td>
+        </tr>
+      `).join('');
+
+      const mockBorrows = books.slice(0, 5).map((b, i) => ({
+        user: mockUsers[i % mockUsers.length].name,
+        bookTitle: b.title,
+        borrowDate: '2026-09-20',
+        returnDate: '2026-10-04',
+        late: i === 1,
+      }));
+      document.getElementById('borrowsTable').innerHTML = mockBorrows.map(br => `
+        <tr>
+          <td>${br.user}</td>
+          <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${br.bookTitle}</td>
+          <td>${formatDate(br.borrowDate)}</td>
+          <td>${formatDate(br.returnDate)}</td>
+          <td>${br.late ? '<span class="badge" style="background:rgba(239,68,68,0.1);color:#B91C1C;">Terlambat</span>' : '<span class="badge badge--borrow">Aktif</span>'}</td>
+        </tr>
+      `).join('');
+    }
+
+    checkAdminAuth();
+  </script>
+</body>
+</html>
