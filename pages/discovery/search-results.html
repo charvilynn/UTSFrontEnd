@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hasil pencarian buku di Charvlibrary.">
+  <title>Hasil Pencarian - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .search-hero {
+      background: var(--color-surface);
+      padding-block: var(--space-10);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    /* Search bar besar - center stage di halaman ini */
+    .search-big-wrap {
+      position: relative;
+      max-width: 640px;
+      margin-bottom: var(--space-6);
+    }
+    .search-big-input {
+      width: 100%;
+      padding: var(--space-4) var(--space-16) var(--space-4) var(--space-12);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-family: var(--font-body);
+      font-size: var(--font-size-xl);
+      background: var(--color-card);
+      color: var(--color-foreground);
+      transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    }
+    .search-big-input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.12);
+    }
+    .search-big-icon {
+      position: absolute;
+      left: var(--space-4);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-muted-foreground);
+      pointer-events: none;
+    }
+    .search-clear-btn {
+      position: absolute;
+      right: var(--space-4);
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--color-muted);
+      border: none;
+      border-radius: var(--radius-full);
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--color-muted-foreground);
+      transition: background var(--transition-fast);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .search-clear-btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .search-clear-btn:hover { background: var(--color-border); }
+
+    .search-query-label {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-light);
+      margin-bottom: var(--space-2);
+    }
+    .search-query-label em {
+      font-style: italic;
+      color: var(--color-secondary);
+    }
+    .search-result-count {
+      font-size: var(--font-size-base);
+      color: var(--color-muted-foreground);
+    }
+
+    /* Animasi item masuk satu per satu */
+    @keyframes resultEnter {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .result-enter {
+      animation: resultEnter 0.3s var(--ease-out) both;
+    }
+
+    /* Highlight teks yang cocok */
+    mark {
+      background: var(--color-accent-light);
+      color: var(--color-secondary);
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <div class="navbar-search" role="search" style="display: none;"></div><!-- disembunyikan, ada search bar besar di halaman -->
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="explore.html">Jelajahi</a></li>
+          <li><a href="categories.html">Kategori</a></li>
+          <li><a href="../community/blog.html">Blog</a></li>
+          <li><a href="../library/wishlist.html" style="position:relative;" aria-label="Wishlist">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="wishlist-count-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--color-error); color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;">0</span>
+          </a></li>
+          <li><a href="../auth/login.html" class="btn btn-primary btn-sm">Masuk</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-controls="mobile-drawer-sr" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+    <nav id="mobile-drawer-sr" class="navbar-drawer">
+      <ul class="navbar-nav">
+        <li><a href="../../index.html">Beranda</a></li>
+        <li><a href="explore.html">Jelajahi</a></li>
+        <li><a href="categories.html">Kategori</a></li>
+        <li><a href="../community/blog.html">Blog</a></li>
+        <li><a href="../library/wishlist.html">Wishlist</a></li>
+        <li><a href="../auth/login.html">Masuk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="navbar-spacer"></div>
+
+  <main id="main-content">
+
+    <section class="search-hero">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">Pencarian</span>
+        </nav>
+
+        <!-- Search bar besar -->
+        <div class="search-big-wrap" role="search" aria-label="Pencarian buku">
+          <svg class="search-big-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input
+            type="search"
+            id="searchBigInput"
+            class="search-big-input"
+            placeholder="Cari judul, penulis, genre..."
+            aria-label="Kata kunci pencarian"
+            autocomplete="off"
+            autofocus
+          >
+          <button class="search-clear-btn" id="searchClearBtn" aria-label="Hapus pencarian">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <!-- Query summary -->
+        <div id="queryLabel" hidden>
+          <p class="search-query-label">Hasil untuk: <em id="queryText"></em></p>
+          <p class="search-result-count" id="resultSummary" aria-live="polite" aria-atomic="true"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section--sm">
+      <div class="container">
+
+        <!-- Hasil buku -->
+        <div class="grid-books" id="searchResultsGrid" aria-label="Hasil pencarian buku"></div>
+
+        <!-- Empty state -->
+        <div class="empty-state" id="emptyState" hidden>
+          <svg class="empty-state-icon" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+            <circle cx="35" cy="35" r="24" stroke="currentColor" stroke-width="2"/>
+            <line x1="52" y1="52" x2="68" y2="68" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <line x1="26" y1="35" x2="44" y2="35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <h2 class="empty-state-title">Tidak ada hasil</h2>
+          <p class="empty-state-desc" id="emptyMsg">Coba kata kunci lain atau jelajahi semua koleksi.</p>
+          <a href="explore.html" class="btn btn-secondary">Jelajahi Semua Buku</a>
+        </div>
+
+        <!-- Default state (belum ada query) -->
+        <div id="defaultState">
+          <div class="section-header" style="margin-bottom: var(--space-8);">
+            <span class="section-eyebrow">Populer</span>
+            <h2 class="section-title" style="font-size: var(--font-size-3xl);">Buku Paling Banyak Dicari</h2>
+          </div>
+          <div class="grid-books stagger-children" id="popularGrid"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="explore.html">Semua Buku</a></li><li><a href="categories.html">Kategori</a></li></ul></div>
+        <div><h3 class="footer-section-title">Akun</h3><ul class="footer-links"><li><a href="../auth/login.html">Masuk</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    let debounceTimer = null;
+    let currentQuery  = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const input       = document.getElementById('searchBigInput');
+      const clearBtn    = document.getElementById('searchClearBtn');
+      const queryLabel  = document.getElementById('queryLabel');
+      const queryText   = document.getElementById('queryText');
+      const resultSummary = document.getElementById('resultSummary');
+      const resultsGrid = document.getElementById('searchResultsGrid');
+      const emptyState  = document.getElementById('emptyState');
+      const emptyMsg    = document.getElementById('emptyMsg');
+      const defaultState= document.getElementById('defaultState');
+      const popularGrid = document.getElementById('popularGrid');
+
+      // buku populer (rating tertinggi)
+      const popular = [...booksData].sort((a,b) => b.rating - a.rating).slice(0, 8);
+      popularGrid.innerHTML = popular.map(b => renderBookCard(b, '../../')).join('');
+      initScrollReveal();
+
+      // isi dari URL param
+      const q = getUrlParam('q');
+      if (q) {
+        input.value = q;
+        doSearch(q);
+      }
+
+      // live search dengan debounce 300ms
+      input.addEventListener('input', () => {
+        const val = input.value;
+        clearBtn.classList.toggle('visible', val.length > 0);
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          if (val.trim()) {
+            doSearch(val.trim());
+          } else {
+            showDefault();
+          }
+        }, 300);
+
+        // update URL tanpa reload
+        const url = new URL(window.location);
+        if (val.trim()) url.searchParams.set('q', val.trim());
+        else url.searchParams.delete('q');
+        window.history.replaceState({}, '', url);
+      });
+
+      // clear button
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        clearBtn.classList.remove('visible');
+        showDefault();
+        input.focus();
+        const url = new URL(window.location);
+        url.searchParams.delete('q');
+        window.history.replaceState({}, '', url);
+      });
+
+      // Enter key
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          clearTimeout(debounceTimer);
+          doSearch(input.value.trim());
+        }
+      });
+
+      function doSearch(query) {
+        currentQuery = query;
+        const results = searchBooks(query);
+
+        // update header
+        queryLabel.hidden = false;
+        defaultState.hidden = true;
+        queryText.textContent = query;
+
+        if (results.length === 0) {
+          emptyState.hidden = false;
+          resultsGrid.innerHTML = '';
+          resultSummary.textContent = 'Tidak ada buku yang cocok.';
+          emptyMsg.textContent = `Tidak ada buku yang cocok dengan "${query}". Coba kata kunci lain.`;
+        } else {
+          emptyState.hidden = true;
+          resultSummary.textContent = `Ditemukan ${results.length} buku`;
+
+          // render dengan highlight dan stagger
+          resultsGrid.innerHTML = results.map((book, i) => {
+            const card = renderBookCard(book, '../../');
+            return card.replace(
+              'class="book-card fade-up"',
+              `class="book-card result-enter" style="animation-delay: ${i * 0.05}s"`
+            );
+          }).join('');
+        }
+      }
+
+      function showDefault() {
+        queryLabel.hidden = true;
+        emptyState.hidden = true;
+        resultsGrid.innerHTML = '';
+        defaultState.hidden = false;
+      }
+    });
+  </script>
+</body>
+</html>
