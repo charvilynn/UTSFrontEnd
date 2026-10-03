@@ -77,3 +77,223 @@
       border-radius: var(--radius-xl);
       padding: var(--space-4);
     }
+    .faq-nav-title {
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--color-muted-foreground);
+      padding: var(--space-2) var(--space-3);
+      margin-bottom: var(--space-2);
+    }
+    .faq-nav-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--color-foreground);
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    .faq-nav-item:hover { background: var(--color-muted); }
+    .faq-nav-item.active { background: var(--color-accent-light); color: var(--color-secondary); font-weight: var(--font-weight-semibold); }
+
+    /* Accordion */
+    .faq-category-section { margin-bottom: var(--space-10); }
+    .faq-category-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .faq-item {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: var(--space-3);
+      transition: box-shadow var(--transition-fast);
+    }
+    .faq-item:has(.faq-answer.open) { box-shadow: var(--shadow-sm); }
+
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-card);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-foreground);
+      transition: background var(--transition-fast);
+    }
+    .faq-question:hover { background: var(--color-muted); }
+    .faq-question[aria-expanded="true"] { background: var(--color-accent-light); color: var(--color-secondary); }
+
+    .faq-chevron {
+      flex-shrink: 0;
+      transition: transform var(--transition-base);
+      color: var(--color-muted-foreground);
+    }
+    .faq-question[aria-expanded="true"] .faq-chevron { transform: rotate(180deg); }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s var(--ease-out);
+    }
+    .faq-answer.open { max-height: 400px; }
+
+    .faq-answer-inner {
+      padding: var(--space-4) var(--space-5) var(--space-5);
+      font-size: var(--font-size-base);
+      color: var(--color-muted-foreground);
+      line-height: var(--line-height-relaxed);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .faq-no-results {
+      text-align: center;
+      padding: var(--space-10);
+      color: var(--color-muted-foreground);
+      display: none;
+    }
+    .faq-no-results.visible { display: block; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .faq-answer { transition: none; }
+      .faq-chevron { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="../support/contact.html">Kontak</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+  <div class="navbar-spacer"></div>
+
+  <main>
+    <div class="faq-hero">
+      <div class="container">
+        <h1>Pertanyaan Umum</h1>
+        <p>Tidak menemukan jawaban? <a href="../support/contact.html" style="color:var(--color-secondary);">Hubungi kami</a> langsung.</p>
+        <div class="faq-search-wrap">
+          <svg class="faq-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="faqSearch" class="faq-search-input" placeholder="Cari pertanyaan..." aria-label="Cari FAQ">
+        </div>
+        <p class="faq-results-count" id="resultsCount" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <section class="section--sm">
+      <div class="container">
+        <div class="faq-layout">
+
+          <!-- Sidebar -->
+          <nav aria-label="Navigasi kategori FAQ" class="faq-nav" id="faqNav">
+            <p class="faq-nav-title">Kategori</p>
+            <!-- diisi JS -->
+          </nav>
+
+          <!-- FAQ content -->
+          <div id="faqContent">
+            <!-- diisi JS -->
+            <div class="faq-no-results" id="noResults">
+              Tidak ada pertanyaan yang cocok dengan "<span id="searchQuery"></span>". Coba kata kunci lain.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA kontak -->
+    <section style="background:var(--color-surface); border-top:1px solid var(--color-border); padding-block:var(--space-10);">
+      <div class="container" style="text-align:center;">
+        <h2 style="font-family:var(--font-heading); font-size:var(--font-size-2xl); margin-bottom:var(--space-3);">Masih ada pertanyaan?</h2>
+        <p style="color:var(--color-muted-foreground); margin-bottom:var(--space-6);">Tim kami siap membantu kamu di hari kerja, pukul 08.00–17.00 WIB.</p>
+        <a href="../support/contact.html" class="btn btn-primary">Hubungi Kami</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
+        <div><h3 class="footer-section-title">Komunitas</h3><ul class="footer-links"><li><a href="blog.html">Blog</a></li><li><a href="events.html">Event</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li><li><a href="../support/contact.html">Kontak</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    const faqs = [
+      {
+        category: 'Umum', icon: '📚',
+        items: [
+          { q: 'Apa itu Charvlibrary?', a: 'Charvlibrary adalah perpustakaan digital untuk mahasiswa. Kamu bisa meminjam, membaca, dan mengeksplorasi ribuan buku secara gratis dari perangkat apapun.' },
+          { q: 'Apakah Charvlibrary gratis digunakan?', a: 'Ya, layanan peminjaman buku di Charvlibrary sepenuhnya gratis untuk semua mahasiswa yang terdaftar.' },
+          { q: 'Di perangkat apa saja Charvlibrary bisa diakses?', a: 'Charvlibrary dapat diakses dari browser di laptop, tablet, maupun smartphone. Tidak perlu mengunduh aplikasi tambahan.' },
+          { q: 'Bagaimana cara mendaftar akun?', a: 'Klik tombol "Daftar" di pojok kanan atas, isi form registrasi dengan email kampusmu, lalu verifikasi melalui kode OTP yang dikirim ke emailmu.' },
+        ]
+      },
+      {
+        category: 'Peminjaman', icon: '📖',
+        items: [
+          { q: 'Berapa lama masa peminjaman buku?', a: 'Setiap buku dapat dipinjam selama 14 hari. Kamu bisa melihat batas pengembalian di halaman "Buku Dipinjam".' },
+          { q: 'Berapa buku yang bisa dipinjam sekaligus?', a: 'Kamu dapat meminjam hingga 5 buku secara bersamaan.' },
+          { q: 'Apakah ada denda keterlambatan?', a: 'Buku yang dikembalikan terlambat dikenakan denda Rp 1.000 per hari per buku.' },
+          { q: 'Bagaimana cara mengembalikan buku?', a: 'Pergi ke halaman "Buku Dipinjam" di profilmu, lalu klik tombol "Kembalikan" di buku yang ingin dikembalikan.' },
+          { q: 'Bisakah saya meminjam ulang buku yang sudah dikembalikan?', a: 'Ya, kamu bisa meminjam kembali buku yang sudah pernah dipinjam selama buku tersebut tersedia.' },
+        ]
+      },
+      {
+        category: 'Akun', icon: '👤',
+        items: [
+          { q: 'Bagaimana cara mengubah password?', a: 'Buka halaman Edit Profil, gulir ke bagian "Ganti Password", masukkan password lama dan password baru, lalu klik Simpan.' },
+          { q: 'Apakah data saya aman di Charvlibrary?', a: 'Keamanan data adalah prioritas kami. Data akun disimpan terenkripsi dan tidak dibagikan ke pihak ketiga. Baca kebijakan privasi kami untuk informasi lebih detail.' },
+          { q: 'Bagaimana cara menghapus akun?', a: 'Hubungi tim kami melalui halaman Kontak untuk meminta penghapusan akun. Permintaan akan diproses dalam 3-5 hari kerja.' },
+          { q: 'Saya lupa password, apa yang harus dilakukan?', a: 'Klik "Lupa Password" di halaman login, masukkan emailmu, dan kami akan kirimkan tautan reset password. Tautan berlaku selama 30 menit.' },
+        ]
+      },
+    ];
+
+    let openItems = new Set();
+    let searchQuery = '';
