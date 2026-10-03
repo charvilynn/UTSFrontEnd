@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Halaman tidak ditemukan - Charvlibrary.">
+  <title>404 - Halaman Tidak Ditemukan - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .not-found-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--space-8);
+      background: var(--color-background);
+    }
+
+    .nf-illustration {
+      position: relative;
+      width: 280px; height: 280px;
+      margin: 0 auto var(--space-8);
+    }
+
+    .nf-404 {
+      font-family: var(--font-heading);
+      font-size: 140px;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-border);
+      letter-spacing: -8px;
+      line-height: 1;
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      user-select: none;
+    }
+
+    .nf-book {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      animation: float404 3s ease-in-out infinite;
+    }
+
+    @keyframes float404 {
+      0%, 100% { transform: translate(-50%, -50%) translateY(0) rotate(-3deg); }
+      50%       { transform: translate(-50%, -50%) translateY(-16px) rotate(3deg); }
+    }
+    @media (prefers-reduced-motion: reduce) { .nf-book { animation: none; } }
+
+    .nf-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.5rem, 3vw, var(--font-size-3xl));
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-3);
+    }
+    .nf-desc {
+      color: var(--color-muted-foreground);
+      font-size: var(--font-size-lg);
+      max-width: 40ch;
+      margin: 0 auto var(--space-8);
+      line-height: var(--line-height-relaxed);
+    }
+    .nf-actions {
+      display: flex;
+      gap: var(--space-3);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-10);
+    }
+
+    .nf-search-wrap {
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto var(--space-6);
+      position: relative;
+    }
+    .nf-search-icon {
+      position: absolute;
+      left: var(--space-4);
+      top: 50%; transform: translateY(-50%);
+      color: var(--color-muted-foreground);
+    }
+    .nf-search-input {
+      width: 100%;
+      padding: var(--space-3) var(--space-4) var(--space-3) 44px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-base);
+      background: var(--color-card);
+      color: var(--color-foreground);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .nf-search-input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+    }
+
+    .nf-links {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nf-link {
+      padding: var(--space-1) var(--space-4);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      font-size: var(--font-size-sm);
+      text-decoration: none;
+      color: var(--color-foreground);
+      transition: all var(--transition-fast);
+    }
