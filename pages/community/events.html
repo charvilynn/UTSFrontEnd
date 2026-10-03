@@ -182,3 +182,226 @@
       <nav aria-label="Navigasi utama">
         <ul class="navbar-nav">
           <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="events.html" aria-current="page">Event</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+  <div class="navbar-spacer"></div>
+
+  <main>
+    <!-- Hero dengan countdown -->
+    <div class="events-hero">
+      <div class="container" style="position:relative;z-index:1;">
+        <h1>Event & Komunitas</h1>
+        <p>Reading club, workshop, dan diskusi buku bersama komunitas Charvlibrary</p>
+        <div>
+          <p style="font-size:var(--font-size-xs);color:rgba(255,255,255,0.5);margin-bottom:var(--space-3);text-transform:uppercase;letter-spacing:1px;">Event berikutnya dalam</p>
+          <div class="event-countdown" id="countdownTimer" aria-label="Hitungan mundur ke event berikutnya">
+            <div class="countdown-unit"><p class="countdown-val" id="cdDays">00</p><p class="countdown-label">Hari</p></div>
+            <div class="countdown-unit"><p class="countdown-val" id="cdHours">00</p><p class="countdown-label">Jam</p></div>
+            <div class="countdown-unit"><p class="countdown-val" id="cdMins">00</p><p class="countdown-label">Menit</p></div>
+            <div class="countdown-unit"><p class="countdown-val" id="cdSecs">00</p><p class="countdown-label">Detik</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="section--sm">
+      <div class="container">
+
+        <!-- Filter chips -->
+        <div class="event-filters" role="group" aria-label="Filter tipe event">
+          <button class="event-chip active" data-filter="all">Semua Event</button>
+          <button class="event-chip" data-filter="reading-club">Reading Club</button>
+          <button class="event-chip" data-filter="workshop">Workshop</button>
+          <button class="event-chip" data-filter="webinar">Webinar</button>
+          <button class="event-chip" data-filter="diskusi">Diskusi</button>
+        </div>
+
+        <!-- Events grid -->
+        <div id="eventsGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap:var(--space-5);">
+          <!-- diisi JS -->
+        </div>
+
+        <!-- Empty state -->
+        <div id="eventsEmpty" hidden class="empty-state" style="background:var(--color-muted);border-radius:var(--radius-xl);">
+          <p class="empty-state-title">Tidak ada event untuk filter ini</p>
+          <p class="empty-state-desc">Coba filter lain atau pantau terus untuk event berikutnya.</p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
+        <div><h3 class="footer-section-title">Komunitas</h3><ul class="footer-links"><li><a href="blog.html">Blog</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li><li><a href="../support/contact.html">Kontak</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    // Mock registration state
+    let regState = getFromStorage('Charvlibrary_event_reg', {});
+
+    const typeColors = {
+      'reading-club': '#065F46',
+      'workshop':     '#1E40AF',
+      'webinar':      '#5B21B6',
+      'diskusi':      '#92400E',
+    };
+
+    function getEvents() {
+      return typeof eventsData !== 'undefined' ? eventsData : [];
+    }
+
+    let activeFilter = 'all';
+
+    function renderEvents() {
+      const events   = getEvents();
+      const filtered = activeFilter === 'all' ? events : events.filter(e => e.type === activeFilter);
+      const grid     = document.getElementById('eventsGrid');
+      const emptyEl  = document.getElementById('eventsEmpty');
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyEl.hidden = false;
+        return;
+      }
+      emptyEl.hidden = true;
+
+      grid.innerHTML = filtered.map(ev => {
+        const registered   = !!regState[ev.id];
+        const participants = registered ? ev.participants + 1 : ev.participants;
+        const pct          = Math.min(100, Math.round(participants / ev.maxParticipants * 100));
+        const isFull       = participants >= ev.maxParticipants;
+        const statusText   = registered ? 'Terdaftar' : isFull ? 'Penuh' : 'Daftar Sekarang';
+        const statusClass  = registered ? 'open' : isFull ? 'full' : 'open';
+        const btnClass     = registered ? 'btn-secondary' : isFull ? 'btn-ghost' : 'btn-primary';
+
+        return `
+          <div class="event-card fade-up" data-type="${ev.type}">
+            <div class="event-card-header">
+              <p class="event-type-badge ${ev.type}">${ev.type.replace('-', ' ')}</p>
+              <h2 class="event-title">${ev.title}</h2>
+              <p class="event-description">${ev.description}</p>
+            </div>
+            <div class="event-card-body">
+              <div class="event-meta-row">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span>${formatDate(ev.date)} · ${ev.time || '14:00 WIB'}</span>
+              </div>
+              <div class="event-meta-row">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>${ev.location || 'Online (Zoom)'}</span>
+              </div>
+              <div class="participant-bar-wrap">
+                <div class="participant-bar-header">
+                  <span>Peserta</span>
+                  <span><strong>${participants}</strong>/${ev.maxParticipants}</span>
+                </div>
+                <div class="participant-bar-track">
+                  <div class="participant-bar-fill" style="width:${pct}%;background:${pct >= 90 ? '#EF4444' : pct >= 70 ? '#F59E0B' : '#10B981'};"></div>
+                </div>
+              </div>
+            </div>
+            <div class="event-card-footer">
+              <span class="event-status-badge ${statusClass}">${registered ? '✓ Terdaftar' : isFull ? 'Sudah penuh' : 'Terbuka'}</span>
+              <button
+                class="btn ${btnClass} btn-sm"
+                data-event-id="${ev.id}"
+                onclick="handleRegister(${ev.id})"
+                ${isFull && !registered ? 'disabled' : ''}
+                aria-label="${statusText} untuk event ${ev.title}"
+              >
+                ${statusText}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleRegister(eventId) {
+      const events = getEvents();
+      const ev = events.find(e => e.id === eventId);
+      if (!ev) return;
+
+      if (regState[eventId]) {
+        if (!confirm('Batalkan pendaftaran untuk event ini?')) return;
+        delete regState[eventId];
+        saveToStorage('Charvlibrary_event_reg', regState);
+        showToast('Pendaftaran dibatalkan', 'info');
+      } else {
+        regState[eventId] = true;
+        saveToStorage('Charvlibrary_event_reg', regState);
+        showToast(`Berhasil daftar: "${ev.title}"! Cek emailmu.`, 'success');
+      }
+      renderEvents();
+      initScrollReveal();
+    }
+
+    function startCountdown() {
+      // Target: event paling dekat yang belum lewat
+      const events = getEvents();
+      const now    = new Date();
+      const upcoming = events
+        .map(e => ({ ...e, dateObj: new Date(`${e.date}T${e.time || '14:00'}:00`) }))
+        .filter(e => e.dateObj > now)
+        .sort((a, b) => a.dateObj - b.dateObj);
+
+      if (upcoming.length === 0) {
+        document.getElementById('countdownTimer').innerHTML = '<span style="color:rgba(255,255,255,0.5);">Tidak ada event mendatang saat ini</span>';
+        return;
+      }
+
+      const target = upcoming[0].dateObj;
+
+      function tick() {
+        const diff = target - new Date();
+        if (diff <= 0) { clearInterval(interval); return; }
+        const days  = Math.floor(diff / 86400000);
+        const hours = Math.floor((diff % 86400000) / 3600000);
+        const mins  = Math.floor((diff % 3600000) / 60000);
+        const secs  = Math.floor((diff % 60000) / 1000);
+        document.getElementById('cdDays').textContent  = String(days).padStart(2, '0');
+        document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('cdMins').textContent  = String(mins).padStart(2, '0');
+        document.getElementById('cdSecs').textContent  = String(secs).padStart(2, '0');
+      }
+      tick();
+      const interval = setInterval(tick, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderEvents();
+      startCountdown();
+
+      // Filter chips
+      document.querySelectorAll('.event-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.event-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          activeFilter = chip.dataset.filter;
+          renderEvents();
+          initScrollReveal();
+        });
+      });
+
+      initScrollReveal();
+    });
+  </script>
+</body>
+</html>
