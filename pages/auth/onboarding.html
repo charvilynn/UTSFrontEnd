@@ -247,3 +247,191 @@
       <p class="step-subheading">Kami akan sesuaikan notifikasi dan rekomendasi denganmu.</p>
 
       <div class="pref-options" id="readingTimeOptions" role="radiogroup" aria-label="Waktu baca favorit">
+        <label class="pref-option" tabindex="0" data-value="pagi">
+          <input type="radio" name="readingTime" value="pagi">
+          <div class="pref-icon" aria-hidden="true">🌅</div>
+          <div class="pref-info">
+            <p>Pagi hari</p>
+            <p>Mulai hari dengan buku yang menyegarkan pikiran</p>
+          </div>
+        </label>
+        <label class="pref-option" tabindex="0" data-value="siang">
+          <input type="radio" name="readingTime" value="siang">
+          <div class="pref-icon" aria-hidden="true">☀️</div>
+          <div class="pref-info">
+            <p>Siang / Istirahat</p>
+            <p>Buku singkat yang cocok dibaca di sela kesibukan</p>
+          </div>
+        </label>
+        <label class="pref-option" tabindex="0" data-value="malam">
+          <input type="radio" name="readingTime" value="malam">
+          <div class="pref-icon" aria-hidden="true">🌙</div>
+          <div class="pref-info">
+            <p>Malam hari</p>
+            <p>Menutup hari dengan bacaan yang tenang</p>
+          </div>
+        </label>
+        <label class="pref-option" tabindex="0" data-value="fleksibel">
+          <input type="radio" name="readingTime" value="fleksibel">
+          <div class="pref-icon" aria-hidden="true">⚡</div>
+          <div class="pref-info">
+            <p>Fleksibel</p>
+            <p>Kapan saja ada waktu, saya baca</p>
+          </div>
+        </label>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-ghost" id="step2Back">← Kembali</button>
+        <button class="btn btn-primary" id="step2Next" disabled>Lanjut →</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Welcome -->
+    <section id="step3" hidden>
+      <div class="welcome-state">
+        <span class="welcome-icon" aria-hidden="true">📚</span>
+        <h2 class="step-heading" style="margin-top:0;">Kamu Siap, <span id="welcomeName">Kawan</span>!</h2>
+        <p class="step-subheading" style="max-width:40ch; margin-inline:auto;">
+          Profilmu sudah diatur. Sekarang waktunya menjelajahi 1.200+ buku di koleksi Charvlibrary.
+        </p>
+
+        <div style="display:flex; gap:var(--space-3); justify-content:center; flex-wrap:wrap; margin-top:var(--space-6);">
+          <a href="../discovery/explore.html" class="btn btn-primary btn-lg">
+            Jelajahi Koleksi
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+          </a>
+          <a href="../../index.html" class="btn btn-secondary btn-lg">Ke Beranda</a>
+        </div>
+
+        <!-- Selected genres summary -->
+        <div style="margin-top:var(--space-8); padding:var(--space-5); background:var(--color-muted); border-radius:var(--radius-xl);">
+          <p style="font-size:var(--font-size-sm); color:var(--color-muted-foreground); margin-bottom:var(--space-3);">Genre pilihanmu:</p>
+          <div id="selectedGenresSummary" style="display:flex; flex-wrap:wrap; gap:var(--space-2); justify-content:center;"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script>
+    const genres = [
+      { id: 'literary-fiction',   name: 'Literary Fiction',   emoji: '📖' },
+      { id: 'historical-fiction', name: 'Sejarah',             emoji: '🏛️' },
+      { id: 'science-fiction',    name: 'Sci-Fi',              emoji: '🚀' },
+      { id: 'fantasy',            name: 'Fantasi',             emoji: '🧙' },
+      { id: 'self-help',          name: 'Self-Help',           emoji: '💡' },
+      { id: 'biography',          name: 'Biografi',            emoji: '👤' },
+      { id: 'mystery',            name: 'Misteri',             emoji: '🔍' },
+      { id: 'thriller',           name: 'Thriller',            emoji: '⚡' },
+      { id: 'science',            name: 'Sains',               emoji: '🔬' },
+      { id: 'philosophy',         name: 'Filsafat',            emoji: '🤔' },
+      { id: 'journalism',         name: 'Jurnalisme',          emoji: '📰' },
+      { id: 'personal-development', name: 'Pengembangan Diri', emoji: '🌱' },
+    ];
+
+    let selectedGenres = new Set();
+    let currentStep = 1;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Render genre grid
+      const grid = document.getElementById('genreGrid');
+      grid.innerHTML = genres.map(g => `
+        <button
+          class="genre-card"
+          data-id="${g.id}"
+          aria-pressed="false"
+          aria-label="Pilih genre ${g.name}"
+          type="button"
+        >
+          <span class="genre-emoji" aria-hidden="true">${g.emoji}</span>
+          <span class="genre-name">${g.name}</span>
+          <div class="genre-check" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </button>
+      `).join('');
+
+      grid.addEventListener('click', e => {
+        const card = e.target.closest('.genre-card');
+        if (!card) return;
+        const id = card.dataset.id;
+
+        if (selectedGenres.has(id)) {
+          selectedGenres.delete(id);
+          card.classList.remove('selected');
+          card.setAttribute('aria-pressed', 'false');
+        } else {
+          selectedGenres.add(id);
+          card.classList.add('selected');
+          card.setAttribute('aria-pressed', 'true');
+        }
+
+        const count = selectedGenres.size;
+        document.getElementById('selectedCount').textContent = count;
+        document.getElementById('step1Next').disabled = count < 3;
+      });
+
+      // Step navigation
+      document.getElementById('step1Next').addEventListener('click', () => goToStep(2));
+      document.getElementById('step2Back').addEventListener('click', () => goToStep(1));
+      document.getElementById('step2Next').addEventListener('click', () => goToStep(3));
+
+      // Pref options
+      document.getElementById('readingTimeOptions').addEventListener('click', e => {
+        const option = e.target.closest('.pref-option');
+        if (!option) return;
+        document.querySelectorAll('.pref-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        option.querySelector('input[type="radio"]').checked = true;
+        document.getElementById('step2Next').disabled = false;
+      });
+
+      // Keyboard support for pref-option
+      document.querySelectorAll('.pref-option').forEach(opt => {
+        opt.addEventListener('keydown', e => {
+          if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); opt.click(); }
+        });
+      });
+    });
+
+    function goToStep(n) {
+      document.getElementById(`step${currentStep}`).hidden = true;
+      document.getElementById(`step${n}`).hidden = false;
+      currentStep = n;
+
+      const pct = (n / 3) * 100;
+      document.getElementById('progressFill').style.width = `${pct}%`;
+      document.getElementById('navStep').textContent = n;
+
+      ['dot-0', 'dot-1', 'dot-2'].forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.classList.remove('active', 'done');
+        if (i + 1 === n) el.classList.add('active');
+        else if (i + 1 < n) el.classList.add('done');
+      });
+
+      // Step 3 setup
+      if (n === 3) {
+        const user = getUser();
+        const firstName = user?.name?.split(' ')[0] || 'Kawan';
+        document.getElementById('welcomeName').textContent = firstName;
+
+        // Save genres to user
+        const userData = getUser() || {};
+        userData.favoriteGenres = [...selectedGenres];
+        saveUser(userData);
+
+        // Show selected genres as chips
+        const summary = document.getElementById('selectedGenresSummary');
+        summary.innerHTML = [...selectedGenres].map(id => {
+          const genre = genres.find(g => g.id === id);
+          return `<span style="display:inline-flex;align-items:center;gap:4px;background:var(--color-accent-light);border:1px solid rgba(217,119,6,0.2);border-radius:var(--radius-full);padding:4px 12px;font-size:var(--font-size-sm);">${genre?.emoji} ${genre?.name}</span>`;
+        }).join('');
+      }
+    }
+  </script>
+</body>
+</html>
