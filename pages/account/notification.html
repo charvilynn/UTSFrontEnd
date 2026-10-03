@@ -162,3 +162,205 @@
         <ul class="navbar-nav">
           <li><a href="../../index.html">Beranda</a></li>
           <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="profile.html">Profil</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+  <div class="navbar-spacer"></div>
+
+  <main>
+    <div class="notif-header">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-4);">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep">/</span>
+          <a href="profile.html">Profil</a>
+          <span class="breadcrumb-sep">/</span>
+          <span aria-current="page">Notifikasi</span>
+        </nav>
+        <div class="notif-header-inner">
+          <h1>
+            Notifikasi
+            <span class="unread-badge" id="unreadBadge" aria-live="polite" aria-label="notifikasi belum dibaca">0</span>
+          </h1>
+          <button class="btn btn-secondary btn-sm" id="markAllReadBtn">
+            Tandai semua dibaca
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <section class="section--sm">
+      <div class="container" style="max-width:680px;">
+
+        <!-- Filter chips -->
+        <div class="notif-filters" role="group" aria-label="Filter notifikasi">
+          <button class="filter-chip active" data-filter="all">Semua</button>
+          <button class="filter-chip" data-filter="borrow">Peminjaman</button>
+          <button class="filter-chip" data-filter="reminder">Pengingat</button>
+          <button class="filter-chip" data-filter="event">Event</button>
+          <button class="filter-chip" data-filter="info">Info</button>
+        </div>
+
+        <!-- Notif list -->
+        <div class="notif-container fade-up" id="notifContainer">
+          <!-- diisi JS -->
+        </div>
+
+        <!-- Empty state -->
+        <div id="notifEmpty" hidden class="empty-state" style="background:var(--color-muted);border-radius:var(--radius-xl);">
+          <div class="empty-state-icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <p class="empty-state-title">Tidak ada notifikasi</p>
+          <p class="empty-state-desc">Kamu sudah membaca semua notifikasi di kategori ini.</p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
+        <div><h3 class="footer-section-title">Akun</h3><ul class="footer-links"><li><a href="profile.html">Profil</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/contact.html">Kontak</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    const iconMap = {
+      borrow:   `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+      reminder: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+      event:    `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+      info:     `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+    };
+
+    // State: notifikasi di-track di localStorage
+    let notifState = getFromStorage('Charvlibrary_notif_read', {});
+    let activeFilter = 'all';
+
+    function getNotifications() {
+      return typeof notificationsData !== 'undefined' ? notificationsData : [];
+    }
+
+    function isRead(id) { return !!notifState[id]; }
+
+    function markRead(id) {
+      notifState[id] = true;
+      saveToStorage('Charvlibrary_notif_read', notifState);
+    }
+
+    function updateUnreadBadge() {
+      const count = getNotifications().filter(n => !isRead(n.id) && (activeFilter === 'all' || n.type === activeFilter)).length;
+      const badge = document.getElementById('unreadBadge');
+      badge.textContent = count;
+      badge.style.display = count === 0 ? 'none' : '';
+    }
+
+    function renderNotifs() {
+      const all = getNotifications();
+      const filtered = activeFilter === 'all' ? all : all.filter(n => n.type === activeFilter);
+
+      const container = document.getElementById('notifContainer');
+      const emptyEl   = document.getElementById('notifEmpty');
+
+      if (filtered.length === 0) {
+        container.style.display = 'none';
+        emptyEl.hidden = false;
+        return;
+      }
+
+      container.style.display = '';
+      emptyEl.hidden = true;
+
+      // Group: Today / Kemarin / Lebih lama
+      const today = new Date(); today.setHours(0,0,0,0);
+      const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+
+      const groups = { today: [], yesterday: [], older: [] };
+      filtered.forEach(n => {
+        const d = new Date(n.date); d.setHours(0,0,0,0);
+        if (d.getTime() === today.getTime()) groups.today.push(n);
+        else if (d.getTime() === yesterday.getTime()) groups.yesterday.push(n);
+        else groups.older.push(n);
+      });
+
+      const labelMap = { today: 'Hari ini', yesterday: 'Kemarin', older: 'Lebih lama' };
+
+      container.innerHTML = Object.entries(groups)
+        .filter(([, items]) => items.length > 0)
+        .map(([groupKey, items]) => `
+          <div class="notif-group-label">${labelMap[groupKey]}</div>
+          ${items.map(n => `
+            <div
+              class="notif-item ${isRead(n.id) ? '' : 'unread'}"
+              data-id="${n.id}"
+              tabindex="0"
+              role="button"
+              aria-label="${n.title}"
+            >
+              <div class="notif-icon-wrap ${n.type}" aria-hidden="true">
+                ${iconMap[n.type] || iconMap.info}
+              </div>
+              <div class="notif-content">
+                <p class="notif-title">${n.title}</p>
+                <p class="notif-body">${n.message}</p>
+                <p class="notif-time">${formatDate(n.date)}</p>
+              </div>
+            </div>
+          `).join('')}
+        `).join('');
+
+      // Click to mark read
+      container.querySelectorAll('.notif-item').forEach(item => {
+        const handler = () => {
+          const id = parseInt(item.dataset.id);
+          if (!isRead(id)) {
+            markRead(id);
+            item.classList.remove('unread');
+            item.classList.remove('unread');
+            updateUnreadBadge();
+          }
+        };
+        item.addEventListener('click', handler);
+        item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') handler(); });
+      });
+
+      updateUnreadBadge();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNotifs();
+
+      // Filter chips
+      document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          activeFilter = chip.dataset.filter;
+          renderNotifs();
+        });
+      });
+
+      // Mark all read
+      document.getElementById('markAllReadBtn').addEventListener('click', () => {
+        getNotifications().forEach(n => markRead(n.id));
+        renderNotifs();
+        showToast('Semua notifikasi ditandai dibaca', 'success');
+      });
+
+      initScrollReveal();
+    });
+  </script>
+</body>
+</html>
