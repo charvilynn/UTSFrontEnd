@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Riwayat buku yang pernah kamu pinjam dan baca di Charvlibrary.">
+  <title>Riwayat Membaca - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .page-header {
+      background: var(--color-surface);
+      padding-block: var(--space-8);
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: var(--space-8);
+    }
+    .page-header h1 { font-size: clamp(1.75rem, 3vw, var(--font-size-4xl)); font-weight: var(--font-weight-light); }
+
+    /* Timeline layout */
+    .history-timeline { position: relative; }
+    .history-timeline::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--color-border);
+    }
+    @media (max-width: 480px) {
+      .history-timeline::before { display: none; }
+    }
+
+    .history-entry {
+      display: flex;
+      gap: var(--space-5);
+      margin-bottom: var(--space-6);
+      position: relative;
+    }
+
+    .history-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      border: 2px solid var(--color-background);
+      box-shadow: 0 0 0 2px var(--color-accent);
+      flex-shrink: 0;
+      margin-top: 20px;
+      position: relative;
+      z-index: 1;
+      margin-left: 20px;
+    }
+
+    .history-card {
+      flex: 1;
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4);
+```
