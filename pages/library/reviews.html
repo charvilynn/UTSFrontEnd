@@ -197,3 +197,244 @@
         <!-- Book header -->
         <div class="book-review-header fade-up" id="bookHeader">
           <!-- diisi JS -->
+        </div>
+
+        <div class="reviews-layout">
+          <!-- Left: form + list -->
+          <div>
+            <!-- Form tulis review -->
+            <div class="review-form-card fade-up">
+              <h2>Tulis Ulasanmu</h2>
+
+              <div class="star-rating-input" id="starInput" role="group" aria-label="Beri rating bintang">
+                <button class="star-btn" data-val="1" aria-label="1 bintang" type="button">★</button>
+                <button class="star-btn" data-val="2" aria-label="2 bintang" type="button">★</button>
+                <button class="star-btn" data-val="3" aria-label="3 bintang" type="button">★</button>
+                <button class="star-btn" data-val="4" aria-label="4 bintang" type="button">★</button>
+                <button class="star-btn" data-val="5" aria-label="5 bintang" type="button">★</button>
+              </div>
+              <p class="star-label" id="starLabel">Klik bintang untuk memberi rating</p>
+
+              <form id="reviewForm" novalidate>
+                <div class="form-group">
+                  <label class="form-label" for="reviewText">Ulasan <span class="required">*</span></label>
+                  <textarea
+                    id="reviewText"
+                    class="form-input"
+                    rows="4"
+                    placeholder="Bagaimana pendapatmu tentang buku ini? Ceritakan pengalamanmu..."
+                    maxlength="500"
+                    style="resize:vertical;"
+                    aria-describedby="reviewCharCounter reviewTextErr"
+                    required
+                  ></textarea>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                    <p class="form-error-msg" id="reviewTextErr" role="alert"></p>
+                    <p class="review-char-counter"><span id="reviewCharCount">0</span>/500</p>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitReviewBtn">
+                  Publikasikan Ulasan
+                </button>
+              </form>
+            </div>
+
+            <!-- List ulasan -->
+            <div id="reviewsList">
+              <!-- diisi JS -->
+            </div>
+          </div>
+
+          <!-- Right: rating summary -->
+          <aside>
+            <div class="rating-summary-card fade-up" id="ratingSummary">
+              <!-- diisi JS -->
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    const starLabels = ['', 'Mengecewakan', 'Kurang bagus', 'Cukup bagus', 'Bagus sekali', 'Luar biasa!'];
+    const avatarColors = ['#92400E', '#065F46', '#1E40AF', '#5B21B6', '#991B1B', '#0F766E'];
+
+
+    const defaultReviews = [
+      { id: 1, name: 'Rizki M.', rating: 5, text: 'Buku yang sangat berkesan. Narasi mengalir dan karakternya terasa nyata.', date: '2026-09-10', color: '#065F46' },
+      { id: 2, name: 'Sari A.',  rating: 4, text: 'Sangat direkomendasikan! Tapi ada beberapa bagian yang agak lambat.', date: '2026-09-05', color: '#1E40AF' },
+      { id: 3, name: 'Budi P.',  rating: 5, text: 'Salah satu buku terbaik yang pernah saya baca tahun ini.', date: '2026-08-28', color: '#5B21B6' },
+    ];
+
+    let currentRating = 0;
+    let bookId;
+    let reviews;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      bookId = parseInt(getUrlParam('id'));
+      const book = getBookById(bookId);
+
+      if (!book) {
+        document.getElementById('notFoundState').hidden = false;
+        return;
+      }
+
+      document.title = `Ulasan: ${book.title} - Charvlibrary`;
+      document.getElementById('mainContent').hidden = false;
+      document.getElementById('breadcrumbTitle').textContent = `Ulasan: ${truncateText(book.title, 25)}`;
+
+
+      document.getElementById('bookHeader').innerHTML = `
+        <img src="${book.cover}" alt="Sampul ${book.title}" class="book-review-cover">
+        <div>
+          <h1 class="book-review-title">${book.title}</h1>
+          <p class="book-review-meta">oleh ${book.author} &middot; ${book.genre}</p>
+          <div style="display:flex; align-items:center; gap:var(--space-2);">
+            <span style="color:#F59E0B; font-size:18px;">${renderStars(book.rating || 4)}</span>
+            <span style="font-size:var(--font-size-sm); color:var(--color-muted-foreground);">${book.rating || 4}/5</span>
+          </div>
+          <div style="margin-top:var(--space-3); display:flex; gap:var(--space-2);">
+            <a href="../discovery/book-detail.html?id=${book.id}" class="btn btn-ghost btn-sm">← Detail Buku</a>
+            <a href="borrow-checkout.html?id=${book.id}" class="btn btn-secondary btn-sm">Pinjam Buku</a>
+          </div>
+        </div>
+      `;
+
+
+      reviews = getFromStorage(`Charvlibrary_reviews_${bookId}`, defaultReviews);
+
+      renderRatingSummary();
+      renderReviewsList();
+
+
+      const starBtns = document.querySelectorAll('.star-btn');
+      starBtns.forEach(btn => {
+        btn.addEventListener('mouseover', () => highlightStars(parseInt(btn.dataset.val)));
+        btn.addEventListener('focus',     () => highlightStars(parseInt(btn.dataset.val)));
+        btn.addEventListener('mouseleave',() => highlightStars(currentRating));
+        btn.addEventListener('click', () => {
+          currentRating = parseInt(btn.dataset.val);
+          highlightStars(currentRating);
+          document.getElementById('starLabel').textContent = starLabels[currentRating];
+        });
+      });
+
+
+      document.getElementById('reviewText').addEventListener('input', e => {
+        document.getElementById('reviewCharCount').textContent = e.target.value.length;
+      });
+
+
+      document.getElementById('reviewForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const textEl = document.getElementById('reviewText');
+        const errEl  = document.getElementById('reviewTextErr');
+        let valid = true;
+
+        if (currentRating === 0) {
+          document.getElementById('starLabel').textContent = '⚠ Pilih rating terlebih dahulu';
+          document.getElementById('starLabel').style.color = 'var(--color-error)';
+          valid = false;
+        }
+        if (!textEl.value.trim()) {
+          errEl.textContent = 'Ulasan tidak boleh kosong';
+          errEl.classList.add('visible');
+          textEl.classList.add('error');
+          valid = false;
+        } else {
+          errEl.textContent = ''; errEl.classList.remove('visible'); textEl.classList.remove('error');
+        }
+        if (!valid) return;
+
+        const user = getUser();
+        const newReview = {
+          id: Date.now(),
+          name: user?.name || 'Kamu',
+          rating: currentRating,
+          text: textEl.value.trim(),
+          date: new Date().toISOString().split('T')[0],
+          color: avatarColors[Math.floor(Math.random() * avatarColors.length)],
+          isNew: true,
+        };
+
+        const submitBtn = document.getElementById('submitReviewBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;"></span> Mengirim...';
+
+        setTimeout(() => {
+          reviews = [newReview, ...reviews];
+          saveToStorage(`Charvlibrary_reviews_${bookId}`, reviews);
+          renderRatingSummary();
+          renderReviewsList();
+          textEl.value = ''; document.getElementById('reviewCharCount').textContent = '0';
+          currentRating = 0; highlightStars(0);
+          document.getElementById('starLabel').textContent = 'Klik bintang untuk memberi rating';
+          document.getElementById('starLabel').style.color = '';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Publikasikan Ulasan';
+          showToast('Ulasan berhasil dipublikasikan!', 'success');
+        }, 700);
+      });
+
+      initScrollReveal();
+    });
+
+    function highlightStars(val) {
+      document.querySelectorAll('.star-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i < val);
+      });
+    }
+
+    function renderStars(rating) {
+      return '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+    }
+
+    function renderRatingSummary() {
+      const avg = reviews.reduce((s, r) => s + r.rating, 0) / (reviews.length || 1);
+      const counts = [0, 0, 0, 0, 0];
+      reviews.forEach(r => { if (r.rating >= 1 && r.rating <= 5) counts[r.rating - 1]++; });
+
+      document.getElementById('ratingSummary').innerHTML = `
+        <p class="big-rating">${avg.toFixed(1)}</p>
+        <p class="rating-stars-display">${renderStars(avg)}</p>
+        <p class="rating-count">${reviews.length} ulasan</p>
+        ${[5,4,3,2,1].map(n => `
+          <div class="rating-bar-row">
+            <span class="rating-bar-label">${n}</span>
+            <div class="rating-bar-track">
+              <div class="rating-bar-fill" style="width:${reviews.length ? (counts[n-1]/reviews.length*100) : 0}%;"></div>
+            </div>
+            <span class="rating-bar-count">${counts[n-1]}</span>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    function renderReviewsList() {
+      const list = document.getElementById('reviewsList');
+      if (reviews.length === 0) {
+        list.innerHTML = `<div class="empty-state" style="background:var(--color-muted);border-radius:var(--radius-xl);"><p class="empty-state-title">Belum ada ulasan</p><p class="empty-state-desc">Jadilah yang pertama mengulas buku ini!</p></div>`;
+        return;
+      }
+      list.innerHTML = reviews.map(r => `
+        <div class="review-item fade-up${r.isNew ? ' new-review' : ''}">
+          <div class="review-item-header">
+            <div class="review-avatar" style="background:${r.color || '#92400E'};">${r.name.charAt(0).toUpperCase()}</div>
+            <div>
+              <p class="reviewer-name">${r.name}</p>
+              <p class="reviewer-date">${formatDate(r.date)}</p>
+            </div>
+            <span class="review-stars" style="margin-left:auto;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span>
+          </div>
+          <p class="review-text">${r.text}</p>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

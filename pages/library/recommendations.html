@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Rekomendasi buku personal untukmu berdasarkan preferensi membaca di Charvlibrary.">
+  <title>Rekomendasi Buku - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .reco-hero {
+      background: linear-gradient(135deg, var(--color-secondary) 0%, #78350F 100%);
+      padding-block: var(--space-12);
+      color: white;
+      margin-bottom: var(--space-10);
+      overflow: hidden;
+      position: relative;
+    }
+    .reco-hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      pointer-events: none;
+    }
+    .reco-hero-inner { position: relative; z-index: 1; }
+    .reco-hero h1 {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: var(--font-weight-light);
+      margin-bottom: var(--space-3);
+      letter-spacing: -0.03em;
+    }
+    .reco-hero p { color: rgba(255,255,255,0.75); font-size: var(--font-size-lg); }
+
+    .reco-section { margin-bottom: var(--space-12); }
+    .reco-section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .reco-section-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-semibold);
+    }
+    .reco-section-reason {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+    }
+
+    /* Horizontal scroll on mobile */
+    .reco-books-scroll {}
