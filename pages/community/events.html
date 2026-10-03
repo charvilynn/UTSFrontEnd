@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Event komunitas, reading club, dan workshop literasi di Charvlibrary.">
+  <title>Event & Komunitas - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .events-hero {
+      background: linear-gradient(135deg, #1E1B4B 0%, #312E81 60%, #3730A3 100%);
+      padding-block: var(--space-12);
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: var(--space-10);
+    }
+    .events-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .events-hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: var(--font-weight-light);
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-3);
+    }
+    .events-hero p { color: rgba(255,255,255,0.7); font-size: var(--font-size-lg); margin-bottom: var(--space-8); }
+
+    /* Countdown timer */
+    .event-countdown {
+      display: inline-flex;
+      gap: var(--space-5);
+      background: rgba(255,255,255,0.1);
+      padding: var(--space-4) var(--space-7);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .countdown-unit { text-align: center; }
+    .countdown-val {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      line-height: 1;
+      color: white;
+    }
+    .countdown-label { font-size: var(--font-size-xs); color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Filter chips */
+    .event-filters {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-8);
+    }
+    .event-chip {
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      background: var(--color-card);
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-weight: var(--font-weight-medium);
+    }
+    .event-chip:hover { border-color: var(--color-accent); }
+    .event-chip.active { background: var(--color-secondary); border-color: var(--color-secondary); color: white; }
+
+    /* Event card */
+    .event-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: box-shadow var(--transition-base), transform var(--transition-base);
+    }
+    .event-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+    .event-card-header {
+      padding: var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .event-type-badge {
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      margin-bottom: var(--space-2);
+    }
+    .event-type-badge.reading-club { color: #065F46; }
+    .event-type-badge.workshop     { color: #1E40AF; }
+    .event-type-badge.webinar      { color: #5B21B6; }
+    .event-type-badge.diskusi      { color: #92400E; }
+
+    .event-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-2);
+    }
+    .event-description { font-size: var(--font-size-sm); color: var(--color-muted-foreground); line-height: var(--line-height-relaxed); }
+
+    .event-card-body { padding: var(--space-5); }
+
+    .event-meta-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+      margin-bottom: var(--space-2);
+    }
+    .event-meta-row svg { flex-shrink: 0; }
+
+    /* Participants bar */
+    .participant-bar-wrap {
+      margin: var(--space-4) 0;
+    }
+    .participant-bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--font-size-xs);
+      color: var(--color-muted-foreground);
+      margin-bottom: 6px;
+    }
+    .participant-bar-track {
+      height: 6px;
+      background: var(--color-border);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .participant-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width .8s var(--ease-out);
+    }
+
+    .event-card-footer {
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+    .event-status-badge {
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+    }
+    .event-status-badge.open   { background: rgba(16,185,129,0.1); color: #065F46; }
+    .event-status-badge.full   { background: rgba(245,158,11,0.1); color: #92400E; }
+    .event-status-badge.closed { background: rgba(107,114,128,0.1); color: var(--color-muted-foreground); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .event-card { transition: none; }
+      .participant-bar-fill { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
