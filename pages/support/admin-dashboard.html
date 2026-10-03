@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin Dashboard - Charvlibrary Perpustakaan Digital">
+  <title>Admin Dashboard - Charvlibrary</title>
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <div class="navbar-search" role="search">
+        <svg class="navbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="navbar-search-input" placeholder="Cari buku..." aria-label="Cari buku">
+      </div>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../index.html">Beranda</a></li>
+          <li><a href="../pages/discovery/explore.html">Jelajahi</a></li>
+          <li><a href="../pages/discovery/categories.html">Kategori</a></li>
+          <li><a href="../pages/community/blog.html">Blog</a></li>
+          <li><a href="../pages/library/wishlist.html" aria-label="Wishlist" style="position:relative;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="wishlist-count-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--color-error); color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;">0</span>
+          </a></li>
+          <li><a href="../pages/auth/login.html" class="btn btn-primary btn-sm">Masuk</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-controls="mobile-drawer-admin-dashboard" aria-label="Buka menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav id="mobile-drawer-admin-dashboard" class="navbar-drawer">
+      <ul class="navbar-nav">
+        <li><a href="../index.html">Beranda</a></li>
+        <li><a href="../pages/discovery/explore.html">Jelajahi</a></li>
+        <li><a href="../pages/discovery/categories.html">Kategori</a></li>
+        <li><a href="../pages/community/blog.html">Blog</a></li>
+        <li><a href="../pages/library/wishlist.html">Wishlist</a></li>
+        <li><a href="../pages/auth/login.html">Masuk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="navbar-spacer"></div>
+
+  <main id="main-content">
+    <section class="section">
+      <div class="container">
+
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="../index.html">Beranda</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">Admin Dashboard</span>
+        </nav>
+
+        <div class="section-header">
+          <span class="section-eyebrow">Dukungan & Admin</span>
+          <h1 class="section-title">Admin Dashboard</h1>
+          <p class="section-subtitle">Dibuat oleh: Olivian</p>
+        </div>
+
+        <div class="empty-state" style="background: var(--color-muted); border-radius: var(--radius-xl);">
+          <svg class="empty-state-icon" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+            <rect x="10" y="10" width="60" height="60" rx="8" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4"/>
+            <line x1="30" y1="40" x2="50" y2="40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="40" y1="30" x2="40" y2="50" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <p class="empty-state-title" style="font-size: var(--font-size-xl);">Halaman Dalam Pengerjaan</p>
+          <p class="empty-state-desc">Halaman ini sedang dikerjakan oleh <strong>Olivian</strong>.</p>
+          <a href="../index.html" class="btn btn-secondary">Kembali ke Beranda</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital untuk mahasiswa.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../pages/discovery/explore.html">Semua Buku</a></li><li><a href="../pages/discovery/categories.html">Kategori</a></li></ul></div>
+        <div><h3 class="footer-section-title">Komunitas</h3><ul class="footer-links"><li><a href="../pages/community/blog.html">Blog</a></li><li><a href="../pages/community/events.html">Event</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../pages/support/about.html">Tentang</a></li><li><a href="../pages/support/contact.html">Kontak</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary. Dibuat oleh Tim: Davvin, Livi, Chandra, Aaron, Davvin, Olivian.</p></div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/data-books.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/nav.js"></script>
+
+</body>
+</html>
