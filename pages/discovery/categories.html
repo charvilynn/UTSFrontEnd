@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Jelajahi 80+ buku berdasarkan 16 kategori dan genre di Charvlibrary.">
+  <title>Kategori Buku - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    /* ── Hero ────────────────────────────────────────────────────── */
+    .cat-hero {
+      background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-accent) 4%, var(--color-background)),
+        var(--color-surface)
+      );
+      padding-block: var(--space-14) var(--space-8);
+      border-bottom: 1px solid var(--color-border);
+      position: relative;
+      overflow: hidden;
+    }
+    .cat-hero::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217,119,6,.08), transparent 70%);
+      pointer-events: none;
+    }
+    .cat-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: var(--font-weight-light);
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-2);
+    }
+    .cat-hero h1 em {
+      font-style: italic;
+      color: var(--color-accent);
+      font-weight: var(--font-weight-medium);
+    }
+
+    /* ── Stats bar ───────────────────────────────────────────────── */
+    .cat-stats-bar {
+      display: flex;
+      gap: var(--space-8);
+      margin-top: var(--space-6);
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--color-border);
+      flex-wrap: wrap;
+    }
+    .cat-stat { display: flex; flex-direction: column; gap: 2px; }
+    .cat-stat-num {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-accent);
+      line-height: 1;
+    }
+    .cat-stat-label {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+    }
+
+    /* ── Grid layout ─────────────────────────────────────────────── */
+    .genre-big-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-top: var(--space-8);
+    }
+    @media (max-width: 1100px) { .genre-big-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px)  { .genre-big-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 420px)  { .genre-big-grid { grid-template-columns: 1fr; } }
+
+    /* ── Card ────────────────────────────────────────────────────── */
+    .genre-big-card {
+      position: relative;
+      background: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: transform .3s var(--ease-out), box-shadow .3s ease, border-color .3s ease;
+    }
+    .genre-big-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 48px rgba(0,0,0,.09);
+      border-color: var(--gc, var(--color-accent));
+    }
+    /* Color stripe */
+    .genre-big-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gc, var(--color-accent));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .35s var(--ease-out);
+    }
+    .genre-big-card:hover::before { transform: scaleX(1); }
+    /* Decorative bg blob */
+    .genre-big-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: -40px;
+      width: 130px; height: 130px;
+      border-radius: 50%;
+      background: var(--gc, var(--color-accent));
+      opacity: 0.04;
+      transition: transform .4s var(--ease-out), opacity .4s;
+      pointer-events: none;
+    }
+    .genre-big-card:hover::after { transform: scale(1.4); opacity: 0.07; }
+
+    /* Card body */
+    .genre-card-body {
+      padding: var(--space-5) var(--space-5) var(--space-3);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+    .genre-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+    }
+    .genre-card-icon { color: var(--gc, var(--color-accent)); }
+    .genre-card-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--gc, var(--color-accent));
+      background: color-mix(in srgb, var(--gc, var(--color-accent)) 10%, transparent);
+      padding: 3px 8px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+    .genre-card-name {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.2;
+      margin-bottom: var(--space-1);
+    }
+    .genre-card-desc {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+      line-height: 1.5;
+      flex: 1;
+    }
+    .genre-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--space-4);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--color-border);
+    }
+    .genre-card-count {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted-foreground);
+    }
+    .genre-card-arrow {
+      color: var(--gc, var(--color-accent));
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity .2s, transform .25s;
+    }
+    .genre-big-card:hover .genre-card-arrow { opacity: 1; transform: translateX(0); }
+
+    /* Mini book covers */
+    .genre-covers {
+      display: flex;
+      gap: 6px;
+      padding: 0 var(--space-5) var(--space-4);
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+    .genre-cover-img {
+      width: 44px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.18);
+      flex-shrink: 0;
+      transition: transform .35s var(--ease-out);
+      background: var(--color-surface);
+    }
+    .genre-big-card:hover .genre-cover-img:nth-child(1) { transform: rotate(-4deg) translateY(-5px); }
+    .genre-big-card:hover .genre-cover-img:nth-child(2) { transform: translateY(-8px); }
+    .genre-big-card:hover .genre-cover-img:nth-child(3) { transform: rotate(4deg) translateY(-5px); }
+
+    /* Featured - span 2 columns */
+    .genre-big-card.featured { grid-column: span 2; }
+    @media (max-width: 768px) { .genre-big-card.featured { grid-column: span 1; } }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+          <line x1="14" y1="17" x2="22" y2="17" stroke="#92400E" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="14" y1="20" x2="22" y2="20" stroke="#92400E" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <div class="navbar-search" role="search">
+        <svg class="navbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="navbar-search-input" placeholder="Cari buku..." aria-label="Cari buku">
+      </div>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="explore.html">Jelajahi</a></li>
+          <li><a href="categories.html" class="active" aria-current="page">Kategori</a></li>
+          <li><a href="../community/blog.html">Blog</a></li>
+          <li><a href="../library/wishlist.html" style="position:relative;" aria-label="Wishlist">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="wishlist-count-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--color-error); color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;">0</span>
+          </a></li>
+          <li><a href="../auth/login.html" class="btn btn-primary btn-sm">Masuk</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-controls="mobile-drawer-cat" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+    <nav id="mobile-drawer-cat" class="navbar-drawer">
+      <ul class="navbar-nav">
+        <li><a href="../../index.html">Beranda</a></li>
+        <li><a href="explore.html">Jelajahi</a></li>
+        <li><a href="categories.html">Kategori</a></li>
+        <li><a href="../community/blog.html">Blog</a></li>
+        <li><a href="../library/wishlist.html">Wishlist</a></li>
+        <li><a href="../auth/login.html">Masuk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="navbar-spacer"></div>
+
+  <main id="main-content">
+
+    <section class="cat-hero">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page">Kategori</span>
+        </nav>
+        <h1>Semua <em>Kategori</em></h1>
+        <p class="section-subtitle">Pilih genre favoritmu dan temukan buku yang tepat.</p>
+        <div class="cat-stats-bar">
+          <div class="cat-stat">
+            <span class="cat-stat-num" id="statTotalBooks">80+</span>
+            <span class="cat-stat-label">Judul Buku</span>
+          </div>
+          <div class="cat-stat">
+            <span class="cat-stat-num" id="statTotalGenres">16</span>
+            <span class="cat-stat-label">Genre</span>
+          </div>
+          <div class="cat-stat">
+            <span class="cat-stat-num">Gratis</span>
+            <span class="cat-stat-label">Untuk Mahasiswa</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section--sm">
+      <div class="container">
+        <div class="genre-big-grid stagger-children" id="genreGrid">
+          <!-- diisi JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital untuk mahasiswa.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="explore.html">Semua Buku</a></li><li><a href="categories.html">Kategori</a></li></ul></div>
+        <div><h3 class="footer-section-title">Akun</h3><ul class="footer-links"><li><a href="../auth/login.html">Masuk</a></li><li><a href="../auth/register.html">Daftar</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li><li><a href="../support/contact.html">Kontak</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    const iconMap = {
+      'book-open':    '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+      'telescope':    '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="2"/><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/></svg>',
+      'lightbulb':    '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>',
+      'newspaper':    '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"/></svg>',
+      'sparkles':     '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4M19 17v4M3 5h4M17 19h4"/></svg>',
+      'clock':        '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+      'brain':        '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg>',
+      'cpu':          '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2M9 2v2M15 20v2M9 20v2M2 15h2M2 9h2M20 15h2M20 9h2"/></svg>',
+      'user':         '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+      'alert-circle': '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+      'atom':         '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1"/><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"/><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"/></svg>',
+      'feather':      '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>',
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.getElementById('genreGrid');
+      if (!grid) return;
+
+      // Update hero stats dari data nyata
+      const totalEl   = document.getElementById('statTotalBooks');
+      const totalGenEl = document.getElementById('statTotalGenres');
+      if (totalEl)    totalEl.textContent   = booksData.length + '+';
+      if (totalGenEl) totalGenEl.textContent = genresData.length;
+
+      grid.innerHTML = genresData.map((g, i) => {
+        // Hitung buku nyata per genre
+        const books = booksData.filter(b => {
+          const bg = b.genre.toLowerCase().replace(/[\s&]+/g, '-');
+          return bg === g.id || b.genre.toLowerCase() === g.name.toLowerCase();
+        });
+        const count = books.length;
+
+        // Hingga 3 cover untuk preview - mini fanned spread
+        const previewBooks = books.slice(0, 3);
+        const coversHtml = previewBooks.length > 0 ? `
+          <div class="genre-covers">
+            ${previewBooks.map(b => {
+              const fb = b.coverFallback || 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=80&q=60';
+              return `<img class="genre-cover-img" src="${b.cover}" onerror="this.onerror=null;this.src='${fb}'" alt="" loading="lazy">`;
+            }).join('')}
+          </div>` : '';
+
+        // Dua genre pertama & ke-6 dibuat span 2 kolom (featured)
+        const isFeatured = i === 0 || i === 5;
+
+        return `
+          <a
+            href="explore.html?genre=${encodeURIComponent(g.name)}"
+            class="genre-big-card fade-up${isFeatured ? ' featured' : ''}"
+            style="--gc: ${g.color};"
+            aria-label="${g.name} - ${count} buku"
+          >
+            <div class="genre-card-body">
+              <div class="genre-card-header">
+                <span class="genre-card-icon">${iconMap[g.icon] || iconMap['book-open']}</span>
+                ${count > 0 ? `<span class="genre-card-badge">${count} buku</span>` : ''}
+              </div>
+              <p class="genre-card-name">${g.name}</p>
+              <p class="genre-card-desc">${g.desc || ''}</p>
+              <div class="genre-card-footer">
+                <span class="genre-card-count">${count > 0 ? count + ' judul tersedia' : 'Segera hadir'}</span>
+                <span class="genre-card-arrow" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </span>
+              </div>
+            </div>
+            ${coversHtml}
+          </a>
+        `;
+      }).join('');
+
+      initScrollReveal();
+    });
+  </script>
+</body>
+</html>
