@@ -297,3 +297,128 @@
 
     let openItems = new Set();
     let searchQuery = '';
+
+    function renderFAQ(filtered = null) {
+      const content = document.getElementById('faqContent');
+      const noResults = document.getElementById('noResults');
+      const nav = document.getElementById('faqNav');
+      let totalVisible = 0;
+
+      // Sidebar nav
+      nav.innerHTML = '<p class="faq-nav-title">Kategori</p>' +
+        faqs.map(cat => `
+          <button class="faq-nav-item" onclick="scrollToCategory('${cat.category}')" aria-label="Pergi ke kategori ${cat.category}">
+            ${cat.icon} ${cat.category}
+          </button>
+        `).join('');
+
+      // Content
+      const sections = faqs.map(cat => {
+        const items = filtered !== null
+          ? cat.items.filter(item =>
+              item.q.toLowerCase().includes(filtered) || item.a.toLowerCase().includes(filtered)
+            )
+          : cat.items;
+
+        if (items.length === 0) return '';
+        totalVisible += items.length;
+
+        return `
+          <div class="faq-category-section fade-up" id="cat-${cat.category}">
+            <h2 class="faq-category-title">${cat.icon} ${cat.category}</h2>
+            ${items.map((item, i) => {
+              const id = `faq-${cat.category}-${i}`;
+              const isOpen = openItems.has(id);
+              const highlight = filtered
+                ? item.q.replace(new RegExp(`(${filtered})`, 'gi'), '<mark style="background:rgba(217,119,6,0.2);border-radius:2px;">$1</mark>')
+                : item.q;
+              return `
+                <div class="faq-item">
+                  <button
+                    class="faq-question"
+                    id="btn-${id}"
+                    aria-expanded="${isOpen}"
+                    aria-controls="answer-${id}"
+                    onclick="toggleFAQ('${id}')"
+                  >
+                    <span>${highlight}</span>
+                    <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  <div class="faq-answer${isOpen ? ' open' : ''}" id="answer-${id}" role="region" aria-labelledby="btn-${id}">
+                    <div class="faq-answer-inner">${item.a}</div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }).join('');
+
+      // Remove existing category sections only
+      const existingSections = content.querySelectorAll('.faq-category-section');
+      existingSections.forEach(s => s.remove());
+      content.insertAdjacentHTML('afterbegin', sections);
+
+      noResults.className = 'faq-no-results' + (totalVisible === 0 ? ' visible' : '');
+      if (filtered) {
+        document.getElementById('searchQuery').textContent = filtered;
+        document.getElementById('resultsCount').textContent = `${totalVisible} pertanyaan ditemukan`;
+      } else {
+        document.getElementById('resultsCount').textContent = '';
+      }
+    }
+
+    function toggleFAQ(id) {
+      const answerEl = document.getElementById(`answer-${id}`);
+      const btnEl    = document.getElementById(`btn-${id}`);
+      const isOpen   = openItems.has(id);
+
+      // Close all
+      openItems.forEach(otherId => {
+        if (otherId !== id) {
+          openItems.delete(otherId);
+          document.getElementById(`answer-${otherId}`)?.classList.remove('open');
+          document.getElementById(`btn-${otherId}`)?.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      if (isOpen) {
+        openItems.delete(id);
+        answerEl.classList.remove('open');
+        btnEl.setAttribute('aria-expanded', 'false');
+      } else {
+        openItems.add(id);
+        answerEl.classList.add('open');
+        btnEl.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    function scrollToCategory(cat) {
+      const el = document.getElementById(`cat-${cat}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.querySelectorAll('.faq-nav-item').forEach(item => {
+          item.classList.toggle('active', item.textContent.includes(cat));
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderFAQ();
+
+      let debounceTimer;
+      document.getElementById('faqSearch').addEventListener('input', e => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          const q = e.target.value.trim().toLowerCase();
+          openItems.clear();
+          renderFAQ(q || null);
+          initScrollReveal();
+        }, 250);
+      });
+
+      initScrollReveal();
+    });
+  </script>
+</body>
+</html>
