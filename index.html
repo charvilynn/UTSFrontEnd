@@ -1,27 +1,412 @@
+<!-- Halaman: Landing/Home | Dibuat oleh: Davvin | Pilar: Discovery & Landing -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Charvlibrary - Perpustakaan digital untuk mahasiswa.">
+  <meta name="description" content="Charvlibrary - Perpustakaan digital untuk mahasiswa. Pinjam, baca, dan temukan ribuan buku akademik & fiksi terbaik.">
+  <meta name="keywords" content="perpustakaan digital, e-library, buku online, pinjam buku, Charvlibrary">
+  <meta property="og:title" content="Charvlibrary - Perpustakaan Digital">
+  <meta property="og:description" content="Temukan dan pinjam buku favoritmu secara digital. Lebih dari 1.000 judul tersedia.">
   <title>Charvlibrary - Perpustakaan Digital</title>
+
+  <!-- Shared CSS -->
   <link rel="stylesheet" href="assets/css/variables.css">
   <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <!-- Page-specific -->
+  <link rel="stylesheet" href="assets/css/index.css">
 </head>
 <body>
+
+  <!--
+       NAVBAR
+  -->
   <header class="navbar" role="banner">
-    <!-- navbar akan dilengkapi Hari 2 -->
     <div class="navbar-inner">
-      <a href="index.html" class="navbar-brand">Charvlibrary</a>
+
+      <!-- Logo -->
+      <a href="index.html" class="navbar-brand" aria-label="Charvlibrary - Beranda">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+          <line x1="14" y1="17" x2="22" y2="17" stroke="#92400E" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="14" y1="20" x2="22" y2="20" stroke="#92400E" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="14" y1="23" x2="19" y2="23" stroke="#92400E" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+
+      <!-- Search -->
+      <div class="navbar-search" role="search">
+        <svg class="navbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="search"
+          id="navbar-search-input"
+          placeholder="Cari judul, penulis, genre..."
+          aria-label="Cari buku"
+          autocomplete="off"
+        >
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="index.html" class="active" aria-current="page">Beranda</a></li>
+          <li><a href="pages/discovery/explore.html">Jelajahi</a></li>
+          <li><a href="pages/discovery/categories.html">Kategori</a></li>
+          <li><a href="pages/community/blog.html">Blog</a></li>
+          <li>
+            <a href="pages/library/wishlist.html" style="position:relative;" aria-label="Wishlist">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+              <span class="wishlist-count-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--color-error); color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;">0</span>
+            </a>
+          </li>
+          <li><a href="pages/auth/login.html" class="btn btn-primary btn-sm">Masuk</a></li>
+        </ul>
+      </nav>
+
+      <!-- Mobile Hamburger -->
+      <button class="navbar-toggle" aria-expanded="false" aria-controls="mobile-drawer" aria-label="Buka menu navigasi">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
+
+    <!-- Mobile Drawer -->
+    <nav id="mobile-drawer" class="navbar-drawer" aria-label="Navigasi mobile">
+      <ul class="navbar-nav">
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="pages/discovery/explore.html">Jelajahi Buku</a></li>
+        <li><a href="pages/discovery/categories.html">Kategori</a></li>
+        <li><a href="pages/community/blog.html">Blog</a></li>
+        <li><a href="pages/library/wishlist.html">Wishlist</a></li>
+        <li><a href="pages/auth/login.html">Masuk</a></li>
+        <li><a href="pages/auth/register.html">Daftar</a></li>
+      </ul>
+    </nav>
   </header>
+
+  <div class="navbar-spacer"></div>
+
   <main id="main-content">
-    <section class="hero">
-      <h1>Setiap buku membuka dunia baru</h1>
-      <p>Temukan ribuan buku fiksi dan non-fiksi di perpustakaan digital Anda.</p>
+
+    <!--
+         HERO SECTION Parallax scroll
+    -->
+    <section class="hero" id="hero" aria-label="Hero section">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-particles" aria-hidden="true" id="particles"></div>
+
+      <div class="container hero-content">
+        <div class="hero-text">
+          <p class="section-eyebrow fade-up">Perpustakaan Digital</p>
+          <h1 class="hero-title fade-up">
+            Setiap buku <span class="hero-accent-word">membuka</span><br>dunia baru
+          </h1>
+          <p class="hero-subtitle fade-up">
+            Lebih dari 1.000 judul buku tersedia. Pinjam, baca, dan temukan
+            bacaan berikutnya, kapan saja dan di mana saja.
+          </p>
+          <div class="hero-cta fade-up">
+            <a href="pages/discovery/explore.html" class="btn btn-primary btn-lg">
+              Mulai Menjelajah
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+            <a href="pages/auth/register.html" class="btn btn-secondary btn-lg">Daftar Gratis</a>
+          </div>
+
+          <!-- Stats row -->
+          <div class="hero-stats fade-up" aria-label="Statistik koleksi">
+            <div class="hero-stat">
+              <span class="hero-stat-num">1.200+</span>
+              <span class="hero-stat-label">Judul Buku</span>
+            </div>
+            <div class="hero-stat-divider" aria-hidden="true"></div>
+            <div class="hero-stat">
+              <span class="hero-stat-num">40+</span>
+              <span class="hero-stat-label">Genre</span>
+            </div>
+            <div class="hero-stat-divider" aria-hidden="true"></div>
+            <div class="hero-stat">
+              <span class="hero-stat-num">Gratis</span>
+              <span class="hero-stat-label">Untuk Mahasiswa</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero visual floating book stack  -->
+        <div class="hero-visual fade-in" aria-hidden="true">
+          <div class="book-stack" id="bookStack">
+            <div class="book-stack-item book-stack-1">
+              <img
+                src="https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg"
+                onerror="this.src='https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=300&q=80'"
+                alt="" loading="eager">
+            </div>
+            <div class="book-stack-item book-stack-2">
+              <img
+                src="https://covers.openlibrary.org/b/isbn/9780441172719-L.jpg"
+                onerror="this.src='https://images.unsplash.com/photo-1614849963640-9cc74b2229f0?w=300&q=80'"
+                alt="" loading="eager">
+            </div>
+            <div class="book-stack-item book-stack-3">
+              <img
+                src="https://covers.openlibrary.org/b/isbn/9780451524935-L.jpg"
+                onerror="this.src='https://images.unsplash.com/photo-1473186578172-c141e6798cf4?w=300&q=80'"
+                alt="" loading="eager">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Scroll indicator -->
+      <button class="scroll-indicator" id="scrollDown" aria-label="Gulir ke bawah">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
     </section>
+
+    <!--
+         BOOK MARK Infinite Horizontal Scroll Loop
+    -->
+    <section class="marquee-section" id="book-marquee" aria-label="Koleksi buku bergerak" aria-hidden="true">
+      <div class="marquee-fade-left"  aria-hidden="true"></div>
+      <div class="marquee-fade-right" aria-hidden="true"></div>
+
+      <div class="marquee-row">
+        <div class="marquee-track" id="marqueeTrack1">
+        </div>
+      </div>
+
+      <div class="marquee-row marquee-row--reverse">
+        <div class="marquee-track" id="marqueeTrack2">
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote Banner -->
+    <section class="quote-banner" aria-label="Kutipan buku pilihan" id="quote-banner">
+      <div class="container quote-banner-inner">
+        <span class="quote-mark" aria-hidden="true">"</span>
+        <div class="quote-content" id="quoteCycle">
+          <blockquote class="quote-text" id="quoteText">
+            Sebuah buku yang ditutup adalah awal dari ribuan kemungkinan.
+          </blockquote>
+          <cite class="quote-author" id="quoteAuthor">Charvlibrary</cite>
+        </div>
+        <div class="quote-dots" aria-hidden="true">
+          <span class="quote-dot active"></span>
+          <span class="quote-dot"></span>
+          <span class="quote-dot"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED BOOKS CAROUSEL -->
+    <section class="section featured-section" id="featured" aria-labelledby="featured-title">
+      <div class="container">
+        <div class="section-header featured-header">
+          <div>
+            <span class="section-eyebrow">Pilihan Editor</span>
+            <h2 class="section-title" id="featured-title">Buku Unggulan Bulan Ini</h2>
+          </div>
+          <a href="pages/discovery/explore.html" class="btn btn-ghost">
+            Lihat semua
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Carousel wrapper -->
+        <div class="carousel-outer">
+          <button class="carousel-arrow carousel-prev" id="carouselPrev" aria-label="Buku sebelumnya">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+
+          <div class="carousel-track-wrap" role="region" aria-label="Carousel buku unggulan">
+            <div class="carousel-track stagger-children" id="carouselTrack">
+              <!-- JS render -->
+            </div>
+          </div>
+
+          <button class="carousel-arrow carousel-next" id="carouselNext" aria-label="Buku berikutnya">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+
+        <!-- Dots -->
+        <div class="carousel-dots" id="carouselDots" role="tablist" aria-label="Navigasi carousel"></div>
+      </div>
+    </section>
+
+    <!--
+         GENRE SHOWCASE
+    -->
+    <section class="section genre-section" id="genres" aria-labelledby="genre-title">
+      <div class="container">
+        <div class="section-header section-header--center">
+          <span class="section-eyebrow">Jelajahi Genre</span>
+          <h2 class="section-title" id="genre-title">Temukan Bacaan Sesuai Minatmu</h2>
+          <p class="section-subtitle">Dari fiksi ilmiah hingga filsafat, semuanya ada di Charvlibrary.</p>
+        </div>
+
+        <div class="genre-grid stagger-children" id="genreGrid">
+          <!-- JS render -->
+        </div>
+
+        <div class="text-center" style="margin-top: var(--space-8);">
+          <a href="pages/discovery/categories.html" class="btn btn-secondary">Lihat Semua Kategori</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section how-section" id="cara-kerja" aria-labelledby="how-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">Cara Kerja</span>
+          <h2 class="section-title" id="how-title">Pinjam buku semudah ini</h2>
+        </div>
+
+        <div class="steps-layout">
+          <div class="steps-list">
+            <div class="step fade-up">
+              <div class="step-number" aria-hidden="true">01</div>
+              <div class="step-content">
+                <h3 class="step-title">Buat Akun</h3>
+                <p class="step-desc">Daftar gratis dengan email kampus atau email pribadi. Verifikasi selesai dalam hitungan detik.</p>
+              </div>
+            </div>
+            <div class="step fade-up">
+              <div class="step-number" aria-hidden="true">02</div>
+              <div class="step-content">
+                <h3 class="step-title">Temukan Buku</h3>
+                <p class="step-desc">Jelajahi lebih dari 1.200 judul. Filter berdasarkan genre, penulis, atau tahun terbit.</p>
+              </div>
+            </div>
+            <div class="step fade-up">
+              <div class="step-number" aria-hidden="true">03</div>
+              <div class="step-content">
+                <h3 class="step-title">Pinjam dan Baca</h3>
+                <p class="step-desc">Konfirmasi peminjaman, catat tanggal pengembalian (14 hari), dan mulai membaca kapanpun.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="steps-visual fade-in">
+            <div class="mockup-phone">
+              <div class="mockup-screen">
+                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&q=80" alt="Ilustrasi membaca buku digital" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+         RECENT BOOKS GRID
+    -->
+    <section class="section recent-section" id="buku-terbaru" aria-labelledby="recent-title">
+      <div class="container">
+        <div class="section-header featured-header">
+          <div>
+            <span class="section-eyebrow">Koleksi Terbaru</span>
+            <h2 class="section-title" id="recent-title">Baru Ditambahkan</h2>
+          </div>
+          <a href="pages/discovery/explore.html" class="btn btn-ghost">Semua buku</a>
+        </div>
+
+        <div class="grid-books stagger-children" id="recentBooksGrid">
+          <!-- JS render -->
+        </div>
+      </div>
+    </section>
+
+    <!--
+         CTA BANNER
+    -->
+    <section class="cta-banner" id="daftar" aria-labelledby="cta-title">
+      <div class="container cta-inner">
+        <div class="cta-text">
+          <h2 class="cta-title" id="cta-title">Siap mulai membaca?</h2>
+          <p class="cta-subtitle">Bergabung dan akses koleksi perpustakaan digital hari ini.</p>
+        </div>
+        <div class="cta-actions">
+          <a href="pages/auth/register.html" class="btn btn-primary btn-lg">Buat Akun Gratis</a>
+          <a href="pages/discovery/explore.html" class="btn btn-ghost btn-lg" style="color: var(--color-accent-light);">Jelajahi dulu</a>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <!--
+       FOOTER
+  -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <p class="footer-brand-name">Charvlibrary</p>
+          <p class="footer-tagline">Perpustakaan digital untuk mahasiswa yang ingin terus belajar dan bertumbuh.</p>
+        </div>
+
+        <div>
+          <h3 class="footer-section-title">Jelajahi</h3>
+          <ul class="footer-links">
+            <li><a href="pages/discovery/explore.html">Semua Buku</a></li>
+            <li><a href="pages/discovery/categories.html">Kategori</a></li>
+            <li><a href="pages/discovery/search-results.html">Pencarian</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="footer-section-title">Komunitas</h3>
+          <ul class="footer-links">
+            <li><a href="pages/community/blog.html">Blog</a></li>
+            <li><a href="pages/community/events.html">Event</a></li>
+            <li><a href="pages/community/author-profile.html">Profil Penulis</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="footer-section-title">Informasi</h3>
+          <ul class="footer-links">
+            <li><a href="pages/support/about.html">Tentang Kami</a></li>
+            <li><a href="pages/support/contact.html">Kontak</a></li>
+            <li><a href="pages/support/terms-privacy.html">Syarat &amp; Privasi</a></li>
+            <li><a href="pages/community/faq.html">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span class="footer-year"></span> Charvlibrary. Dibuat untuk UTS Front-End Programming.</p>
+        <p style="font-size: var(--font-size-xs); opacity: 0.5;">Tim: Davvin, Livi, Chandra, Aaron, Davvin, Olivian</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast container -->
+
+  <!-- Scripts -->
   <script src="assets/js/data-books.js"></script>
   <script src="assets/js/utils.js"></script>
+  <script src="assets/js/nav.js"></script>
+  <script src="assets/js/interactions.js" defer></script>
+  <script src="assets/js/index.js"></script>
+
 </body>
 </html>
