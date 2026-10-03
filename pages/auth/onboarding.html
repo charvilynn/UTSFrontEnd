@@ -76,3 +76,174 @@
     }
     @media (max-width: 640px) { .genre-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 400px) { .genre-grid { grid-template-columns: 1fr 1fr; } }
+
+    .genre-card {
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4) var(--space-3);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+      position: relative;
+      user-select: none;
+      background: var(--color-card);
+    }
+    .genre-card:hover { border-color: var(--color-secondary); transform: translateY(-2px); }
+    .genre-card.selected {
+      border-color: var(--color-secondary);
+      background: var(--color-accent-light);
+    }
+    .genre-card.selected .genre-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .genre-emoji {
+      font-size: 32px;
+      line-height: 1;
+      display: block;
+      margin-bottom: var(--space-2);
+    }
+    .genre-name {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-foreground);
+    }
+
+    .genre-check {
+      position: absolute;
+      top: var(--space-2); right: var(--space-2);
+      width: 20px; height: 20px;
+      background: var(--color-secondary);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .min-select-hint {
+      text-align: center;
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+      margin-bottom: var(--space-6);
+    }
+    .min-select-hint strong { color: var(--color-accent); }
+
+    /* Step 2 - Preferensi baca */
+    .pref-options { display: flex; flex-direction: column; gap: var(--space-4); margin-bottom: var(--space-8); }
+    .pref-option {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      cursor: pointer;
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+      background: var(--color-card);
+    }
+    .pref-option:hover { border-color: var(--color-secondary); }
+    .pref-option input[type="radio"] { display: none; }
+    .pref-option.selected {
+      border-color: var(--color-secondary);
+      background: var(--color-accent-light);
+    }
+    .pref-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 24px;
+    }
+    .pref-info p:first-child { font-weight: var(--font-weight-semibold); margin-bottom: 2px; }
+    .pref-info p:last-child { font-size: var(--font-size-sm); color: var(--color-muted-foreground); }
+
+    /* Step 3 - Welcome */
+    .welcome-state {
+      text-align: center;
+      padding: var(--space-8) 0;
+    }
+    .welcome-icon {
+      font-size: 80px;
+      line-height: 1;
+      display: block;
+      margin-bottom: var(--space-6);
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .welcome-icon { animation: none; }
+      .genre-card, .pref-option { transition: none; }
+    }
+
+    /* Nav buttons */
+    .step-nav {
+      display: flex;
+      gap: var(--space-3);
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <p style="margin-left:auto; font-size:var(--font-size-sm); color:var(--color-muted-foreground);">
+        Langkah <span id="navStep">1</span> dari 3
+      </p>
+    </div>
+  </header>
+
+  <div class="navbar-spacer"></div>
+  <div class="onboarding-progress">
+    <div class="onboarding-progress-fill" id="progressFill" style="width: 33%;"></div>
+  </div>
+
+  <main class="onboarding-wrap">
+
+    <div class="step-dots" aria-label="Langkah onboarding">
+      <div class="step-dot active" id="dot-0"></div>
+      <div class="step-dot" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+    </div>
+
+    <!-- Step 1: Pilih Genre -->
+    <section id="step1">
+      <h1 class="step-heading">Genre Apa yang Kamu Sukai?</h1>
+      <p class="step-subheading">Pilih setidaknya 3 genre untuk personalisasi rekomendasimu.</p>
+
+      <div class="genre-grid" id="genreGrid" aria-label="Pilih genre favorit">
+        <!-- diisi JS -->
+      </div>
+
+      <p class="min-select-hint" aria-live="polite">
+        Sudah memilih <strong id="selectedCount">0</strong> dari minimal 3 genre
+      </p>
+
+      <div class="step-nav">
+        <span></span>
+        <button class="btn btn-primary" id="step1Next" disabled>
+          Lanjut →
+        </button>
+      </div>
+    </section>
+
+    <!-- Step 2: Preferensi baca -->
+    <section id="step2" hidden>
+      <h2 class="step-heading">Kapan Kamu Biasanya Membaca?</h2>
+      <p class="step-subheading">Kami akan sesuaikan notifikasi dan rekomendasi denganmu.</p>
+
+      <div class="pref-options" id="readingTimeOptions" role="radiogroup" aria-label="Waktu baca favorit">
