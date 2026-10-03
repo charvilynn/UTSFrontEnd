@@ -77,3 +77,243 @@
       outline: none;
       caret-color: var(--color-accent);
     }
+    .otp-input:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+      transform: translateY(-2px);
+    }
+    .otp-input.filled {
+      border-color: var(--color-secondary);
+      background: var(--color-accent-light);
+    }
+    .otp-input.error {
+      border-color: var(--color-error);
+      animation: shake .3s ease;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+
+    /* Timer */
+    .otp-timer {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+      margin-bottom: var(--space-5);
+    }
+    .otp-resend {
+      background: none; border: none; cursor: pointer;
+      color: var(--color-secondary); font-weight: var(--font-weight-semibold);
+      font-size: var(--font-size-sm); padding: 0;
+    }
+    .otp-resend:disabled { color: var(--color-muted-foreground); cursor: default; }
+
+    /* Success overlay */
+    .verify-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .verify-success-icon {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, #10B981, #059669);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      animation: popIn .5s cubic-bezier(.34, 1.56, .64, 1) forwards;
+      color: white;
+    }
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .verify-success-icon { animation: none; }
+      .otp-input { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <div style="margin-left:auto;">
+        <a href="register.html" class="btn btn-ghost btn-sm">← Kembali</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="navbar-spacer"></div>
+
+  <div class="verify-page">
+    <div class="verify-card">
+
+      <!-- Form state -->
+      <div id="verifyFormState">
+        <div class="verify-icon-wrap" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+
+        <h1 class="verify-title">Cek Email Kamu</h1>
+        <p class="verify-subtitle">
+          Kami kirim kode 4 digit ke<br>
+          <span class="verify-email-highlight" id="targetEmail">email kamu</span>
+        </p>
+
+        <div class="otp-group" role="group" aria-label="Masukkan kode OTP 4 digit">
+          <input type="text" inputmode="numeric" maxlength="1" class="otp-input" id="otp-0" aria-label="Digit pertama" autocomplete="one-time-code">
+          <input type="text" inputmode="numeric" maxlength="1" class="otp-input" id="otp-1" aria-label="Digit kedua">
+          <input type="text" inputmode="numeric" maxlength="1" class="otp-input" id="otp-2" aria-label="Digit ketiga">
+          <input type="text" inputmode="numeric" maxlength="1" class="otp-input" id="otp-3" aria-label="Digit keempat">
+        </div>
+
+        <p class="otp-timer" id="otpTimer" aria-live="polite">
+          Kirim ulang kode dalam <strong id="otpCountdown">120</strong> detik
+        </p>
+        <button class="otp-resend" id="resendOtp" disabled>Kirim Ulang Kode</button>
+
+        <button class="btn btn-primary" id="verifyBtn" style="width:100%; margin-top:var(--space-6);" disabled>
+          Verifikasi
+        </button>
+
+        <p id="otpError" style="color:var(--color-error); font-size:var(--font-size-sm); margin-top:var(--space-3); display:none;" role="alert">
+          Kode tidak valid. Coba lagi.
+        </p>
+
+        <p style="margin-top:var(--space-5); font-size:var(--font-size-sm); color:var(--color-muted-foreground);">
+          <strong>Demo:</strong> Masukkan kode apapun (4 digit) untuk melanjutkan.
+        </p>
+      </div>
+
+      <!-- Success state -->
+      <div class="verify-success" id="verifySuccess" aria-live="polite">
+        <div class="verify-success-icon" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <p style="font-family:var(--font-heading); font-size:var(--font-size-2xl);">Terverifikasi!</p>
+        <p style="color:var(--color-muted-foreground);">Akunmu sudah aktif. Mengalihkan ke onboarding...</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputs    = [...document.querySelectorAll('.otp-input')];
+      const verifyBtn = document.getElementById('verifyBtn');
+      const resendBtn = document.getElementById('resendOtp');
+      const timerEl   = document.getElementById('otpTimer');
+      const countdown = document.getElementById('otpCountdown');
+
+      // Prefill email dari URL atau mock
+      const emailParam = new URLSearchParams(location.search).get('email') || 'email@kamu.com';
+      document.getElementById('targetEmail').textContent = emailParam;
+
+      // OTP input behaviour
+      inputs.forEach((input, i) => {
+        input.addEventListener('input', (e) => {
+          const val = e.target.value.replace(/\D/g, '');
+          e.target.value = val;
+          e.target.classList.toggle('filled', val !== '');
+          if (val && i < 3) inputs[i + 1].focus();
+          checkAllFilled();
+        });
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && i > 0) {
+            inputs[i - 1].focus();
+            inputs[i - 1].value = '';
+            inputs[i - 1].classList.remove('filled');
+          }
+        });
+
+        // Paste support
+        input.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 4);
+          pasted.split('').forEach((ch, j) => {
+            if (inputs[j]) {
+              inputs[j].value = ch;
+              inputs[j].classList.add('filled');
+            }
+          });
+          inputs[Math.min(pasted.length, 3)].focus();
+          checkAllFilled();
+        });
+      });
+
+      function checkAllFilled() {
+        const filled = inputs.every(inp => inp.value.length === 1);
+        verifyBtn.disabled = !filled;
+      }
+
+      // Verify
+      verifyBtn.addEventListener('click', () => {
+        verifyBtn.disabled = true;
+        verifyBtn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;"></span> Memverifikasi...';
+        document.getElementById('otpError').style.display = 'none';
+
+        setTimeout(() => {
+          // Mock: kode apapun diterima
+          document.getElementById('verifyFormState').style.display = 'none';
+          document.getElementById('verifySuccess').style.display = 'flex';
+          setTimeout(() => {
+            window.location.href = 'onboarding.html';
+          }, 1800);
+        }, 1000);
+      });
+
+      // Countdown
+      let sec = 120;
+      const timer = setInterval(() => {
+        sec--;
+        countdown.textContent = sec;
+        if (sec <= 0) {
+          clearInterval(timer);
+          timerEl.style.display = 'none';
+          resendBtn.disabled = false;
+        }
+      }, 1000);
+
+      resendBtn.addEventListener('click', () => {
+        inputs.forEach(inp => { inp.value = ''; inp.classList.remove('filled', 'error'); });
+        verifyBtn.disabled = true;
+        resendBtn.disabled = true;
+        sec = 120;
+        countdown.textContent = sec;
+        timerEl.style.display = 'block';
+
+        const newTimer = setInterval(() => {
+          sec--;
+          countdown.textContent = sec;
+          if (sec <= 0) {
+            clearInterval(newTimer);
+            timerEl.style.display = 'none';
+            resendBtn.disabled = false;
+          }
+        }, 1000);
+
+        inputs[0].focus();
+      });
+
+      inputs[0].focus();
+    });
+  </script>
+</body>
+</html>
