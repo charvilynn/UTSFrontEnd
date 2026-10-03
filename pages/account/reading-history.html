@@ -57,4 +57,141 @@
       border: 1px solid var(--color-border);
       border-radius: var(--radius-xl);
       padding: var(--space-4);
-```
+      display: flex;
+      gap: var(--space-4);
+      transition: box-shadow var(--transition-base);
+    }
+    .history-card:hover { box-shadow: var(--shadow-md); }
+
+    .history-cover {
+      width: 56px; height: 80px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+
+    .history-info { flex: 1; min-width: 0; }
+    .history-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .history-meta {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted-foreground);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-2);
+    }
+    .year-group-heading {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-sm);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--color-muted-foreground);
+      margin-bottom: var(--space-5);
+      margin-top: var(--space-8);
+      padding-left: 50px;
+    }
+    .year-group-heading:first-child { margin-top: 0; }
+
+    /* Summary stats bar */
+    .stats-bar {
+      display: flex;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+      padding: var(--space-5);
+      background: var(--color-muted);
+      border-radius: var(--radius-xl);
+      margin-bottom: var(--space-8);
+    }
+    .stat-item { text-align: center; }
+    .stat-item-val {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-secondary);
+      line-height: 1;
+    }
+    .stat-item-label { font-size: var(--font-size-xs); color: var(--color-muted-foreground); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="../../index.html" class="navbar-brand">
+        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <rect width="36" height="36" rx="8" fill="#92400E"/>
+          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+        </svg>
+        <span class="navbar-brand-name">Charvlibrary</span>
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="profile.html" aria-current="page">Profil</a></li>
+        </ul>
+      </nav>
+      <button class="navbar-toggle" aria-expanded="false" aria-label="Buka menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+  <div class="navbar-spacer"></div>
+
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <a href="../../index.html">Beranda</a>
+          <span class="breadcrumb-sep">/</span>
+          <a href="profile.html">Profil</a>
+          <span class="breadcrumb-sep">/</span>
+          <span aria-current="page">Riwayat Membaca</span>
+        </nav>
+        <h1>Riwayat Membaca</h1>
+      </div>
+    </div>
+
+    <section class="section--sm">
+      <div class="container" style="max-width:740px;">
+
+        <!-- Stats bar -->
+        <div class="stats-bar fade-up" id="statsBar">
+          <!-- diisi JS -->
+        </div>
+
+        <!-- Timeline -->
+        <div id="timelineContainer">
+          <!-- diisi JS -->
+        </div>
+
+        <!-- Empty state -->
+        <div id="emptyHistory" hidden class="empty-state" style="background:var(--color-muted);border-radius:var(--radius-xl);">
+          <div class="empty-state-icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <p class="empty-state-title">Belum ada riwayat</p>
+          <p class="empty-state-desc">Pinjam dan kembalikan buku untuk melihat riwayat membacamu di sini.</p>
+          <a href="../discovery/explore.html" class="btn btn-primary">Mulai Membaca</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
