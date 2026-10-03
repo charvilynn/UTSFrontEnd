@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pertanyaan yang sering diajukan tentang Charvlibrary - peminjaman, akun, dan lebih banyak lagi.">
+  <title>FAQ - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .faq-hero {
+      background: var(--color-surface);
+      padding-block: var(--space-10);
+      border-bottom: 1px solid var(--color-border);
+      text-align: center;
+      margin-bottom: var(--space-10);
+    }
+    .faq-hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: var(--font-weight-light);
+      margin-bottom: var(--space-3);
+    }
+    .faq-hero p { color: var(--color-muted-foreground); font-size: var(--font-size-lg); margin-bottom: var(--space-6); }
+
+    /* Search */
+    .faq-search-wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .faq-search-icon {
+      position: absolute;
+      left: var(--space-4);
+      top: 50%; transform: translateY(-50%);
+      color: var(--color-muted-foreground);
+    }
+    .faq-search-input {
+      width: 100%;
+      padding: var(--space-3) var(--space-4) var(--space-3) 44px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-base);
+      background: var(--color-card);
+      color: var(--color-foreground);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .faq-search-input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+    }
+    .faq-results-count {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
+      text-align: center;
+      margin-top: var(--space-3);
+      min-height: 20px;
+    }
+
+    /* Layout */
+    .faq-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+    @media (max-width: 768px) { .faq-layout { grid-template-columns: 1fr; } }
+
+    /* Sidebar category nav */
+    .faq-nav {
+      position: sticky;
+      top: calc(var(--navbar-height) + var(--space-4));
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4);
+    }
