@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Personalisasi pengalaman membacamu di Charvlibrary - pilih genre favoritmu.">
+  <title>Selamat Datang di Charvlibrary - Onboarding</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    body { min-height: 100vh; background: var(--color-background); }
+
+    /* Progress bar atas */
+    .onboarding-progress {
+      height: 4px;
+      background: var(--color-border);
+      position: fixed;
+      top: var(--navbar-height);
+      left: 0; right: 0;
+      z-index: 100;
+    }
+    .onboarding-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
+      border-radius: var(--radius-full);
+      transition: width .4s var(--ease-out);
+    }
+
+    .onboarding-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: calc(var(--navbar-height) + var(--space-10)) var(--space-6) var(--space-10);
+    }
+
+    /* Step indicator dots */
+    .step-dots {
+      display: flex;
+      gap: var(--space-2);
+      justify-content: center;
+      margin-bottom: var(--space-8);
+    }
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--color-border);
+      transition: background var(--transition-base), width var(--transition-base);
+    }
+    .step-dot.active {
+      width: 24px;
+      border-radius: var(--radius-full);
+      background: var(--color-secondary);
+    }
+    .step-dot.done { background: var(--color-accent); }
+
+    .step-heading {
+      font-family: var(--font-heading);
+      font-size: clamp(1.75rem, 3vw, var(--font-size-4xl));
+      font-weight: var(--font-weight-light);
+      text-align: center;
+      margin-bottom: var(--space-3);
+      letter-spacing: -0.02em;
+    }
+    .step-subheading {
+      text-align: center;
+      color: var(--color-muted-foreground);
+      margin-bottom: var(--space-8);
+    }
+
+    /* Genre grid - Step 1 */
+    .genre-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-3);
+      margin-bottom: var(--space-8);
+    }
+    @media (max-width: 640px) { .genre-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 400px) { .genre-grid { grid-template-columns: 1fr 1fr; } }
