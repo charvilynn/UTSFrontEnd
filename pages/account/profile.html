@@ -268,6 +268,11 @@
               Wishlist
             </a>
             <div class="profile-nav-divider" role="separator"></div>
+            <a href="../support/admin.html" class="profile-nav-item" style="color: var(--color-secondary); font-weight: var(--font-weight-medium);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Panel Manajemen (Admin)
+            </a>
+            <div class="profile-nav-divider" role="separator"></div>
             <a href="../auth/login.html" class="profile-nav-item" style="color: var(--color-error);" id="logoutBtn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Keluar
@@ -327,7 +332,7 @@
         <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
         <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
         <div><h3 class="footer-section-title">Akun</h3><ul class="footer-links"><li><a href="edit-profile.html">Edit Profil</a></li><li><a href="notifications.html">Notifikasi</a></li></ul></div>
-        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li></ul></div>
+        <div><h3 class="footer-section-title">Admin</h3><ul class="footer-links"><li><a href="../support/admin.html">Panel Manajemen</a></li><li><a href="../support/admin-dashboard.html">Dashboard Admin</a></li></ul></div>
       </div>
       <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
     </div>
@@ -350,7 +355,20 @@
       const initials = user.name
         ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
         : 'U';
-      document.getElementById('profileAvatar').textContent = initials;
+      const profileAvatar = document.getElementById('profileAvatar');
+      if (profileAvatar) {
+        profileAvatar.textContent = initials;
+        if (user.avatarColor) {
+          profileAvatar.style.background = user.avatarColor;
+          profileAvatar.style.borderColor = 'rgba(255,251,235,0.7)';
+        }
+      }
+      if (user.avatarColor) {
+        const sidebarHeader = document.querySelector('.profile-sidebar-header');
+        if (sidebarHeader) {
+          sidebarHeader.style.background = `linear-gradient(135deg, ${user.avatarColor} 0%, #1c0f00 100%)`;
+        }
+      }
       document.getElementById('profileName').textContent = user.name || 'Pengguna';
       document.getElementById('profileEmail').textContent = user.email || '—';
       document.getElementById('profileJoin').textContent = user.joinDate
@@ -366,12 +384,22 @@
       document.getElementById('statWishlist').textContent = wishlist.length;
       document.getElementById('statTotal').textContent    = borrowed.length;
 
-      // Notif badge
-      const unread = notificationsData.filter(n => !n.read).length;
+      // Notif badge tersinkronisasi
+      const unread = typeof getUnreadNotificationsCount === 'function'
+        ? getUnreadNotificationsCount()
+        : (function() {
+            const readMap = getFromStorage('Charvlibrary_notif_read', {});
+            const list = typeof notificationsData !== 'undefined' ? notificationsData : [];
+            return list.filter(n => !readMap[n.id] && !n.read).length;
+          })();
       const badge  = document.getElementById('unreadBadge');
-      if (unread > 0) {
-        badge.style.display = 'inline';
-        badge.textContent = unread;
+      if (badge) {
+        if (unread > 0) {
+          badge.style.display = 'inline';
+          badge.textContent = unread;
+        } else {
+          badge.style.display = 'none';
+        }
       }
 
       // Buku dipinjam aktif
@@ -383,13 +411,13 @@
           const dueDate = formatDate(b.returnDate);
           return `
             <div class="activity-item">
-              <img src="${book.cover}" alt="${book.title}" style="width:48px;height:64px;object-fit:cover;border-radius:var(--radius-sm);">
+              <img src="${book.coverFallback || book.cover}" alt="${book.title}" style="width:48px;height:64px;object-fit:cover;border-radius:var(--radius-sm);" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';">
               <div class="activity-text">
                 <p class="activity-title">${book.title}</p>
                 <p style="font-size:var(--font-size-xs);color:var(--color-muted-foreground);">${book.author}</p>
                 <p style="font-size:var(--font-size-xs);color:var(--color-accent);margin-top:var(--space-1);">Kembali: ${dueDate}</p>
               </div>
-              <a href="../library/borrow-checkout.html?id=${book.id}" class="btn btn-ghost btn-sm" style="align-self:center;">Detail</a>
+              <a href="../discovery/book-detail.html?id=${book.id}" class="btn btn-ghost btn-sm" style="align-self:center;">Detail</a>
             </div>
           `;
         }).join('');
@@ -402,7 +430,7 @@
         const wlBooks = wishlist.slice(0, 3).map(id => getBookById(id)).filter(Boolean);
         wlPreview.innerHTML = wlBooks.map(book => `
           <a href="../discovery/book-detail.html?id=${book.id}" class="activity-item" style="text-decoration:none;color:inherit;">
-            <img src="${book.cover}" alt="${book.title}" style="width:40px;height:54px;object-fit:cover;border-radius:var(--radius-sm);">
+            <img src="${book.coverFallback || book.cover}" alt="${book.title}" style="width:40px;height:54px;object-fit:cover;border-radius:var(--radius-sm);" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';">
             <div class="activity-text">
               <p class="activity-title">${book.title}</p>
               <p style="font-size:var(--font-size-xs);color:var(--color-muted-foreground);">${book.author}</p>

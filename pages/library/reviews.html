@@ -290,7 +290,7 @@
 
 
       document.getElementById('bookHeader').innerHTML = `
-        <img src="${book.cover}" alt="Sampul ${book.title}" class="book-review-cover">
+        <img src="${book.coverFallback || book.cover}" alt="Sampul ${book.title}" class="book-review-cover" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';">
         <div>
           <h1 class="book-review-title">${book.title}</h1>
           <p class="book-review-meta">oleh ${book.author} &middot; ${book.genre}</p>

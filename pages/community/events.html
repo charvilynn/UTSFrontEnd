@@ -10,48 +10,67 @@
   <link rel="stylesheet" href="../../assets/css/components.css">
   <style>
     .events-hero {
-      background: linear-gradient(135deg, #1E1B4B 0%, #312E81 60%, #3730A3 100%);
-      padding-block: var(--space-12);
-      color: white;
+      background: linear-gradient(135deg, #1C0F00 0%, #451A03 45%, #78350F 100%);
+      padding-block: var(--space-14);
+      color: #FFFBEB;
       text-align: center;
       position: relative;
       overflow: hidden;
       margin-bottom: var(--space-10);
+      border-bottom: 1px solid rgba(217, 119, 6, 0.25);
     }
     .events-hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.06) 0%, transparent 60%);
+      background: radial-gradient(circle at 50% 30%, rgba(217, 119, 6, 0.2) 0%, transparent 70%);
       pointer-events: none;
     }
     .events-hero h1 {
       font-family: var(--font-heading);
       font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: var(--font-weight-light);
-      letter-spacing: -0.03em;
+      font-weight: var(--font-weight-normal);
+      letter-spacing: -0.02em;
       margin-bottom: var(--space-3);
+      color: #FFFBEB !important;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
     }
-    .events-hero p { color: rgba(255,255,255,0.7); font-size: var(--font-size-lg); margin-bottom: var(--space-8); }
+    .events-hero p {
+      color: rgba(255, 251, 235, 0.9);
+      font-size: var(--font-size-lg);
+      margin-bottom: var(--space-8);
+      max-width: 650px;
+      margin-inline: auto;
+      line-height: 1.6;
+    }
 
     /* Countdown timer */
     .event-countdown {
       display: inline-flex;
-      gap: var(--space-5);
-      background: rgba(255,255,255,0.1);
-      padding: var(--space-4) var(--space-7);
-      border-radius: var(--radius-xl);
-      border: 1px solid rgba(255,255,255,0.15);
+      gap: var(--space-6);
+      background: rgba(28, 15, 0, 0.65);
+      padding: var(--space-5) var(--space-8);
+      border-radius: var(--radius-2xl);
+      border: 1px solid rgba(253, 230, 138, 0.35);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     }
-    .countdown-unit { text-align: center; }
+    .countdown-unit { text-align: center; min-width: 56px; }
     .countdown-val {
       font-family: var(--font-heading);
-      font-size: var(--font-size-3xl);
+      font-size: 2.5rem;
       font-weight: var(--font-weight-bold);
       line-height: 1;
-      color: white;
+      color: #FDE68A;
+      text-shadow: 0 0 14px rgba(245, 158, 11, 0.45);
     }
-    .countdown-label { font-size: var(--font-size-xs); color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 1px; }
+    .countdown-label {
+      font-size: 11px;
+      color: rgba(255, 251, 235, 0.75);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 4px;
+    }
 
     /* Filter chips */
     .event-filters {
@@ -199,7 +218,7 @@
         <h1>Event & Komunitas</h1>
         <p>Reading club, workshop, dan diskusi buku bersama komunitas Charvlibrary</p>
         <div>
-          <p style="font-size:var(--font-size-xs);color:rgba(255,255,255,0.5);margin-bottom:var(--space-3);text-transform:uppercase;letter-spacing:1px;">Event berikutnya dalam</p>
+          <p style="font-size:var(--font-size-xs);color:#FDE68A;margin-bottom:var(--space-3);text-transform:uppercase;letter-spacing:2px;font-weight:var(--font-weight-semibold);opacity:0.95;">Event Berikutnya Dimulai Dalam</p>
           <div class="event-countdown" id="countdownTimer" aria-label="Hitungan mundur ke event berikutnya">
             <div class="countdown-unit"><p class="countdown-val" id="cdDays">00</p><p class="countdown-label">Hari</p></div>
             <div class="countdown-unit"><p class="countdown-val" id="cdHours">00</p><p class="countdown-label">Jam</p></div>

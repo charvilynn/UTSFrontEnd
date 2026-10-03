@@ -245,7 +245,7 @@
       const returnDate = new Date(today.getTime() + 14 * 24 * 60 * 60 * 1000);
 
       document.getElementById('bookInfo').innerHTML = `
-        <img src="${book.cover}" alt="Sampul ${book.title}" class="book-checkout-cover">
+        <img src="${book.coverFallback || book.cover}" alt="Sampul ${book.title}" class="book-checkout-cover" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';">
         <div>
           <p class="book-checkout-title">${book.title}</p>
           <p class="book-checkout-author">${book.author}</p>

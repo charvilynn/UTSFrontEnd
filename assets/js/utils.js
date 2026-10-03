@@ -166,6 +166,44 @@ function getBorrowedBooks() {
   return getFromStorage('Charvlibrary_borrowed', []);
 }
 
+/* ==========================================================================
+   Notifications Utilities
+   ========================================================================== */
+
+function getNotificationsList() {
+  const customNotifs = getFromStorage('Charvlibrary_custom_notifs', []);
+  const baseNotifs = typeof notificationsData !== 'undefined' ? notificationsData : [];
+  return [...customNotifs, ...baseNotifs];
+}
+
+function addNotification(type, title, message) {
+  const customNotifs = getFromStorage('Charvlibrary_custom_notifs', []);
+  const newNotif = {
+    id: Date.now(),
+    type,
+    title,
+    message,
+    date: new Date().toISOString().split('T')[0],
+    read: false
+  };
+  customNotifs.unshift(newNotif);
+  saveToStorage('Charvlibrary_custom_notifs', customNotifs);
+  return newNotif;
+}
+
+function getUnreadNotificationsCount() {
+  const readMap = getFromStorage('Charvlibrary_notif_read', {});
+  const list = getNotificationsList();
+  return list.filter(n => !readMap[n.id] && n.read !== true).length;
+}
+
+function markAllNotificationsAsRead() {
+  const readMap = getFromStorage('Charvlibrary_notif_read', {});
+  const list = getNotificationsList();
+  list.forEach(n => { readMap[n.id] = true; });
+  saveToStorage('Charvlibrary_notif_read', readMap);
+}
+
 function borrowBook(bookId) {
   const borrowed = getBorrowedBooks();
   const today = new Date();
@@ -179,6 +217,12 @@ function borrowBook(bookId) {
       status: 'active'
     });
     saveToStorage('Charvlibrary_borrowed', borrowed);
+
+    const book = typeof getBookById === 'function' ? getBookById(bookId) : null;
+    const bookTitle = book ? book.title : `Buku #${bookId}`;
+    const dueStr = typeof formatDate === 'function' ? formatDate(returnDate.toISOString().split('T')[0]) : returnDate.toISOString().split('T')[0];
+    addNotification('borrow', 'Peminjaman Berhasil', `Kamu berhasil meminjam "${bookTitle}". Batas pengembalian: ${dueStr}.`);
+
     return true;
   }
   return false;
@@ -190,6 +234,10 @@ function returnBook(bookId) {
     return b;
   });
   saveToStorage('Charvlibrary_borrowed', borrowed);
+
+  const book = typeof getBookById === 'function' ? getBookById(bookId) : null;
+  const bookTitle = book ? book.title : `Buku #${bookId}`;
+  addNotification('reminder', 'Pengembalian Berhasil', `Buku "${bookTitle}" telah berhasil dikembalikan ke perpustakaan.`);
 }
 
 /* ==========================================================================
@@ -262,19 +310,16 @@ function showToast(message, type = 'info', duration = 3000) {
 function renderBookCard(book, basePath = '') {
   const inWishlist = isInWishlist(book.id);
   const detailPath = basePath + 'pages/discovery/book-detail.html?id=' + book.id;
-  // onerror: coba coverFallback dulu, lalu gradient placeholder
-  const fallback = book.coverFallback
-    ? `this.onerror=null; this.src='${book.coverFallback}'`
-    : `this.onerror=null; this.style='background:linear-gradient(135deg,#92400E,#D97706); opacity:.6'`;
+  const coverSrc = book.coverFallback || book.cover;
+  const fallback = `this.onerror=null; this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80'`;
 
   return `
     <article class="book-card fade-up" data-book-id="${book.id}">
       <div class="book-cover-wrap">
         <a href="${detailPath}" tabindex="-1" aria-hidden="true">
           <img
-            src="${book.cover}"
+            src="${coverSrc}"
             alt="Sampul buku ${book.title}"
-            loading="lazy"
             onerror="${fallback}"
           >
         </a>

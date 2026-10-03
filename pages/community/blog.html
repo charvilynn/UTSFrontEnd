@@ -260,11 +260,23 @@
       <div class="container">
 
         <!-- Filter chips -->
-        <div class="chip-group" id="blogChips" style="margin-bottom: var(--space-8);" role="group" aria-label="Filter kategori blog">
+        <div class="chip-group" id="blogChips" style="margin-bottom: var(--space-6);" role="group" aria-label="Filter kategori blog">
           <button class="chip active" data-cat="all" aria-pressed="true">Semua</button>
           <button class="chip" data-cat="Rekomendasi" aria-pressed="false">Rekomendasi</button>
           <button class="chip" data-cat="Ulasan" aria-pressed="false">Ulasan</button>
           <button class="chip" data-cat="Tips" aria-pressed="false">Tips</button>
+        </div>
+
+        <!-- Banner Pintasan ke Profil Penulis -->
+        <div style="background:var(--color-card); border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-4) var(--space-5); margin-bottom:var(--space-8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-3);">
+          <div style="display:flex; align-items:center; gap:var(--space-3);">
+            <span style="font-size:24px;">✍️</span>
+            <div>
+              <p style="font-weight:var(--font-weight-semibold); margin:0;">Profil & Biografi Penulis Terkemuka</p>
+              <p style="font-size:var(--font-size-xs); color:var(--color-muted-foreground); margin:0;">Telusuri biografi, statistik, dan karya Andrea Hirata, Pramoedya Ananta Toer, dan sastrawan lainnya.</p>
+            </div>
+          </div>
+          <a href="author-profile.html?author=Andrea+Hirata" class="btn btn-secondary btn-sm" style="font-weight:600;">Lihat Profil Penulis →</a>
         </div>
 
         <!-- Layout: featured + sidebar -->
@@ -303,34 +315,7 @@
   <script src="../../assets/js/utils.js"></script>
   <script src="../../assets/js/nav.js"></script>
   <script>
-    // Extended blog data (tambahan dari data-books.js)
-    const extendedBlogData = [
-      ...blogData,
-      {
-        id: 4,
-        title: "Review: Project Hail Mary - Buku Sci-Fi Terbaik 2021",
-        category: "Ulasan",
-        author: "Davvin",
-        authorAvatar: "A",
-        date: "2026-08-20",
-        readTime: 7,
-        excerpt: "Andy Weir kembali dengan karya yang mendebarkan. Bukan hanya tentang sains, tapi juga persahabatan.",
-        cover: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&q=80",
-        featured: false
-      },
-      {
-        id: 5,
-        title: "5 Genre Buku yang Wajib Kamu Eksplorasi di 2026",
-        category: "Tips",
-        author: "Davvin",
-        authorAvatar: "A",
-        date: "2026-08-15",
-        readTime: 5,
-        excerpt: "Jangan hanya baca genre yang itu-itu saja. Keluar dari zona nyaman dan temukan bacaan baru yang mengejutkan.",
-        cover: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80",
-        featured: false
-      }
-    ];
+    const extendedBlogData = blogData;
 
     let activeCategory = 'all';
 
