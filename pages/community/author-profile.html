@@ -1,20 +1,21 @@
+<!-- Halaman: Profil Penulis | Dibuat oleh: Aurel | Pilar: Komunitas & Konten -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Profil penulis dan karya-karyanya di koleksi Charvlibrary.">
-  <title>Profil Penulis - Charvlibrary</title>
+  <meta name="description" content="Profil penulis, biografi lengkap, dan karya-karyanya di koleksi perpustakaan Charvlibrary.">
+  <title>Profil & Biografi Penulis - Charvlibrary</title>
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
   <style>
     /* Author hero */
     .author-hero {
-      background: var(--color-surface);
+      background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-muted) 100%);
       border-bottom: 1px solid var(--color-border);
-      padding-block: var(--space-12);
-      margin-bottom: var(--space-10);
+      padding-block: var(--space-10);
+      margin-bottom: var(--space-8);
     }
     .author-hero-inner {
       display: flex;
@@ -23,43 +24,69 @@
       flex-wrap: wrap;
     }
     .author-avatar-lg {
-      width: 120px; height: 120px;
+      width: 130px; height: 130px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-family: var(--font-heading);
-      font-size: 48px;
+      font-size: 52px;
       font-weight: var(--font-weight-bold);
       color: white;
       flex-shrink: 0;
       box-shadow: var(--shadow-lg);
+      border: 4px solid var(--color-card);
     }
     .author-name {
       font-family: var(--font-heading);
-      font-size: clamp(2rem, 4vw, 3rem);
+      font-size: clamp(2rem, 4vw, 2.75rem);
       font-weight: var(--font-weight-light);
       letter-spacing: -0.02em;
       margin-bottom: var(--space-2);
+      line-height: 1.15;
     }
     .author-specialty {
-      color: var(--color-accent);
+      color: var(--color-secondary);
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-semibold);
       letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
-      margin-bottom: var(--space-4);
+      margin-bottom: var(--space-3);
+      display: inline-block;
     }
     .author-bio {
       color: var(--color-muted-foreground);
       line-height: var(--line-height-relaxed);
-      max-width: 60ch;
+      max-width: 65ch;
       margin-bottom: var(--space-5);
+      font-size: var(--font-size-base);
     }
+    .author-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+      flex-wrap: wrap;
+    }
+    .btn-follow {
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: var(--font-weight-semibold);
+    }
+    .btn-follow.following {
+      background: var(--color-secondary);
+      color: white;
+      border-color: var(--color-secondary);
+    }
+
     .author-stats {
       display: flex;
       gap: var(--space-6);
       flex-wrap: wrap;
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-border);
     }
-    .author-stat { text-align: center; }
+    .author-stat { text-align: left; }
     .author-stat-val {
       font-family: var(--font-heading);
       font-size: var(--font-size-2xl);
@@ -73,31 +100,51 @@
       margin-top: 4px;
     }
 
-    /* Social links */
-    .author-socials {
+    /* Switcher Penulis Populer */
+    .author-switcher-section {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4) var(--space-5);
+      margin-bottom: var(--space-8);
       display: flex;
-      gap: var(--space-3);
-      flex-wrap: wrap;
-      margin-top: var(--space-4);
-    }
-    .social-link {
-      display: inline-flex;
       align-items: center;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+    .author-switcher-label {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-foreground);
+      white-space: nowrap;
+    }
+    .author-chips-wrap {
+      display: flex;
       gap: var(--space-2);
-      padding: var(--space-2) var(--space-4);
+      flex-wrap: wrap;
+    }
+    .author-chip {
+      padding: var(--space-1) var(--space-3);
       border-radius: var(--radius-full);
       border: 1px solid var(--color-border);
-      font-size: var(--font-size-sm);
+      background: var(--color-surface);
+      font-size: var(--font-size-xs);
       color: var(--color-foreground);
       text-decoration: none;
       transition: all var(--transition-fast);
     }
-    .social-link:hover {
+    .author-chip:hover {
       border-color: var(--color-secondary);
       color: var(--color-secondary);
+      background: var(--color-muted);
+    }
+    .author-chip.active {
+      background: var(--color-secondary);
+      color: white;
+      border-color: var(--color-secondary);
+      font-weight: var(--font-weight-semibold);
     }
 
-    /* Books section */
     .books-section-title {
       font-family: var(--font-heading);
       font-size: var(--font-size-2xl);
@@ -106,10 +153,16 @@
       padding-bottom: var(--space-4);
       border-bottom: 1px solid var(--color-border);
     }
+    .grid-books {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-6);
+    }
   </style>
 </head>
 <body>
 
+  <!-- NAVBAR -->
   <header class="navbar">
     <div class="navbar-inner">
       <a href="../../index.html" class="navbar-brand">
@@ -128,67 +181,135 @@
         <ul class="navbar-nav">
           <li><a href="../../index.html">Beranda</a></li>
           <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="../discovery/categories.html">Kategori</a></li>
           <li><a href="blog.html">Blog</a></li>
+          <li><a href="author-profile.html" class="active" aria-current="page">Penulis</a></li>
+          <li><a href="../library/wishlist.html" aria-label="Wishlist" style="position:relative;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="wishlist-count-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--color-error); color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;">0</span>
+          </a></li>
+          <li><a href="../auth/login.html" class="btn btn-primary btn-sm">Masuk</a></li>
         </ul>
       </nav>
-      <button class="navbar-toggle" aria-expanded="false" aria-label="Buka menu"><span></span><span></span><span></span></button>
+      <button class="navbar-toggle" aria-expanded="false" aria-controls="mobile-drawer-author" aria-label="Buka menu"><span></span><span></span><span></span></button>
     </div>
+    <nav id="mobile-drawer-author" class="navbar-drawer">
+      <ul class="navbar-nav">
+        <li><a href="../../index.html">Beranda</a></li>
+        <li><a href="../discovery/explore.html">Jelajahi</a></li>
+        <li><a href="../discovery/categories.html">Kategori</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="author-profile.html">Profil Penulis</a></li>
+        <li><a href="../library/wishlist.html">Wishlist</a></li>
+        <li><a href="../auth/login.html">Masuk</a></li>
+      </ul>
+    </nav>
   </header>
   <div class="navbar-spacer"></div>
 
-  <div id="notFoundState" class="empty-state" hidden>
-    <p class="empty-state-title">Penulis tidak ditemukan</p>
-    <a href="../discovery/explore.html" class="btn btn-primary">Kembali ke Jelajahi</a>
+  <!-- State jika penulis benar-benar tidak dikenal -->
+  <div id="notFoundState" class="empty-state" style="display:none; padding:var(--space-16) 0;">
+    <svg class="empty-state-icon" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+      <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="2"/>
+      <line x1="30" y1="30" x2="50" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <line x1="50" y1="30" x2="30" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <p class="empty-state-title" style="font-size:var(--font-size-xl);">Penulis tidak ditemukan</p>
+    <p class="empty-state-desc">Silakan pilih salah satu penulis terkemuka di bawah ini.</p>
+    <div style="display:flex; gap:var(--space-3); margin-top:var(--space-4); justify-content:center; flex-wrap:wrap;">
+      <a href="author-profile.html?author=Andrea+Hirata" class="btn btn-primary btn-sm">Andrea Hirata</a>
+      <a href="author-profile.html?author=Pramoedya+Ananta+Toer" class="btn btn-secondary btn-sm">Pramoedya Ananta Toer</a>
+      <a href="../discovery/explore.html" class="btn btn-ghost btn-sm">Kembali ke Jelajahi</a>
+    </div>
   </div>
 
-  <main id="mainContent" hidden>
-    <!-- Author Hero -->
+  <main id="mainContent">
+    <!-- Author Hero (AUR-AUT-01) -->
     <div class="author-hero">
       <div class="container">
         <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-6);">
           <a href="../../index.html">Beranda</a>
-          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
           <a href="../discovery/explore.html">Jelajahi</a>
-          <span class="breadcrumb-sep">/</span>
-          <span aria-current="page">Penulis</span>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <a href="blog.html">Komunitas</a>
+          <span class="breadcrumb-sep" aria-hidden="true">/</span>
+          <span aria-current="page" id="breadcrumbAuthorName">Profil Penulis</span>
         </nav>
         <div class="author-hero-inner">
-          <div class="author-avatar-lg" id="authorAvatar" aria-hidden="true"></div>
-          <div style="flex:1;">
-            <p class="author-specialty" id="authorSpecialty"></p>
-            <h1 class="author-name" id="authorName"></h1>
-            <p class="author-bio" id="authorBio"></p>
-            <div class="author-stats" id="authorStats"></div>
-            <div class="author-socials" id="authorSocials"></div>
+          <div class="author-avatar-lg" id="authorAvatar" aria-hidden="true">A</div>
+          <div style="flex:1; min-width:280px;">
+            <span class="author-specialty" id="authorSpecialty">Novelis & Penulis Sastra</span>
+            <h1 class="author-name" id="authorName">Andrea Hirata</h1>
+            <p class="author-bio" id="authorBio">
+              Andrea Hirata Seman Said Harun adalah novelis Indonesia yang berasal dari Pulau Belitong. Karyanya yang fenomenal, Laskar Pelangi, telah diterjemahkan ke dalam puluhan bahasa dan memenangkan berbagai penghargaan sastra internasional.
+            </p>
+            
+            <!-- Tombol Ikuti Penulis (AUR-AUT-02) -->
+            <div class="author-actions">
+              <button type="button" class="btn btn-secondary btn-follow" id="btnFollowAuthor" aria-label="Ikuti Penulis">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="iconFollow"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                <span id="textFollow">Ikuti Penulis</span>
+              </button>
+              <a href="../discovery/explore.html" class="btn btn-ghost btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                Jelajahi Semua Koleksi
+              </a>
+            </div>
+
+            <!-- Statistik Penulis -->
+            <div class="author-stats" id="authorStats">
+              <!-- diisi JS -->
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Books by author -->
+    <!-- Quick Author Switcher -->
+    <div class="container">
+      <div class="author-switcher-section">
+        <span class="author-switcher-label">Pilih Penulis Lainnya:</span>
+        <div class="author-chips-wrap" id="authorChips">
+          <a href="author-profile.html?author=Andrea+Hirata" class="author-chip" data-author="Andrea Hirata">Andrea Hirata</a>
+          <a href="author-profile.html?author=Pramoedya+Ananta+Toer" class="author-chip" data-author="Pramoedya Ananta Toer">Pramoedya Ananta Toer</a>
+          <a href="author-profile.html?author=Min+Jin+Lee" class="author-chip" data-author="Min Jin Lee">Min Jin Lee</a>
+          <a href="author-profile.html?author=Henry+Manampiring" class="author-chip" data-author="Henry Manampiring">Henry Manampiring</a>
+          <a href="author-profile.html?author=James+Clear" class="author-chip" data-author="James Clear">James Clear</a>
+          <a href="author-profile.html?author=Tere+Liye" class="author-chip" data-author="Tere Liye">Tere Liye</a>
+          <a href="author-profile.html?author=Aurel" class="author-chip" data-author="Aurel">Aurel</a>
+        </div>
+      </div>
+    </div>
+
     <section class="section--sm">
       <div class="container">
-        <h2 class="books-section-title" id="booksSectionTitle">Karya Penulis</h2>
-        <div id="authorBooksGrid" class="book-grid">
-          <!-- diisi JS -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-6); flex-wrap:wrap; gap:var(--space-3);">
+          <h2 class="books-section-title" id="booksSectionTitle" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">Karya Penulis</h2>
+          <span style="font-size:var(--font-size-sm); color:var(--color-muted-foreground);" id="booksCountBadge"></span>
         </div>
-        <div id="noBooksState" hidden class="empty-state" style="background:var(--color-muted);border-radius:var(--radius-xl);">
-          <p class="empty-state-title">Belum ada buku di koleksi kami</p>
-          <p class="empty-state-desc">Karya dari penulis ini belum tersedia di Charvlibrary.</p>
+
+        <div id="authorBooksGrid" class="grid-books">
+        </div>
+
+        <div id="noBooksState" style="display:none;" class="empty-state" style="background:var(--color-muted);border-radius:var(--radius-xl);">
+          <p class="empty-state-title">Belum ada karya terdaftar</p>
+          <p class="empty-state-desc">Karya dari penulis ini sedang dalam proses pembaruan katalog Charvlibrary.</p>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
-        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
-        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
-        <div><h3 class="footer-section-title">Komunitas</h3><ul class="footer-links"><li><a href="blog.html">Blog</a></li><li><a href="events.html">Event</a></li></ul></div>
-        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li></ul></div>
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital untuk mahasiswa.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li><li><a href="../discovery/categories.html">Kategori</a></li></ul></div>
+        <div><h3 class="footer-section-title">Komunitas</h3><ul class="footer-links"><li><a href="blog.html">Blog</a></li><li><a href="events.html">Event</a></li><li><a href="author-profile.html?author=Andrea+Hirata">Profil Penulis</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li><li><a href="../support/contact.html">Kontak</a></li><li><a href="../support/admin.html">Panel Manajemen</a></li></ul></div>
       </div>
-      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary. Dibuat oleh Tim: Davvin, Livi, Chandra, Aaron, Aurel, Olivian.</p></div>
     </div>
   </footer>
 
@@ -197,70 +318,289 @@
   <script src="../../assets/js/nav.js"></script>
   <script>
     const authorBios = {
-      'George Orwell': { bio: 'Eric Arthur Blair, dikenal dengan nama pena George Orwell, adalah novelis, esais, dan kritikus sosial Inggris. Karya-karyanya yang paling terkenal mencerminkan kepedulian mendalam terhadap keadilan sosial dan perlawanan terhadap totalitarisme.', specialty: 'Fiksi Distopia · Esais Sosial', colors: ['#1E40AF'], socials: [] },
-      'Harper Lee': { bio: 'Harper Lee adalah penulis Amerika yang dikenal melalui novelnya yang memenangkan Pulitzer Prize. Karyanya mengeksplorasi tema rasisme dan ketidakadilan sosial di Amerika Selatan dengan kejernihan moral yang jarang tertandingi.', specialty: 'Literary Fiction · Realisme Sosial', colors: ['#065F46'], socials: [] },
-      'Gabriel García Márquez': { bio: 'Penulis Colombia yang merupakan salah satu tokoh terkemuka dalam sastra Latin Amerika dan pelopor realisme magis. Dianugerahi Nobel Prize dalam Sastra pada tahun 1982.', specialty: 'Realisme Magis · Sastra Dunia', colors: ['#92400E'], socials: [] },
+      'Andrea Hirata': {
+        bio: 'Andrea Hirata Seman Said Harun adalah novelis terkemuka Indonesia asal Gantung, Belitung Timur. Mahakaryanya, Laskar Pelangi (2005), menjadi fenomena literasi nasional dan diterjemahkan ke dalam lebih dari 30 bahasa serta memenangkan berbagai anugerah buku internasional.',
+        specialty: 'Novelis Sastra & Fiksi Inspiratif',
+        colors: ['#92400E'],
+        location: 'Belitung, Indonesia'
+      },
+      'Pramoedya Ananta Toer': {
+        bio: 'Pramoedya Ananta Toer adalah salah satu sastrawan terbesar Indonesia. Lahir di Blora, ia menghasilkan lebih dari 50 karya sastra monumental termasuk Tetralogi Buru (Bumi Manusia, Anak Semua Bangsa, Jejak Langkah, Rumah Kaca) yang diterjemahkan ke dalam 42 bahasa dunia.',
+        specialty: 'Sastrawan Legendaris & Realisme Sejarah',
+        colors: ['#065F46'],
+        location: 'Blora, Indonesia'
+      },
+      'Min Jin Lee': {
+        bio: 'Min Jin Lee adalah novelis dan jurnalis Korea-Amerika terkemuka. Mahakaryanya yang diakui dunia, Pachinko (2017), menjadi finalis National Book Award, dinobatkan sebagai salah satu buku terbaik dekade ini, dan diadaptasi ke serial televisi internasional.',
+        specialty: 'Novelis Sastra & Fiksi Sejarah Dunia',
+        colors: ['#065F46'],
+        location: 'Seoul / New York'
+      },
+      'James Clear': {
+        bio: 'James Clear adalah penulis, peneliti, dan pembicara internasional terkemuka yang fokus pada kebiasaan, pengambilan keputusan, dan perbaikan berkelanjutan. Karyanya yang berjudul Atomic Habits telah terjual jutaan eksemplar di seluruh dunia.',
+        specialty: 'Pengembangan Diri & Psikologi Perilaku',
+        colors: ['#1E40AF'],
+        location: 'Ohio, Amerika Serikat'
+      },
+      'Henry Manampiring': {
+        bio: 'Henry Manampiring adalah seorang praktisi komunikasi korporat dan penulis buku bestseller nasional. Bukunya Filosofi Teras memperkenalkan filsafat Stoisisme kuno dengan bahasa yang segar, relevan, dan memenangkan penghargaan Book of The Year.',
+        specialty: 'Filsafat Terapan & Pengembangan Diri',
+        colors: ['#5B21B6'],
+        location: 'Jakarta, Indonesia'
+      },
+      'Tere Liye': {
+        bio: 'Tere Liye adalah nama pena dari Darwis, novelis fiksi Indonesia yang sangat produktif dengan puluhan karya bestseller seperti Hujan, Pulang, Pergi, dan serial Dunia Paralel (Bumi, Bulan, Bintang, Matahari).',
+        specialty: 'Fiksi Populer & Fantasi Petualangan',
+        colors: ['#0F766E'],
+        location: 'Sumatera Selatan, Indonesia'
+      },
+      'Aurel': {
+        bio: 'Aurelia Cheryl Claresta adalah kurator literasi dan penulis konten komunitas Charvlibrary asal Universitas Tarumanagara. Berfokus pada pengembangan minat baca mahasiswa, ulasan novel inspiratif, dan tips membangun rutinitas membaca yang konsisten.',
+        specialty: 'Penulis Konten Literasi & Kurator Komunitas',
+        colors: ['#BE185D'],
+        location: 'Jakarta, Indonesia'
+      },
+      'Aurelia Cheryl Claresta': {
+        bio: 'Aurelia Cheryl Claresta adalah kurator literasi dan penulis konten komunitas Charvlibrary asal Universitas Tarumanagara. Berfokus pada pengembangan minat baca mahasiswa, ulasan novel inspiratif, dan tips membangun rutinitas membaca yang konsisten.',
+        specialty: 'Penulis Konten Literasi & Kurator Komunitas',
+        colors: ['#BE185D'],
+        location: 'Jakarta, Indonesia'
+      },
+      'F. Scott Fitzgerald': {
+        bio: 'Francis Scott Key Fitzgerald adalah novelis dan penulis cerita pendek Amerika era Jazz Age. Mahakaryanya The Great Gatsby (1925) diakui luas sebagai salah satu novel terbesar dalam sastra bahasa Inggris.',
+        specialty: 'Sastra Klasik Abad ke-20',
+        colors: ['#991B1B'],
+        location: 'Minnesota, Amerika Serikat'
+      },
+      'Harper Lee': {
+        bio: 'Nelle Harper Lee adalah novelis Amerika yang terkenal lewat novel pemenang Hadiah Pulitzer To Kill a Mockingbird (1960) yang mengangkat tema toleransi, kemanusiaan, dan keadilan moral di Amerika Selatan.',
+        specialty: 'Literary Fiction & Realisme Sosial',
+        colors: ['#065F46'],
+        location: 'Alabama, Amerika Serikat'
+      },
+      'George Orwell': {
+        bio: 'Eric Arthur Blair, dikenal dengan nama pena George Orwell, adalah novelis, esais, dan kritikus sosial Inggris. Karyanya seperti 1984 dan Animal Farm menyuarakan perlawanan terhadap totalitarisme dan pembelaan atas kebebasan berpikir.',
+        specialty: 'Fiksi Distopia & Esai Kritis',
+        colors: ['#1E40AF'],
+        location: 'Inggris Raya'
+      },
+      'Marcus Aurelius': {
+        bio: 'Marcus Aurelius Antoninus adalah Kaisar Romawi dan salah satu filsuf Stoa terpenting dalam sejarah dunia. Buku catatannya Meditations menjadi rujukan abadi tentang ketenangan batin, keteguhan karakter, dan penguasaan diri.',
+        specialty: 'Filsafat Stoikisme Klasik',
+        colors: ['#5B21B6'],
+        location: 'Roma, Italia'
+      },
+      'Andy Weir': {
+        bio: 'Andy Weir adalah novelis fiksi ilmiah Amerika Serikat. Karya monumentalnya Project Hail Mary dan The Martian meraih sambutan luas dunia atas kecermatan astrofisika dan jalinan cerita eksplorasi kosmik yang memikat.',
+        specialty: 'Fiksi Ilmiah & Astrofisika',
+        colors: ['#1E40AF'],
+        location: 'California, Amerika Serikat'
+      }
     };
 
-    const avatarColorList = ['#92400E','#065F46','#1E40AF','#5B21B6','#991B1B','#0F766E'];
+    const avatarColorList = ['#92400E','#065F46','#1E40AF','#5B21B6','#991B1B','#0F766E','#BE185D'];
 
     document.addEventListener('DOMContentLoaded', () => {
-      const authorParam = decodeURIComponent(getUrlParam('author') || '');
-      const books = booksData.filter(b => b.author === authorParam);
-
+      let rawParam = '';
+      try {
+        const usp = new URLSearchParams(window.location.search);
+        rawParam = usp.get('author') || '';
+        try { rawParam = decodeURIComponent(rawParam); } catch (e) {}
+      } catch (e) {}
+      let authorParam = rawParam.trim();
       if (!authorParam) {
-        document.getElementById('notFoundState').hidden = false;
-        return;
+        authorParam = 'Andrea Hirata';
       }
 
-      document.title = `${authorParam} - Charvlibrary`;
-      document.getElementById('mainContent').hidden = false;
+      const allBooks = (typeof booksData !== 'undefined' && Array.isArray(booksData)) ? booksData : [];
+      let authorBooks = [];
+      const isAurel = (authorParam.toLowerCase() === 'aurel' || authorParam.toLowerCase() === 'aurelia cheryl claresta');
+      if (!isAurel) {
+        authorBooks = allBooks.filter(b => b.author && b.author.toLowerCase() === authorParam.toLowerCase());
+        if (authorBooks.length === 0) {
+          authorBooks = allBooks.filter(b => {
+            if (!b.author) return false;
+            const words = b.author.toLowerCase().split(/\s+/);
+            const paramWords = authorParam.toLowerCase().split(/\s+/);
+            return paramWords.every(pw => words.includes(pw)) || words.every(w => paramWords.includes(w));
+          });
+        }
+      }
 
-      const info = authorBios[authorParam] || {
-        bio: `${authorParam} adalah penulis berbakat yang karyanya telah memperkaya koleksi Charvlibrary. Kunjungi halaman detail buku untuk menemukan karya-karya terbaiknya.`,
-        specialty: 'Penulis',
-        colors: [avatarColorList[Math.abs([...authorParam].reduce((s, c) => s + c.charCodeAt(0), 0)) % avatarColorList.length]],
-        socials: [],
+      const allArticles = (typeof blogData !== 'undefined' && Array.isArray(blogData)) ? blogData : [];
+      let authorArticles = allArticles.filter(a => {
+        if (!a.author) return false;
+        if (isAurel && (a.author.toLowerCase() === 'aurel' || a.author.toLowerCase().includes('aurel'))) return true;
+        return a.author.toLowerCase() === authorParam.toLowerCase();
+      });
+
+      let matchedBioKey = Object.keys(authorBios).find(k => k.toLowerCase() === authorParam.toLowerCase());
+      const info = (matchedBioKey ? authorBios[matchedBioKey] : null) || {
+        bio: `${authorParam} adalah salah satu penulis terkemuka yang karya-karyanya menjadi bagian penting dari perbendaharaan literasi perpustakaan digital Charvlibrary. Temukan berbagai judul karya dan ulasan pembaca di bawah ini.`,
+        specialty: 'Penulis & Kontributor Literasi',
+        colors: [avatarColorList[Math.abs([...authorParam].reduce((s, c) => s + c.charCodeAt(0), 0)) % avatarColorList.length]]
       };
 
-      const avatarColor = info.colors[0] || '#92400E';
-      document.getElementById('authorAvatar').style.background = avatarColor;
-      document.getElementById('authorAvatar').textContent = authorParam.charAt(0).toUpperCase();
+      document.getElementById('notFoundState').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+      document.title = `${authorParam} - Profil & Biografi Penulis | Charvlibrary`;
+
+      const avatarColor = (info.colors && info.colors[0]) || '#92400E';
+      const authorAvatarEl = document.getElementById('authorAvatar');
+      authorAvatarEl.style.background = avatarColor;
+      const initials = authorParam.split(' ').map(w => w.charAt(0)).filter(Boolean).slice(0, 2).join('').toUpperCase() || 'A';
+      authorAvatarEl.textContent = initials;
+
       document.getElementById('authorName').textContent = authorParam;
+      document.getElementById('breadcrumbAuthorName').textContent = authorParam;
       document.getElementById('authorSpecialty').textContent = info.specialty;
       document.getElementById('authorBio').textContent = info.bio;
 
-      const avgRating = books.length > 0
-        ? (books.reduce((s, b) => s + (b.rating || 4), 0) / books.length).toFixed(1)
-        : '—';
+      document.querySelectorAll('.author-chip').forEach(chip => {
+        if (chip.dataset.author && chip.dataset.author.toLowerCase() === authorParam.toLowerCase()) {
+          chip.classList.add('active');
+        } else {
+          chip.classList.remove('active');
+        }
+      });
 
-      document.getElementById('authorStats').innerHTML = `
-        <div class="author-stat">
-          <p class="author-stat-val">${books.length}</p>
-          <p class="author-stat-label">Buku di Charvlibrary</p>
-        </div>
-        <div class="author-stat">
-          <p class="author-stat-val">${avgRating}</p>
-          <p class="author-stat-label">Rata-rata Rating</p>
-        </div>
-        <div class="author-stat">
-          <p class="author-stat-val">${books.reduce((s, b) => s + (b.pages || 300), 0).toLocaleString('id')}</p>
-          <p class="author-stat-label">Total Halaman</p>
-        </div>
-      `;
-
-      if (info.socials && info.socials.length > 0) {
-        document.getElementById('authorSocials').innerHTML = info.socials.map(s =>
-          `<a href="#" class="social-link">${s}</a>`
-        ).join('');
+      if (authorBooks.length > 0) {
+        const totalPages = authorBooks.reduce((sum, b) => sum + (b.pages || 250), 0);
+        const avgRating = (authorBooks.reduce((s, b) => s + (b.rating || 4.5), 0) / authorBooks.length).toFixed(1);
+        document.getElementById('authorStats').innerHTML = `
+          <div class="author-stat">
+            <p class="author-stat-val">${authorBooks.length}</p>
+            <p class="author-stat-label">Buku di Charvlibrary</p>
+          </div>
+          <div class="author-stat">
+            <p class="author-stat-val">⭐ ${avgRating}</p>
+            <p class="author-stat-label">Rata-rata Rating</p>
+          </div>
+          <div class="author-stat">
+            <p class="author-stat-val">${totalPages.toLocaleString('id-ID')}</p>
+            <p class="author-stat-label">Total Halaman</p>
+          </div>
+        `;
+      } else if (authorArticles.length > 0) {
+        const totalReadMin = authorArticles.reduce((sum, a) => sum + (a.readTime || 5), 0);
+        document.getElementById('authorStats').innerHTML = `
+          <div class="author-stat">
+            <p class="author-stat-val">${authorArticles.length}</p>
+            <p class="author-stat-label">Artikel Diterbitkan</p>
+          </div>
+          <div class="author-stat">
+            <p class="author-stat-val">⭐ 4.9</p>
+            <p class="author-stat-label">Rating Konten</p>
+          </div>
+          <div class="author-stat">
+            <p class="author-stat-val">${totalReadMin} Menit</p>
+            <p class="author-stat-label">Total Waktu Baca</p>
+          </div>
+        `;
+      } else {
+        document.getElementById('authorStats').innerHTML = `
+          <div class="author-stat">
+            <p class="author-stat-val">0</p>
+            <p class="author-stat-label">Buku di Charvlibrary</p>
+          </div>
+          <div class="author-stat">
+            <p class="author-stat-val">⭐ 4.8</p>
+            <p class="author-stat-label">Rata-rata Rating</p>
+          </div>
+          <div class="author-stat">
+            <p class="author-stat-val">-</p>
+            <p class="author-stat-label">Total Halaman</p>
+          </div>
+        `;
       }
 
-      // Books grid
-      document.getElementById('booksSectionTitle').textContent = `Karya ${authorParam} (${books.length})`;
-      if (books.length === 0) {
-        document.getElementById('noBooksState').hidden = false;
+      const btnFollow = document.getElementById('btnFollowAuthor');
+      const textFollow = document.getElementById('textFollow');
+      const iconFollow = document.getElementById('iconFollow');
+
+      function getFollowedAuthors() {
+        try {
+          return JSON.parse(localStorage.getItem('Charvlibrary_followed_authors')) || [];
+        } catch { return []; }
+      }
+
+      function updateFollowState() {
+        const followed = getFollowedAuthors().includes(authorParam);
+        if (followed) {
+          btnFollow.classList.add('following');
+          btnFollow.classList.remove('btn-secondary');
+          btnFollow.classList.add('btn-primary');
+          textFollow.textContent = 'Mengikuti';
+          iconFollow.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+        } else {
+          btnFollow.classList.remove('following');
+          btnFollow.classList.add('btn-secondary');
+          btnFollow.classList.remove('btn-primary');
+          textFollow.textContent = 'Ikuti Penulis';
+          iconFollow.innerHTML = '<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>';
+        }
+      }
+
+      btnFollow.addEventListener('click', () => {
+        let followedList = getFollowedAuthors();
+        const isFollowed = followedList.includes(authorParam);
+        if (isFollowed) {
+          followedList = followedList.filter(a => a !== authorParam);
+          localStorage.setItem('Charvlibrary_followed_authors', JSON.stringify(followedList));
+          updateFollowState();
+          if (typeof showToast === 'function') {
+            showToast(`Berhenti mengikuti ${authorParam}.`, 'info');
+          }
+        } else {
+          followedList.push(authorParam);
+          localStorage.setItem('Charvlibrary_followed_authors', JSON.stringify(followedList));
+          updateFollowState();
+          if (typeof showToast === 'function') {
+            showToast(`Berhasil mengikuti ${authorParam}! Anda akan mendapat pemberitahuan buku barunya.`, 'success');
+          }
+        }
+      });
+
+      updateFollowState();
+
+      document.getElementById('booksSectionTitle').textContent = `Karya ${authorParam}`;
+      const countBadge = document.getElementById('booksCountBadge');
+      const booksGrid = document.getElementById('authorBooksGrid');
+      const noBooksEl = document.getElementById('noBooksState');
+
+      if (authorBooks.length > 0) {
+        if (countBadge) countBadge.textContent = `Menampilkan ${authorBooks.length} buku terdaftar`;
+        noBooksEl.style.display = 'none';
+        booksGrid.style.display = 'grid';
+        booksGrid.innerHTML = authorBooks.map(b => renderBookCard(b, '../../')).join('');
+      } else if (authorArticles.length > 0) {
+        if (countBadge) countBadge.textContent = `Menampilkan ${authorArticles.length} artikel literasi terbit`;
+        noBooksEl.style.display = 'none';
+        booksGrid.style.display = 'grid';
+        booksGrid.innerHTML = authorArticles.map(a => `
+          <article class="book-card fade-up">
+            <div class="book-cover-wrap" style="height:190px;overflow:hidden;background:var(--color-muted);">
+              <a href="blog-detail.html?id=${a.id}">
+                <img src="${a.cover}" alt="${a.title}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+              </a>
+              <span class="badge badge--genre book-available-badge">${a.category}</span>
+            </div>
+            <div class="book-info">
+              <span class="book-genre">${a.category} · ${a.readTime || '5'} menit baca</span>
+              <a href="blog-detail.html?id=${a.id}" class="book-title-link" style="text-decoration:none;">
+                <h3 class="book-title">${a.title}</h3>
+              </a>
+              <p class="book-author">${a.excerpt ? truncateText(a.excerpt, 80) : ''}</p>
+              <div style="margin-top:var(--space-2);">
+                <a href="blog-detail.html?id=${a.id}" class="btn btn-secondary btn-sm" style="width:100%;text-align:center;font-weight:600;">Baca Artikel →</a>
+              </div>
+            </div>
+          </article>
+        `).join('');
       } else {
-        document.getElementById('authorBooksGrid').innerHTML = books.map(b => renderBookCard(b)).join('');
+        if (countBadge) countBadge.textContent = `0 karya ditemukan`;
+        noBooksEl.style.display = 'block';
+        booksGrid.style.display = 'none';
       }
 
       initScrollReveal();

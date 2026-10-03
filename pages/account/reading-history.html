@@ -270,7 +270,7 @@
           entry.innerHTML = `
             <div class="history-dot" aria-hidden="true"></div>
             <div class="history-card">
-              <img src="${book.cover}" alt="Sampul ${book.title}" class="history-cover">
+              <img src="${book.coverFallback || book.cover}" alt="Sampul ${book.title}" class="history-cover" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';">
               <div class="history-info">
                 <a href="../discovery/book-detail.html?id=${book.id}" class="history-title" style="text-decoration:none;color:inherit;">${book.title}</a>
                 <p style="font-size:var(--font-size-sm);color:var(--color-muted-foreground);margin-bottom:var(--space-2);">${book.author}</p>

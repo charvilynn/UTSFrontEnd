@@ -11,61 +11,101 @@
   <style>
     .edit-layout {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 280px 1fr;
       gap: var(--space-8);
       align-items: start;
     }
-    @media (max-width: 768px) { .edit-layout { grid-template-columns: 1fr; } }
+    @media (max-width: 860px) {
+      .edit-layout { grid-template-columns: 1fr; }
+    }
 
     /* Avatar section */
     .avatar-picker-section {
       background: var(--color-card);
       border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      padding: var(--space-6);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-7) var(--space-6);
       text-align: center;
       position: sticky;
-      top: calc(var(--navbar-height) + var(--space-4));
+      top: calc(var(--navbar-height) + var(--space-6));
+      box-shadow: var(--shadow-sm);
     }
     .avatar-preview {
-      width: 100px; height: 100px;
+      width: 104px;
+      height: 104px;
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-family: var(--font-heading);
-      font-size: 40px;
+      font-size: 42px;
       font-weight: var(--font-weight-semibold);
       color: white;
-      margin: 0 auto var(--space-5);
-      transition: background var(--transition-base);
+      margin: 0 auto var(--space-4);
+      transition: background var(--transition-base), transform var(--transition-fast);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
     }
     .avatar-colors {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: var(--space-2);
+      display: flex;
+      justify-content: center;
+      gap: 10px;
       margin-bottom: var(--space-4);
+      flex-wrap: wrap;
     }
     .avatar-color-swatch {
-      width: 32px; height: 32px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid transparent;
-      transition: transform var(--transition-fast), border-color var(--transition-fast);
+      outline: 2px solid transparent;
+      transition: transform var(--transition-fast), outline-color var(--transition-fast);
     }
-    .avatar-color-swatch:hover { transform: scale(1.15); }
-    .avatar-color-swatch.active { border-color: var(--color-foreground); transform: scale(1.1); }
-    .avatar-color-label { font-size: var(--font-size-xs); color: var(--color-muted-foreground); }
+    .avatar-color-swatch:hover {
+      transform: scale(1.15);
+    }
+    .avatar-color-swatch.active {
+      outline-color: var(--color-foreground);
+      outline-offset: 2px;
+      transform: scale(1.08);
+    }
+    .avatar-color-label {
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-foreground);
+      margin-bottom: var(--space-3);
+    }
+    .avatar-info-box {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted-foreground);
+      line-height: 1.5;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      margin-top: var(--space-4);
+      text-align: left;
+    }
 
     /* Form section */
     .form-card {
       background: var(--color-card);
       border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      padding: var(--space-7);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-8);
+      margin-bottom: var(--space-6);
+      box-shadow: var(--shadow-sm);
     }
     .form-card h2 {
       font-family: var(--font-heading);
       font-size: var(--font-size-xl);
       font-weight: var(--font-weight-semibold);
+      color: var(--color-foreground);
+      margin-bottom: var(--space-2);
+    }
+    .form-card-subtitle {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted-foreground);
       margin-bottom: var(--space-6);
       padding-bottom: var(--space-4);
       border-bottom: 1px solid var(--color-border);
@@ -73,15 +113,17 @@
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--space-4);
+      gap: var(--space-5);
     }
-    @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
 
     .char-counter {
       font-size: var(--font-size-xs);
       color: var(--color-muted-foreground);
       text-align: right;
-      margin-top: 4px;
+      margin-top: 6px;
     }
     .char-counter.near-limit { color: var(--color-accent); }
     .char-counter.at-limit   { color: var(--color-error); }
@@ -99,73 +141,103 @@
         </svg>
         <span class="navbar-brand-name">Charvlibrary</span>
       </a>
-      <div style="margin-left:auto; display:flex; gap:var(--space-3);">
-        <a href="profile.html" class="btn btn-ghost btn-sm">← Batal</a>
+      <nav aria-label="Navigasi utama">
+        <ul class="navbar-nav">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="../discovery/categories.html">Kategori</a></li>
+          <li><a href="../community/blog.html">Blog</a></li>
+          <li><a href="profile.html" class="active" aria-current="page">Profil</a></li>
+        </ul>
+      </nav>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:var(--space-3);">
+        <a href="profile.html" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+          <span>← Kembali ke Profil</span>
+        </a>
       </div>
     </div>
   </header>
 
-  <div class="navbar-spacer"></div>
+  <div class="navbar-spacer" style="height: calc(var(--navbar-height) + 16px);"></div>
 
   <main>
-    <div class="section--sm">
+    <div class="section--sm" style="padding-top: var(--space-4);">
       <div class="container">
-        <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-6);">
-          <a href="../../index.html">Beranda</a>
-          <span class="breadcrumb-sep" aria-hidden="true">/</span>
-          <a href="profile.html">Profil</a>
-          <span class="breadcrumb-sep" aria-hidden="true">/</span>
-          <span aria-current="page">Edit Profil</span>
+        
+        <!-- Breadcrumb -->
+        <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-4); display:flex; align-items:center; gap:8px;">
+          <a href="../../index.html" style="color:var(--color-muted-foreground); text-decoration:none;">Beranda</a>
+          <span class="breadcrumb-sep" aria-hidden="true" style="color:var(--color-border);">/</span>
+          <a href="profile.html" style="color:var(--color-muted-foreground); text-decoration:none;">Profil</a>
+          <span class="breadcrumb-sep" aria-hidden="true" style="color:var(--color-border);">/</span>
+          <span aria-current="page" style="color:var(--color-foreground); font-weight:var(--font-weight-medium);">Edit Profil</span>
         </nav>
 
-        <h1 style="font-family:var(--font-heading); font-size:var(--font-size-3xl); font-weight:var(--font-weight-light); margin-bottom:var(--space-7);">Edit Profil</h1>
+        <h1 style="font-family:var(--font-heading); font-size:var(--font-size-3xl); font-weight:var(--font-weight-light); margin-bottom:var(--space-7); color:var(--color-foreground);">
+          Edit Profil Pengguna
+        </h1>
 
         <div class="edit-layout">
           <!-- Avatar sidebar -->
           <aside>
             <div class="avatar-picker-section fade-up">
-              <div class="avatar-preview" id="avatarPreview">D</div>
-              <p style="font-weight:var(--font-weight-semibold); margin-bottom:var(--space-2);" id="avatarName">Nama Pengguna</p>
-              <p class="avatar-color-label" style="margin-bottom:var(--space-3);">Pilih warna avatar:</p>
-              <div class="avatar-colors" id="avatarColors" role="radiogroup" aria-label="Warna avatar">
-                <!-- diisi JS -->
+              <div class="avatar-preview" id="avatarPreview">C</div>
+              <p style="font-family:var(--font-heading); font-size:var(--font-size-lg); font-weight:var(--font-weight-semibold); margin-bottom:var(--space-1); color:var(--color-foreground);" id="avatarName">
+                Nama Pengguna
+              </p>
+              <p style="font-size:var(--font-size-xs); color:var(--color-muted-foreground); margin-bottom:var(--space-4);">
+                Anggota Perpustakaan
+              </p>
+
+              <div style="border-top: 1px solid var(--color-border); padding-top: var(--space-4); margin-top: var(--space-2);">
+                <p class="avatar-color-label">Pilih Tema Warna Avatar</p>
+                <div class="avatar-colors" id="avatarColors" role="radiogroup" aria-label="Warna avatar">
+                  <!-- diisi JS -->
+                </div>
+                <div class="avatar-info-box">
+                  <strong>Catatan:</strong> Huruf inisial avatar otomatis diperbarui mengikuti nama depan yang Anda masukkan.
+                </div>
               </div>
-              <p class="avatar-color-label">Inisial menyesuaikan nama yang kamu masukkan</p>
             </div>
           </aside>
 
           <!-- Form -->
           <div>
             <form id="editProfileForm" novalidate>
+              
               <!-- Info pribadi -->
-              <div class="form-card fade-up" style="margin-bottom:var(--space-5);">
+              <div class="form-card fade-up">
                 <h2>Informasi Pribadi</h2>
+                <p class="form-card-subtitle">Perbarui identitas dan biografi singkat Anda untuk kartu profil pembaca.</p>
 
-                <div class="form-row">
-                  <div class="form-group">
+                <div class="form-row" style="margin-bottom:var(--space-5);">
+                  <div class="form-group" style="margin-bottom:0;">
                     <label class="form-label" for="editFirstName">Nama Depan <span class="required">*</span></label>
-                    <input type="text" id="editFirstName" class="form-input" placeholder="Nama depan" required aria-describedby="firstNameErr">
+                    <input type="text" id="editFirstName" class="form-input" placeholder="Nama depan Anda" required aria-describedby="firstNameErr">
                     <p class="form-error-msg" id="firstNameErr" role="alert"></p>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" style="margin-bottom:0;">
                     <label class="form-label" for="editLastName">Nama Belakang</label>
                     <input type="text" id="editLastName" class="form-input" placeholder="Nama belakang (opsional)">
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <label class="form-label" for="editEmail">Email <span class="required">*</span></label>
+                <div class="form-group" style="margin-bottom:var(--space-5);">
+                  <label class="form-label" for="editEmail">Alamat Email <span class="required">*</span></label>
                   <input type="email" id="editEmail" class="form-input" placeholder="nama@email.com" required aria-describedby="emailErr">
                   <p class="form-error-msg" id="emailErr" role="alert"></p>
                 </div>
 
-                <div class="form-group">
-                  <label class="form-label" for="editBio">Bio <span style="font-weight:normal; color:var(--color-muted-foreground);">(opsional)</span></label>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label" for="editBio" style="display:flex; justify-content:space-between; align-items:baseline;">
+                    <span>Bio Singkat <span style="font-weight:normal; color:var(--color-muted-foreground);">(opsional)</span></span>
+                    <span style="font-size:var(--font-size-xs); color:var(--color-muted-foreground); font-weight:normal;">Maks. 200 karakter</span>
+                  </label>
                   <textarea
                     id="editBio"
                     class="form-input"
                     rows="3"
-                    placeholder="Ceritakan sedikit tentang dirimu sebagai pembaca..."
+                    placeholder="Ceritakan sedikit tentang minat baca atau buku favorit Anda..."
                     maxlength="200"
                     style="resize:vertical;"
                     aria-describedby="bioCounter"
@@ -175,39 +247,40 @@
               </div>
 
               <!-- Password section -->
-              <div class="form-card fade-up" style="margin-bottom:var(--space-5);">
-                <h2>Ganti Password</h2>
-                <p style="font-size:var(--font-size-sm); color:var(--color-muted-foreground); margin-bottom:var(--space-5);">Biarkan kosong jika tidak ingin mengubah password.</p>
+              <div class="form-card fade-up">
+                <h2>Ganti Kata Sandi</h2>
+                <p class="form-card-subtitle">Kosongkan kolom di bawah jika Anda tidak ingin mengubah kata sandi akun.</p>
 
-                <div class="form-group">
-                  <label class="form-label" for="currentPassword">Password Saat Ini</label>
+                <div class="form-group" style="margin-bottom:var(--space-5);">
+                  <label class="form-label" for="currentPassword">Kata Sandi Saat Ini</label>
                   <input type="password" id="currentPassword" class="form-input" placeholder="••••••••" autocomplete="current-password">
                 </div>
 
                 <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label" for="newPassword">Password Baru</label>
-                    <input type="password" id="newPassword" class="form-input" placeholder="••••••••" autocomplete="new-password" aria-describedby="newPassErr">
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="newPassword">Kata Sandi Baru</label>
+                    <input type="password" id="newPassword" class="form-input" placeholder="Minimal 6 karakter" autocomplete="new-password" aria-describedby="newPassErr">
                     <p class="form-error-msg" id="newPassErr" role="alert"></p>
                   </div>
-                  <div class="form-group">
-                    <label class="form-label" for="confirmPassword">Konfirmasi Password</label>
-                    <input type="password" id="confirmPassword" class="form-input" placeholder="••••••••" autocomplete="new-password" aria-describedby="confirmPassErr">
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="confirmPassword">Konfirmasi Kata Sandi Baru</label>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="Ulangi kata sandi baru" autocomplete="new-password" aria-describedby="confirmPassErr">
                     <p class="form-error-msg" id="confirmPassErr" role="alert"></p>
                   </div>
                 </div>
               </div>
 
               <!-- Actions -->
-              <div style="display:flex; justify-content:flex-end; gap:var(--space-3);">
-                <a href="profile.html" class="btn btn-secondary">Batal</a>
-                <button type="submit" class="btn btn-primary" id="saveBtn">
+              <div style="display:flex; justify-content:flex-end; align-items:center; gap:var(--space-3); margin-top:var(--space-2); margin-bottom:var(--space-12);">
+                <a href="profile.html" class="btn btn-secondary" style="padding:10px 24px;">Batal</a>
+                <button type="submit" class="btn btn-primary" id="saveBtn" style="padding:10px 28px; font-weight:var(--font-weight-semibold);">
                   Simpan Perubahan
                 </button>
               </div>
             </form>
           </div>
         </div>
+
       </div>
     </div>
   </main>
@@ -219,75 +292,67 @@
     const avatarColors = [
       '#92400E','#065F46','#1E40AF','#5B21B6','#991B1B','#0F766E'
     ];
-    let selectedColor = avatarColors[0];
+    let selectedColor = '#92400E';
 
     document.addEventListener('DOMContentLoaded', () => {
-      const user = getUser() || { name: 'Pengguna', email: '', bio: '', avatarColor: avatarColors[0] };
-      const [firstName, ...rest] = (user.name || '').split(' ');
+      const user = getUser() || { name: 'Chandra Wijaya', email: 'chandra.535250143@stu.untar.ac.id', bio: 'Gemari buku fiksi dan sastra klasik.' };
 
-      // Prefill form
-      document.getElementById('editFirstName').value = firstName || '';
-      document.getElementById('editLastName').value  = rest.join(' ') || '';
-      document.getElementById('editEmail').value     = user.email || '';
-      document.getElementById('editBio').value       = user.bio || '';
+      const parts = (user.name || 'Chandra Wijaya').split(' ');
+      document.getElementById('editFirstName').value = parts[0] || 'Chandra';
+      document.getElementById('editLastName').value  = parts.slice(1).join(' ') || 'Wijaya';
+      document.getElementById('editEmail').value     = user.email || 'chandra.535250143@stu.untar.ac.id';
+      document.getElementById('editBio').value       = user.bio || 'Gemari buku fiksi dan sastra klasik.';
+      document.getElementById('avatarName').textContent = user.name || 'Chandra Wijaya';
 
-      selectedColor = user.avatarColor || avatarColors[0];
+      selectedColor = user.avatarColor || '#92400E';
+      updateAvatarPreview(parts[0] || 'C', selectedColor);
 
-      // Render avatar colors
-      const colorsEl = document.getElementById('avatarColors');
-      colorsEl.innerHTML = avatarColors.map(c => `
-        <button
-          type="button"
-          class="avatar-color-swatch${c === selectedColor ? ' active' : ''}"
-          style="background:${c};"
-          data-color="${c}"
-          aria-label="Pilih warna avatar"
-          aria-pressed="${c === selectedColor}"
-        ></button>
-      `).join('');
-
-      updateAvatarPreview(firstName || 'U', selectedColor);
-      document.getElementById('avatarName').textContent = user.name || 'Nama Pengguna';
-
-      // Color picker
-      colorsEl.addEventListener('click', e => {
-        const swatch = e.target.closest('.avatar-color-swatch');
-        if (!swatch) return;
-        selectedColor = swatch.dataset.color;
-        document.querySelectorAll('.avatar-color-swatch').forEach(s => {
-          s.classList.toggle('active', s.dataset.color === selectedColor);
-          s.setAttribute('aria-pressed', s.dataset.color === selectedColor);
+      // Render color swatches
+      const colorsContainer = document.getElementById('avatarColors');
+      avatarColors.forEach(color => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `avatar-color-swatch ${color === selectedColor ? 'active' : ''}`;
+        btn.style.background = color;
+        btn.setAttribute('aria-label', `Warna ${color}`);
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.avatar-color-swatch').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedColor = color;
+          const fn = document.getElementById('editFirstName').value || 'C';
+          updateAvatarPreview(fn, selectedColor);
         });
-        const fname = document.getElementById('editFirstName').value || 'U';
-        updateAvatarPreview(fname, selectedColor);
-      });
-
-      // Live avatar update on name change
-      document.getElementById('editFirstName').addEventListener('input', e => {
-        const val = e.target.value || 'U';
-        updateAvatarPreview(val, selectedColor);
-        document.getElementById('avatarName').textContent =
-          `${val} ${document.getElementById('editLastName').value}`.trim() || 'Nama Pengguna';
-      });
-      document.getElementById('editLastName').addEventListener('input', () => {
-        const fn = document.getElementById('editFirstName').value || 'U';
-        const ln = document.getElementById('editLastName').value;
-        document.getElementById('avatarName').textContent = `${fn} ${ln}`.trim() || 'Nama Pengguna';
+        colorsContainer.appendChild(btn);
       });
 
       // Bio counter
-      const bioField = document.getElementById('editBio');
-      const bioCount = document.getElementById('bioCount');
-      const bioCounter = document.getElementById('bioCounter');
-      bioField.addEventListener('input', () => {
-        const len = bioField.value.length;
-        bioCount.textContent = len;
-        bioCounter.className = 'char-counter' + (len >= 200 ? ' at-limit' : len >= 160 ? ' near-limit' : '');
+      const bioEl = document.getElementById('editBio');
+      const countEl = document.getElementById('bioCount');
+      const counterWrap = document.getElementById('bioCounter');
+      const updateBio = () => {
+        const len = bioEl.value.length;
+        countEl.textContent = len;
+        counterWrap.classList.toggle('near-limit', len >= 180 && len < 200);
+        counterWrap.classList.toggle('at-limit', len >= 200);
+      };
+      bioEl.addEventListener('input', updateBio);
+      updateBio();
+
+      // Realtime avatar initial & name update
+      document.getElementById('editFirstName').addEventListener('input', (e) => {
+        const val = e.target.value.trim() || 'C';
+        const ln = document.getElementById('editLastName').value.trim();
+        document.getElementById('avatarName').textContent = ln ? `${val} ${ln}` : val;
+        updateAvatarPreview(val, selectedColor);
       });
-      bioCount.textContent = bioField.value.length;
+      document.getElementById('editLastName').addEventListener('input', (e) => {
+        const fn = document.getElementById('editFirstName').value.trim() || 'C';
+        const val = e.target.value.trim();
+        document.getElementById('avatarName').textContent = val ? `${fn} ${val}` : fn;
+      });
 
       // Form submit
-      document.getElementById('editProfileForm').addEventListener('submit', e => {
+      document.getElementById('editProfileForm').addEventListener('submit', (e) => {
         e.preventDefault();
         let valid = true;
 
@@ -331,7 +396,7 @@
 
         const ln = document.getElementById('editLastName').value.trim();
         const bio = document.getElementById('editBio').value.trim();
-        const updatedUser = { name: `${fn} ${ln}`.trim(), email: em, bio, avatarColor: selectedColor };
+        const updatedUser = { ...user, name: `${fn} ${ln}`.trim(), email: em, bio, avatarColor: selectedColor };
 
         setTimeout(() => {
           saveUser(updatedUser);
@@ -340,7 +405,9 @@
         }, 900);
       });
 
-      initScrollReveal();
+      if (typeof initScrollReveal === 'function') {
+        initScrollReveal();
+      }
     });
 
     function updateAvatarPreview(name, color) {

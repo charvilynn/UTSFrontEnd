@@ -205,14 +205,20 @@
 
   <header class="navbar">
     <div class="navbar-inner">
-      <a href="../../index.html" class="navbar-brand">
-        <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-          <rect width="36" height="36" rx="8" fill="#92400E"/>
-          <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
-          <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
-        </svg>
-        <span class="navbar-brand-name">Charvlibrary</span>
-      </a>
+      <div style="display: flex; align-items: center; gap: var(--space-4);">
+        <a href="../../index.html" class="btn btn-secondary btn-sm" id="btnBackHome" style="display: inline-flex; align-items: center; gap: 6px; font-weight: var(--font-weight-medium);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Kembali</span>
+        </a>
+        <a href="../../index.html" class="navbar-brand" style="border-left: 1px solid var(--color-border); padding-left: var(--space-4);">
+          <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect width="36" height="36" rx="8" fill="#92400E"/>
+            <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
+            <path d="M22 10v4h4" fill="none" stroke="#92400E" stroke-width="1.5"/>
+          </svg>
+          <span class="navbar-brand-name">Charvlibrary</span>
+        </a>
+      </div>
       <div style="margin-left: auto; display: flex; align-items: center; gap: var(--space-3);">
         <span style="font-size: var(--font-size-sm); color: var(--color-muted-foreground);">Sudah punya akun?</span>
         <a href="login.html" class="btn btn-secondary btn-sm">Masuk</a>
@@ -459,6 +465,17 @@
           window.location.href = 'onboarding.html';
         }, 1200);
       });
+
+      // Navigasi kembali cerdas
+      const btnBackHome = document.getElementById('btnBackHome');
+      if (btnBackHome) {
+        btnBackHome.addEventListener('click', (e) => {
+          if (window.history.length > 1 && document.referrer) {
+            e.preventDefault();
+            window.history.back();
+          }
+        });
+      }
     });
   </script>
 </body>

@@ -250,7 +250,9 @@
     let activeFilter = 'all';
 
     function getNotifications() {
-      return typeof notificationsData !== 'undefined' ? notificationsData : [];
+      return typeof getNotificationsList === 'function'
+        ? getNotificationsList()
+        : (typeof notificationsData !== 'undefined' ? notificationsData : []);
     }
 
     function isRead(id) { return !!notifState[id]; }
@@ -354,9 +356,13 @@
 
       // Mark all read
       document.getElementById('markAllReadBtn').addEventListener('click', () => {
+        if (typeof markAllNotificationsAsRead === 'function') {
+          markAllNotificationsAsRead();
+        }
+        notifState = getFromStorage('Charvlibrary_notif_read', {});
         getNotifications().forEach(n => markRead(n.id));
         renderNotifs();
-        showToast('Semua notifikasi ditandai dibaca', 'success');
+        showToast('Semua notifikasi ditandai telah dibaca', 'success');
       });
 
       initScrollReveal();

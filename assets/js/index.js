@@ -55,9 +55,8 @@ function renderMarquee() {
         >
           <img
             class="marquee-cover"
-            src="${book.cover}"
+            src="${book.coverFallback || book.cover}"
             alt="${book.title}"
-            loading="lazy"
             onerror="${onerror}"
             draggable="false"
           >

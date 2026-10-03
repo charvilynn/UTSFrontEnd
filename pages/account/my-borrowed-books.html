@@ -254,7 +254,7 @@
 
           return `
             <div class="borrow-card fade-up">
-              <img src="${book.cover}" alt="Sampul ${book.title}" class="borrow-cover">
+              <img src="${book.coverFallback || book.cover}" alt="Sampul ${book.title}" class="borrow-cover" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';">
               <div class="borrow-info">
                 <p class="borrow-title">${book.title}</p>
                 <p class="borrow-author">${book.author}</p>
@@ -266,7 +266,7 @@
                 </div>
                 <div class="borrow-actions">
                   <a href="../discovery/book-detail.html?id=${book.id}" class="btn btn-ghost btn-sm">Lihat Detail</a>
-                  <button class="btn btn-secondary btn-sm" data-return-id="${book.bookId}" onclick="handleReturn(${book.bookId})">
+                  <button class="btn btn-secondary btn-sm" data-return-id="${b.bookId}" onclick="handleReturn(${b.bookId})">
                     Kembalikan
                   </button>
                 </div>
@@ -285,7 +285,7 @@
           if (!book) return '';
           return `
             <div class="borrow-card" style="opacity:0.65;">
-              <img src="${book.cover}" alt="Sampul ${book.title}" class="borrow-cover">
+              <img src="${book.coverFallback || book.cover}" alt="Sampul ${book.title}" class="borrow-cover" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';">
               <div class="borrow-info">
                 <p class="borrow-title">${book.title}</p>
                 <p class="borrow-author">${book.author}</p>

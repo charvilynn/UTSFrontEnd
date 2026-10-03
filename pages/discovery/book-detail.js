@@ -35,11 +35,14 @@ function renderBookDetail(book) {
   if (loading) loading.hidden = true;
   if (content) content.hidden = false;
 
-  // cover
   const coverImg = document.getElementById('bookCoverImg');
   if (coverImg) {
-    coverImg.src = book.cover;
+    coverImg.src = book.coverFallback || book.cover;
     coverImg.alt = `Sampul buku: ${book.title}`;
+    coverImg.onerror = function() {
+      this.onerror = null;
+      this.src = 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';
+    };
   }
 
   // breadcrumb
@@ -58,9 +61,13 @@ function renderBookDetail(book) {
       : '<span class="badge badge--borrowed">Sedang dipinjam</span>';
   }
 
-  // title, author
   setTextContent('bookTitle',    book.title);
-  setTextContent('bookAuthor',   book.author);
+  const authorEl = document.getElementById('bookAuthor');
+  if (authorEl) {
+    authorEl.innerHTML = `Oleh <a href="../community/author-profile.html?author=${encodeURIComponent(book.author)}" style="color:var(--color-secondary);font-weight:var(--font-weight-semibold);text-decoration:underline;" title="Lihat profil dan biografi ${book.author}">${book.author}</a>`;
+  } else {
+    setTextContent('bookAuthor', book.author);
+  }
   setTextContent('bookPublisher',book.publisher);
   setTextContent('bookYear',     String(book.year));
   setTextContent('bookPages',    `${book.pages} halaman`);

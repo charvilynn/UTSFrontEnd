@@ -1,3 +1,4 @@
+<!-- Halaman: Detail Blog | Dibuat oleh: Davvin | Pilar: Komunitas & Konten -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -301,9 +302,31 @@
         <p>Mulai dengan konteks singkat tentang buku. Lanjutkan dengan apa yang berhasil - narasi, karakter, tema - lalu apa yang bisa lebih baik. Akhiri dengan siapa yang akan menikmati buku ini.</p>
         <p>Bergabunglah dengan komunitas pembaca Charvlibrary dan mulai berbagi ulasanmu. Setiap perspektif berharga.</p>
       `,
+      4: `
+        <p>Project Hail Mary karya Andy Weir membawa pembaca ke dalam perjalanan luar angkasa penuh ketegangan, misteri astrofisika, dan kehangatan persahabatan antarspesies yang tak terduga.</p>
+        <blockquote>"Human beings have a remarkable ability to accept the abnormal and make it normal." - Andy Weir</blockquote>
+        <h2>Premis yang Menggugah</h2>
+        <p>Ryland Grace adalah satu-satunya astronot yang selamat dalam misi kepunahan matahari. Ia terbangun dari koma dengan amnesia mendalam dan harus memecahkan teka-teki ilmiah untuk menyelamatkan bumi dari kepunahan.</p>
+        <h2>Mengapa Buku Ini Sangat Istimewa?</h2>
+        <p>Buku ini memadukan sains keras yang akurat dengan humor khas Andy Weir. Dialog cerdas dan dinamika hubungan yang terbangun di stasiun luar angkasa membuat novel tebal ini terasa sangat cepat selesai dibaca.</p>
+        <p>Bagi penggemar genre fiksi ilmiah, novel ini adalah bacaan wajib yang tidak boleh dilewatkan di koleksi Charvlibrary.</p>
+      `,
+      5: `
+        <p>Banyak pembaca terjebak dalam zona nyaman satu atau dua genre saja sepanjang tahun. Tahun 2026 adalah momentum yang tepat untuk memperluas cakrawala literasi dengan menjelajahi genre baru.</p>
+        <blockquote>"A book is a dream that you hold in your hand." - Neil Gaiman</blockquote>
+        <h2>5 Genre yang Layak Dicoba</h2>
+        <ul>
+          <li><strong>Cli-Fi (Climate Fiction):</strong> Fiksi bertema ekologi dan masa depan iklim bumi yang menggugah kesadaran lingkungan.</li>
+          <li><strong>Cosy Mystery:</strong> Misteri investigasi dengan latar komunitas hangat yang menenangkan tanpa kekerasan berlebihan.</li>
+          <li><strong>Memoir & Creative Non-Fiction:</strong> Kisah nyata yang diceritakan dengan teknik sastra memikat.</li>
+          <li><strong>Filsafat Populer:</strong> Pemikiran mendalam tentang etika dan makna hidup yang disajikan dalam bahasa ringan.</li>
+          <li><strong>Sastra Terjemahan Dunia:</strong> Suara-suara unik dari belahan Amerika Latin, Afrika, hingga Asia Timur.</li>
+        </ul>
+        <p>Gunakan filter kategori di katalog Charvlibrary untuk menemukan koleksi terbaik dari masing-masing genre di atas!</p>
+      `,
     };
 
-    const authorColors = { 'Davvin': '#065F46', 'Tim Charvlibrary': '#1E40AF', 'Davvin': '#5B21B6' };
+    const authorColors = { 'Aurel': '#BE185D', 'Davvin': '#92400E', 'Tim Charvlibrary': '#1E40AF', 'Chandra': '#065F46', 'Aaron': '#7C3AED', 'Livi': '#0F4C81' };
 
     document.addEventListener('DOMContentLoaded', () => {
       const id   = parseInt(getUrlParam('id')) || 1;
@@ -347,3 +370,62 @@
       // Sidebar author
       document.getElementById('sidebarAuthor').innerHTML = `
         <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3);">
+          <div style="width:48px;height:48px;border-radius:50%;background:${avatarColor};display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:20px;">${article.author.charAt(0)}</div>
+          <div>
+            <p style="font-weight:var(--font-weight-semibold);">${article.author}</p>
+            <p style="font-size:var(--font-size-xs);color:var(--color-muted-foreground);">Kontributor Charvlibrary</p>
+          </div>
+        </div>
+        <p style="font-size:var(--font-size-sm);color:var(--color-muted-foreground);">Penulis aktif yang berbagi tentang dunia literasi dan kebiasaan membaca.</p>
+        <a href="author-profile.html?author=${encodeURIComponent(article.author)}" class="btn btn-secondary btn-sm" style="display:block;text-align:center;margin-top:var(--space-3);font-size:var(--font-size-xs);font-weight:600;">Lihat Profil & Biografi Penulis →</a>
+      `;
+
+      // Related articles
+      const related = blog.filter(b => b.id !== id && b.category === article.category).slice(0, 3);
+      document.getElementById('relatedArticles').innerHTML = related.length > 0
+        ? related.map(r => `
+          <a href="blog-detail.html?id=${r.id}" class="related-article-item">
+            <div style="width:56px;height:56px;border-radius:var(--radius-md);background:var(--color-muted);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;" aria-hidden="true">📖</div>
+            <div>
+              <p class="related-article-title">${r.title}</p>
+              <p style="font-size:var(--font-size-xs);color:var(--color-muted-foreground);margin-top:2px;">${r.readTime || '5 menit'}</p>
+            </div>
+          </a>
+        `).join('')
+        : blog.filter(b => b.id !== id).slice(0, 2).map(r => `
+          <a href="blog-detail.html?id=${r.id}" class="related-article-item">
+            <div style="width:56px;height:56px;border-radius:var(--radius-md);background:var(--color-muted);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;" aria-hidden="true">📖</div>
+            <div>
+              <p class="related-article-title">${r.title}</p>
+              <p style="font-size:var(--font-size-xs);color:var(--color-muted-foreground);margin-top:2px;">${r.readTime || '5 menit'}</p>
+            </div>
+          </a>
+        `).join('');
+
+      // Prev/next navigation
+      const idx = blog.findIndex(b => b.id === id);
+      if (idx > 0) {
+        document.getElementById('prevArticle').innerHTML =
+          `<a href="blog-detail.html?id=${blog[idx-1].id}" class="btn btn-ghost btn-sm">← ${truncateText(blog[idx-1].title, 25)}</a>`;
+      }
+      if (idx < blog.length - 1) {
+        document.getElementById('nextArticle').innerHTML =
+          `<a href="blog-detail.html?id=${blog[idx+1].id}" class="btn btn-ghost btn-sm">${truncateText(blog[idx+1].title, 25)} →</a>`;
+      }
+
+      // Reading progress
+      window.addEventListener('scroll', () => {
+        const article = document.querySelector('article');
+        if (!article) return;
+        const rect = article.getBoundingClientRect();
+        const totalHeight = article.offsetHeight;
+        const scrolled    = -rect.top;
+        const pct = Math.min(100, Math.max(0, (scrolled / (totalHeight - window.innerHeight)) * 100));
+        document.getElementById('readingProgressFill').style.width = `${pct}%`;
+      });
+
+      initScrollReveal();
+    });
+  </script>
+</body>
+</html>

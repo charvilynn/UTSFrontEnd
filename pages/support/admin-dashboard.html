@@ -1,3 +1,4 @@
+<!-- Halaman: Admin Dashboard | Dibuat oleh: Olivian | Pilar: Dukungan & Admin -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -5,16 +6,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Admin Dashboard - Charvlibrary Perpustakaan Digital">
   <title>Admin Dashboard - Charvlibrary</title>
-  <link rel="stylesheet" href="../assets/css/variables.css">
-  <link rel="stylesheet" href="../assets/css/base.css">
-  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+    .kpi-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .kpi-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .kpi-val {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-secondary);
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+    .kpi-label {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-foreground);
+    }
+    .kpi-desc {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted-foreground);
+      margin-top: 4px;
+    }
 
+    /* Action Banner */
+    .admin-action-banner {
+      background: linear-gradient(135deg, var(--color-card) 0%, var(--color-muted) 100%);
+      border: 1px solid var(--color-border);
+      border-left: 5px solid var(--color-secondary);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      margin-bottom: var(--space-8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-5);
+      flex-wrap: wrap;
+    }
+
+    .admin-recent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--space-6);
+    }
+    .summary-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+    }
+    .summary-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .summary-card-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-foreground);
+    }
+  </style>
 </head>
 <body>
 
   <header class="navbar">
     <div class="navbar-inner">
-      <a href="../index.html" class="navbar-brand">
+      <a href="../../index.html" class="navbar-brand">
         <svg class="navbar-logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
           <rect width="36" height="36" rx="8" fill="#92400E"/>
           <path d="M10 28V10h12l4 4v14H10z" fill="#FFFBEB" opacity="0.9"/>
@@ -28,15 +120,16 @@
       </div>
       <nav aria-label="Navigasi utama">
         <ul class="navbar-nav">
-          <li><a href="../index.html">Beranda</a></li>
-          <li><a href="../pages/discovery/explore.html">Jelajahi</a></li>
-          <li><a href="../pages/discovery/categories.html">Kategori</a></li>
-          <li><a href="../pages/community/blog.html">Blog</a></li>
-          <li><a href="../pages/library/wishlist.html" aria-label="Wishlist" style="position:relative;">
+          <li><a href="../../index.html">Beranda</a></li>
+          <li><a href="../discovery/explore.html">Jelajahi</a></li>
+          <li><a href="../discovery/categories.html">Kategori</a></li>
+          <li><a href="../community/blog.html">Blog</a></li>
+          <li><a href="../library/wishlist.html" aria-label="Wishlist" style="position:relative;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span class="wishlist-count-badge" style="display:none; position:absolute; top:-6px; right:-6px; background:var(--color-error); color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; font-weight:700; align-items:center; justify-content:center;">0</span>
           </a></li>
-          <li><a href="../pages/auth/login.html" class="btn btn-primary btn-sm">Masuk</a></li>
+          <li><a href="../account/profile.html" class="btn btn-secondary btn-sm">Profil</a></li>
+          <li><a href="admin.html" class="btn btn-primary btn-sm">Panel Admin</a></li>
         </ul>
       </nav>
       <button class="navbar-toggle" aria-expanded="false" aria-controls="mobile-drawer-admin-dashboard" aria-label="Buka menu">
@@ -45,12 +138,13 @@
     </div>
     <nav id="mobile-drawer-admin-dashboard" class="navbar-drawer">
       <ul class="navbar-nav">
-        <li><a href="../index.html">Beranda</a></li>
-        <li><a href="../pages/discovery/explore.html">Jelajahi</a></li>
-        <li><a href="../pages/discovery/categories.html">Kategori</a></li>
-        <li><a href="../pages/community/blog.html">Blog</a></li>
-        <li><a href="../pages/library/wishlist.html">Wishlist</a></li>
-        <li><a href="../pages/auth/login.html">Masuk</a></li>
+        <li><a href="../../index.html">Beranda</a></li>
+        <li><a href="../discovery/explore.html">Jelajahi</a></li>
+        <li><a href="../discovery/categories.html">Kategori</a></li>
+        <li><a href="../community/blog.html">Blog</a></li>
+        <li><a href="../library/wishlist.html">Wishlist</a></li>
+        <li><a href="../account/profile.html">Profil Saya</a></li>
+        <li><a href="admin.html">Panel Admin</a></li>
       </ul>
     </nav>
   </header>
@@ -61,27 +155,170 @@
     <section class="section">
       <div class="container">
 
-        <nav aria-label="Breadcrumb" class="breadcrumb">
-          <a href="../index.html">Beranda</a>
+        <nav aria-label="Breadcrumb" class="breadcrumb" style="margin-bottom:var(--space-4);">
+          <a href="../../index.html">Beranda</a>
           <span class="breadcrumb-sep" aria-hidden="true">/</span>
           <span aria-current="page">Admin Dashboard</span>
         </nav>
 
-        <div class="section-header">
-          <span class="section-eyebrow">Dukungan & Admin</span>
-          <h1 class="section-title">Admin Dashboard</h1>
-          <p class="section-subtitle">Dibuat oleh: Olivian</p>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);">
+          <div>
+            <span class="section-eyebrow">Dukungan & Admin</span>
+            <h1 class="section-title">Admin Dashboard</h1>
+            <p class="section-subtitle">Ringkasan status perpustakaan & statistik operasional digital. Dibuat oleh: Olivian</p>
+          </div>
+          <div style="display:flex; gap:var(--space-3); flex-wrap:wrap;">
+            <a href="../../index.html" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Kembali ke Beranda
+            </a>
+            <a href="admin.html" class="btn btn-primary btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Buka Panel Manajemen (admin.html) →
+            </a>
+          </div>
         </div>
 
-        <div class="empty-state" style="background: var(--color-muted); border-radius: var(--radius-xl);">
-          <svg class="empty-state-icon" viewBox="0 0 80 80" fill="none" aria-hidden="true">
-            <rect x="10" y="10" width="60" height="60" rx="8" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4"/>
-            <line x1="30" y1="40" x2="50" y2="40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <line x1="40" y1="30" x2="40" y2="50" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <p class="empty-state-title" style="font-size: var(--font-size-xl);">Halaman Dalam Pengerjaan</p>
-          <p class="empty-state-desc">Halaman ini sedang dikerjakan oleh <strong>Olivian</strong>.</p>
-          <a href="../index.html" class="btn btn-secondary">Kembali ke Beranda</a>
+        <!-- 4 KPI Cards (OLI-DSH-01) -->
+        <div class="kpi-grid">
+          <!-- Total Buku -->
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap" style="background:#FFFBEB; color:#92400E;">📚</div>
+            <div>
+              <div class="kpi-val" id="metricTotalBooks">80</div>
+              <div class="kpi-label">Total Buku</div>
+              <div class="kpi-desc">Koleksi terdaftar di sistem katalog</div>
+            </div>
+          </div>
+          <!-- Peminjaman Aktif -->
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap" style="background:#FEF3C7; color:#B45309;">📖</div>
+            <div>
+              <div class="kpi-val" id="metricActiveBorrows">14</div>
+              <div class="kpi-label">Peminjaman Aktif</div>
+              <div class="kpi-desc">Buku yang sedang dipinjam mahasiswa</div>
+            </div>
+          </div>
+          <!-- Pengguna Terdaftar -->
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap" style="background:#EFF6FF; color:#1E40AF;">👥</div>
+            <div>
+              <div class="kpi-val" id="metricRegisteredUsers">128</div>
+              <div class="kpi-label">Pengguna Terdaftar</div>
+              <div class="kpi-desc">Mahasiswa & civitas akademika aktif</div>
+            </div>
+          </div>
+          <!-- Request Buku Baru -->
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap" style="background:#F0FDF4; color:#166534;">📩</div>
+            <div>
+              <div class="kpi-val" id="metricBookRequests">5</div>
+              <div class="kpi-label">Request Buku Baru</div>
+              <div class="kpi-desc">Permintaan pengadaan judul bulan ini</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Banner for Accessing Full Panel (OLI-DSH-02) -->
+        <div class="admin-action-banner">
+          <div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge badge--genre">Akses Cepat Pengelola</span>
+              <h2 style="font-family:var(--font-heading); font-size:var(--font-size-xl); margin:0;">Akses Panel Manajemen Penuh</h2>
+            </div>
+            <p style="color:var(--color-muted-foreground); font-size:var(--font-size-sm); margin:0; max-width:650px;">
+              Gunakan tombol di bawah untuk melompat langsung ke halaman <strong>Panel Manajemen Buku dan Pengguna</strong> (<code>admin.html</code>) untuk menambah, mengedit buku, memantau anggota, atau memverifikasi peminjaman.
+            </p>
+          </div>
+          <div style="display:flex; gap:var(--space-3); flex-wrap:wrap;">
+            <a href="admin.html?panel=books" id="btnManageBooks" class="btn btn-primary" style="font-weight:var(--font-weight-semibold); display:inline-flex; align-items:center; gap:8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              Kelola Katalog Penuh
+            </a>
+            <a href="admin.html?panel=users" id="btnManageUsers" class="btn btn-secondary" style="font-weight:var(--font-weight-semibold); display:inline-flex; align-items:center; gap:8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              Manajemen Pengguna
+            </a>
+          </div>
+        </div>
+
+        <!-- Recent Activities & Popular Books Summary -->
+        <div class="admin-recent-grid">
+          <!-- Aktivitas Peminjaman Terbaru -->
+          <div class="summary-card">
+            <div class="summary-card-header">
+              <h3 class="summary-card-title">Aktivitas Peminjaman Terbaru</h3>
+              <a href="admin.html?panel=borrows" class="btn btn-ghost btn-sm" style="font-size:var(--font-size-xs);">Lihat Semua →</a>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:var(--space-3);" id="recentBorrowsList">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--color-border);">
+                <div>
+                  <p style="font-weight:var(--font-weight-medium); font-size:var(--font-size-sm); margin:0;">Davvin Denielsen Fusta</p>
+                  <p style="color:var(--color-muted-foreground); font-size:var(--font-size-xs); margin:0;">Meminjam: <em>Atomic Habits</em></p>
+                </div>
+                <span class="badge badge--borrow" style="font-size:11px;">Aktif</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--color-border);">
+                <div>
+                  <p style="font-weight:var(--font-weight-medium); font-size:var(--font-size-sm); margin:0;">Aurelia Cheryl Claresta</p>
+                  <p style="color:var(--color-muted-foreground); font-size:var(--font-size-xs); margin:0;">Meminjam: <em>Laskar Pelangi</em></p>
+                </div>
+                <span class="badge badge--borrow" style="font-size:11px;">Aktif</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--color-border);">
+                <div>
+                  <p style="font-weight:var(--font-weight-medium); font-size:var(--font-size-sm); margin:0;">Chandra Wijaya</p>
+                  <p style="color:var(--color-muted-foreground); font-size:var(--font-size-xs); margin:0;">Mengembalikan: <em>Bumi Manusia</em></p>
+                </div>
+                <span class="badge badge--available" style="font-size:11px;">Kembali</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0;">
+                <div>
+                  <p style="font-weight:var(--font-weight-medium); font-size:var(--font-size-sm); margin:0;">Aaron Valerio Lieputra</p>
+                  <p style="color:var(--color-muted-foreground); font-size:var(--font-size-xs); margin:0;">Meminjam: <em>Filosofi Teras</em></p>
+                </div>
+                <span class="badge badge--borrow" style="font-size:11px;">Aktif</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Koleksi Buku Populer -->
+          <div class="summary-card">
+            <div class="summary-card-header">
+              <h3 class="summary-card-title">Koleksi Terpopuler</h3>
+              <a href="admin.html?panel=books" class="btn btn-ghost btn-sm" style="font-size:var(--font-size-xs);">Kelola Buku →</a>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:var(--space-3);">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--color-border);">
+                <div>
+                  <p style="font-weight:var(--font-weight-medium); font-size:var(--font-size-sm); margin:0;">Atomic Habits</p>
+                  <p style="color:var(--color-muted-foreground); font-size:var(--font-size-xs); margin:0;">James Clear • Pengembangan Diri</p>
+                </div>
+                <span style="font-size:var(--font-size-xs); font-weight:600; color:var(--color-secondary);">⭐ 4.9 (42x)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--color-border);">
+                <div>
+                  <p style="font-weight:var(--font-weight-medium); font-size:var(--font-size-sm); margin:0;">Bumi Manusia</p>
+                  <p style="color:var(--color-muted-foreground); font-size:var(--font-size-xs); margin:0;">Pramoedya Ananta Toer • Sastra</p>
+                </div>
+                <span style="font-size:var(--font-size-xs); font-weight:600; color:var(--color-secondary);">⭐ 4.8 (38x)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--color-border);">
+                <div>
+                  <p style="font-weight:var(--font-weight-medium); font-size:var(--font-size-sm); margin:0;">Filosofi Teras</p>
+                  <p style="color:var(--color-muted-foreground); font-size:var(--font-size-xs); margin:0;">Henry Manampiring • Filsafat</p>
+                </div>
+                <span style="font-size:var(--font-size-xs); font-weight:600; color:var(--color-secondary);">⭐ 4.7 (31x)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0;">
+                <div>
+                  <p style="font-weight:var(--font-weight-medium); font-size:var(--font-size-sm); margin:0;">Laskar Pelangi</p>
+                  <p style="color:var(--color-muted-foreground); font-size:var(--font-size-xs); margin:0;">Andrea Hirata • Fiksi</p>
+                </div>
+                <span style="font-size:var(--font-size-xs); font-weight:600; color:var(--color-secondary);">⭐ 4.7 (29x)</span>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -92,17 +329,25 @@
     <div class="container">
       <div class="footer-grid">
         <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital untuk mahasiswa.</p></div>
-        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../pages/discovery/explore.html">Semua Buku</a></li><li><a href="../pages/discovery/categories.html">Kategori</a></li></ul></div>
-        <div><h3 class="footer-section-title">Komunitas</h3><ul class="footer-links"><li><a href="../pages/community/blog.html">Blog</a></li><li><a href="../pages/community/events.html">Event</a></li></ul></div>
-        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../pages/support/about.html">Tentang</a></li><li><a href="../pages/support/contact.html">Kontak</a></li></ul></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li><li><a href="../discovery/categories.html">Kategori</a></li></ul></div>
+        <div><h3 class="footer-section-title">Komunitas</h3><ul class="footer-links"><li><a href="../community/blog.html">Blog</a></li><li><a href="../community/events.html">Event</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="about.html">Tentang</a></li><li><a href="contact.html">Kontak</a></li><li><a href="admin.html">Panel Manajemen</a></li></ul></div>
       </div>
-      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary. Dibuat oleh Tim: Davvin, Livi, Chandra, Aaron, Davvin, Olivian.</p></div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary. Dibuat oleh Tim: Davvin, Livi, Chandra, Aaron, Aurel, Olivian.</p></div>
     </div>
   </footer>
 
-  <script src="../assets/js/data-books.js"></script>
-  <script src="../assets/js/utils.js"></script>
-  <script src="../assets/js/nav.js"></script>
-
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Dinamis membaca jumlah buku dari data-books jika ada
+      if (typeof booksData !== 'undefined' && Array.isArray(booksData)) {
+        const totalEl = document.getElementById('metricTotalBooks');
+        if (totalEl) totalEl.textContent = booksData.length;
+      }
+    });
+  </script>
 </body>
 </html>

@@ -191,7 +191,7 @@
         `"${truncateText(book.title, 40)}" siap dibaca. Selamat menikmati!`;
 
       document.getElementById('successBookCard').innerHTML = `
-        <img src="${book.cover}" alt="Sampul ${book.title}" class="success-book-cover">
+        <img src="${book.coverFallback || book.cover}" alt="Sampul ${book.title}" class="success-book-cover" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';">
         <div>
           <p style="font-family:var(--font-heading);font-size:var(--font-size-lg);font-weight:var(--font-weight-semibold);margin-bottom:var(--space-1);">${book.title}</p>
           <p style="font-size:var(--font-size-sm);color:var(--color-muted-foreground);margin-bottom:var(--space-2);">${book.author}</p>
