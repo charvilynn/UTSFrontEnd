@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Panel administrasi Charvlibrary - kelola buku, pengguna, dan peminjaman.">
+  <title>Admin Panel - Charvlibrary</title>
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    body { display: flex; min-height: 100vh; }
+
+    .admin-sidebar {
+      width: 240px;
+      background: var(--color-surface);
+      border-right: 1px solid var(--color-border);
+      padding: var(--space-6) var(--space-4);
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    @media (max-width: 768px) { .admin-sidebar { display: none; } }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-8);
+      text-decoration: none;
+    }
+    .admin-brand-name { font-family: var(--font-heading); font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); color: var(--color-foreground); }
+    .admin-brand-badge {
+      font-size: var(--font-size-xs);
+      background: var(--color-accent);
+      color: white;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .admin-nav-group-label {
+      font-size: var(--font-size-xs);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--color-muted-foreground);
+      font-weight: var(--font-weight-semibold);
+      padding: var(--space-2) var(--space-3);
+      margin-bottom: var(--space-1);
+    }
+    .admin-nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--color-foreground);
+      width: 100%;
+      text-align: left;
+      transition: background var(--transition-fast), color var(--transition-fast);
+      margin-bottom: 2px;
+    }
+    .admin-nav-item:hover { background: var(--color-muted); }
+    .admin-nav-item.active { background: var(--color-accent-light); color: var(--color-secondary); font-weight: var(--font-weight-semibold); }
+    .admin-nav-icon { flex-shrink: 0; }
+
+    .admin-main {
+      flex: 1;
+      padding: var(--space-6) var(--space-8);
+      overflow-y: auto;
+    }
+    @media (max-width: 768px) { .admin-main { padding: var(--space-4); } }
+
+    .admin-page-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--space-6);
+    }
+
+    .admin-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+    .admin-stat-card {
+      background: var(--color-card);
+    }
