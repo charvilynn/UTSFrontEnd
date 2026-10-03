@@ -197,3 +197,128 @@
                 <span class="stat-row-label">Sedang dipinjam</span>
                 <span class="stat-row-val" id="sidebarActive">0</span>
               </div>
+              <div class="stat-row">
+                <span class="stat-row-label">Total dipinjam</span>
+                <span class="stat-row-val" id="sidebarTotal">0</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-row-label">Sudah dikembalikan</span>
+                <span class="stat-row-val" id="sidebarReturned">0</span>
+              </div>
+              <a href="../discovery/explore.html" class="btn btn-primary" style="width:100%; margin-top:var(--space-4);">Pinjam Buku Lagi</a>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
+        <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
+        <div><h3 class="footer-section-title">Akun</h3><ul class="footer-links"><li><a href="profile.html">Profil</a></li><li><a href="../library/wishlist.html">Wishlist</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const allBorrowed = getBorrowedBooks();
+      const active   = allBorrowed.filter(b => b.status === 'active');
+      const returned = allBorrowed.filter(b => b.status === 'returned');
+
+      // Update sidebar stats
+      document.getElementById('sidebarActive').textContent   = active.length;
+      document.getElementById('sidebarTotal').textContent    = allBorrowed.length;
+      document.getElementById('sidebarReturned').textContent = returned.length;
+
+      // Render active
+      const activeList = document.getElementById('activeBorrowList');
+      if (active.length === 0) {
+        document.getElementById('emptyBorrow').hidden = false;
+      } else {
+        activeList.innerHTML = active.map(b => {
+          const book = getBookById(b.bookId);
+          if (!book) return '';
+          const daysLeft  = getDaysLeft(b.returnDate);
+          const urgency   = daysLeft <= 0 ? 'danger' : daysLeft <= 3 ? 'warn' : 'safe';
+          const urgencyText = daysLeft <= 0 ? 'Sudah lewat!' : daysLeft === 1 ? '1 hari lagi' : `${daysLeft} hari lagi`;
+
+          return `
+            <div class="borrow-card fade-up">
+              <img src="${book.cover}" alt="Sampul ${book.title}" class="borrow-cover">
+              <div class="borrow-info">
+                <p class="borrow-title">${book.title}</p>
+                <p class="borrow-author">${book.author}</p>
+                <div>
+                  <span class="return-countdown ${urgency}">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Kembali: ${formatDate(b.returnDate)} · ${urgencyText}
+                  </span>
+                </div>
+                <div class="borrow-actions">
+                  <a href="../discovery/book-detail.html?id=${book.id}" class="btn btn-ghost btn-sm">Lihat Detail</a>
+                  <button class="btn btn-secondary btn-sm" data-return-id="${book.bookId}" onclick="handleReturn(${book.bookId})">
+                    Kembalikan
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render returned (collapsed)
+      if (returned.length > 0) {
+        document.getElementById('returnedSection').hidden = false;
+        const retList = document.getElementById('returnedList');
+        retList.innerHTML = returned.map(b => {
+          const book = getBookById(b.bookId);
+          if (!book) return '';
+          return `
+            <div class="borrow-card" style="opacity:0.65;">
+              <img src="${book.cover}" alt="Sampul ${book.title}" class="borrow-cover">
+              <div class="borrow-info">
+                <p class="borrow-title">${book.title}</p>
+                <p class="borrow-author">${book.author}</p>
+                <span class="badge badge--available" style="font-size:11px;">Sudah dikembalikan</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        document.getElementById('toggleReturned').addEventListener('click', function() {
+          const expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', !expanded);
+          retList.hidden = expanded;
+          this.querySelector('svg').style.transform = expanded ? 'rotate(0)' : 'rotate(180deg)';
+        });
+      }
+
+      initScrollReveal();
+    });
+
+    function getDaysLeft(returnDateStr) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const ret   = new Date(returnDateStr); ret.setHours(0,0,0,0);
+      return Math.round((ret - today) / (1000 * 60 * 60 * 24));
+    }
+
+    function handleReturn(bookId) {
+      const book = getBookById(bookId);
+      if (!confirm(`Konfirmasi pengembalian "${book?.title}"?`)) return;
+      returnBook(bookId);
+      showToast(`"${book?.title}" berhasil dikembalikan`, 'success');
+      setTimeout(() => location.reload(), 800);
+    }
+  </script>
+</body>
+</html>
