@@ -89,6 +89,8 @@
       gap: var(--space-3);
       margin-top: var(--space-2);
     }
+
+    /* Year group header */
     .year-group-heading {
       font-family: var(--font-heading);
       font-size: var(--font-size-sm);
@@ -195,3 +197,100 @@
       <div class="footer-grid">
         <div><p class="footer-brand-name">Charvlibrary</p><p class="footer-tagline">Perpustakaan digital.</p></div>
         <div><h3 class="footer-section-title">Jelajahi</h3><ul class="footer-links"><li><a href="../discovery/explore.html">Semua Buku</a></li></ul></div>
+        <div><h3 class="footer-section-title">Akun</h3><ul class="footer-links"><li><a href="profile.html">Profil</a></li></ul></div>
+        <div><h3 class="footer-section-title">Info</h3><ul class="footer-links"><li><a href="../support/about.html">Tentang</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; <span class="footer-year"></span> Charvlibrary.</p></div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/data-books.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/nav.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Ambil semua borrowed (active + returned)
+      const allBorrowed = getBorrowedBooks();
+
+      // Stats
+      const totalRead   = allBorrowed.filter(b => b.status === 'returned').length;
+      const totalAll    = allBorrowed.length;
+      const genreSet    = new Set();
+      allBorrowed.forEach(b => {
+        const book = getBookById(b.bookId);
+        if (book) genreSet.add(book.genre);
+      });
+
+      document.getElementById('statsBar').innerHTML = `
+        <div class="stat-item">
+          <p class="stat-item-val">${totalAll}</p>
+          <p class="stat-item-label">Total Dipinjam</p>
+        </div>
+        <div class="stat-item">
+          <p class="stat-item-val">${totalRead}</p>
+          <p class="stat-item-label">Selesai Dibaca</p>
+        </div>
+        <div class="stat-item">
+          <p class="stat-item-val">${genreSet.size}</p>
+          <p class="stat-item-label">Genre Dijelajahi</p>
+        </div>
+      `;
+
+      if (allBorrowed.length === 0) {
+        document.getElementById('emptyHistory').hidden = false;
+        document.getElementById('statsBar').style.display = 'none';
+        return;
+      }
+
+      // Sort by borrow date desc
+      const sorted = [...allBorrowed].sort((a, b) => new Date(b.borrowDate) - new Date(a.borrowDate));
+
+      // Group by year
+      const groups = {};
+      sorted.forEach(b => {
+        const yr = new Date(b.borrowDate).getFullYear();
+        if (!groups[yr]) groups[yr] = [];
+        groups[yr].push(b);
+      });
+
+      const container = document.getElementById('timelineContainer');
+      Object.keys(groups).sort((a, b) => b - a).forEach(year => {
+        const group = groups[year];
+        const groupEl = document.createElement('div');
+        groupEl.innerHTML = `<p class="year-group-heading">${year}</p>`;
+
+        const timeline = document.createElement('div');
+        timeline.className = 'history-timeline';
+
+        group.forEach(b => {
+          const book = getBookById(b.bookId);
+          if (!book) return;
+          const entry = document.createElement('div');
+          entry.className = 'history-entry fade-up';
+          entry.innerHTML = `
+            <div class="history-dot" aria-hidden="true"></div>
+            <div class="history-card">
+              <img src="${book.cover}" alt="Sampul ${book.title}" class="history-cover">
+              <div class="history-info">
+                <a href="../discovery/book-detail.html?id=${book.id}" class="history-title" style="text-decoration:none;color:inherit;">${book.title}</a>
+                <p style="font-size:var(--font-size-sm);color:var(--color-muted-foreground);margin-bottom:var(--space-2);">${book.author}</p>
+                <div class="history-meta">
+                  <span>📅 Dipinjam: ${formatDate(b.borrowDate)}</span>
+                  ${b.returnDate ? `<span>🔄 Dikembalikan: ${formatDate(b.returnDate)}</span>` : ''}
+                  <span class="badge ${b.status === 'returned' ? 'badge--available' : 'badge--borrow'}" style="font-size:11px;">${b.status === 'returned' ? 'Selesai' : 'Aktif'}</span>
+                </div>
+              </div>
+            </div>
+          `;
+          timeline.appendChild(entry);
+        });
+
+        groupEl.appendChild(timeline);
+        container.appendChild(groupEl);
+      });
+
+      initScrollReveal();
+    });
+  </script>
+</body>
+</html>
