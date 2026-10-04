@@ -27,14 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
    ------------------------------------------------------------------ */
 
 function autoLoadInteractions() {
-  // Skip if already loaded (statically or previously injected)
   if (document.querySelector('script[data-Charvlibrary-interactions]')) return;
   if (document.querySelector('script[src*="interactions.js"]')) return;
 
-  // Calculate relative path to assets/ from current page
-  const depth = window.location.pathname.split('/').filter(Boolean).length;
-  // depth 0 = root (index.html), depth 2 = pages/folder/file.html
-  const prefix = depth >= 2 ? '../../' : depth === 1 ? '../' : '';
+  const path = window.location.pathname.replace(/\\/g, '/');
+  const inPages = path.includes('/pages/');
+  const prefix = inPages ? '../../' : '';
 
   const script = document.createElement('script');
   script.src = prefix + 'assets/js/interactions.js';
@@ -43,69 +41,73 @@ function autoLoadInteractions() {
   document.head.appendChild(script);
 }
 
-
 /* ------------------------------------------------------------------
    NAVBAR
    ------------------------------------------------------------------ */
 
 function initNavbar() {
-  const navbar   = document.querySelector('.navbar');
-  const toggle   = document.querySelector('.navbar-toggle');
-  const drawer   = document.querySelector('.navbar-drawer');
+  const navbar = document.querySelector('.navbar');
+  const toggle = document.querySelector('.navbar-toggle');
+  const drawer = document.querySelector('.navbar-drawer');
 
   if (!navbar) return;
 
-  // Shadow saat scroll
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 10);
   }, { passive: true });
 
-  // Hamburger
   if (toggle && drawer) {
-    toggle.addEventListener('click', () => {
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
       const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!isOpen));
-      drawer.classList.toggle('open', !isOpen);
+      const newState = !isOpen;
 
-      // tutup drawer saat klik di luar
-      if (!isOpen) {
+      toggle.setAttribute('aria-expanded', String(newState));
+      toggle.classList.toggle('active', newState);
+      drawer.classList.toggle('open', newState);
+      drawer.classList.toggle('active', newState);
+
+      if (newState) {
         document.addEventListener('click', closeDrawerOutside, { once: true, capture: true });
       }
     });
 
-    // tutup dengan Escape
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && drawer.classList.contains('open')) {
+      if (e.key === 'Escape' && (drawer.classList.contains('open') || drawer.classList.contains('active'))) {
         closeDrawer(toggle, drawer);
       }
     });
   }
 
-  // Tandai link aktif berdasarkan URL
   highlightActiveNav();
 }
 
 function closeDrawer(toggle, drawer) {
-  toggle.setAttribute('aria-expanded', 'false');
-  drawer.classList.remove('open');
+  if (toggle) {
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.classList.remove('active');
+  }
+  if (drawer) {
+    drawer.classList.remove('open');
+    drawer.classList.remove('active');
+  }
 }
 
 function closeDrawerOutside(e) {
   const drawer = document.querySelector('.navbar-drawer');
   const toggle = document.querySelector('.navbar-toggle');
-  if (drawer && !drawer.contains(e.target) && !toggle.contains(e.target)) {
+  if (drawer && !drawer.contains(e.target) && (!toggle || !toggle.contains(e.target))) {
     closeDrawer(toggle, drawer);
   }
 }
 
 function highlightActiveNav() {
-  const currentPath = window.location.pathname;
+  const currentPath = window.location.pathname.replace(/\\/g, '/');
   const navLinks = document.querySelectorAll('.navbar-nav a, .navbar-drawer .navbar-nav a');
 
   navLinks.forEach(link => {
     const href = link.getAttribute('href') || '';
-    // cocokkan path akhir dari href dengan current path
-    const linkPath = href.split('?')[0]; // abaikan query string
+    const linkPath = href.split('?')[0].replace(/^(\.\.\/)+/, '');
     if (linkPath && currentPath.endsWith(linkPath)) {
       link.classList.add('active');
       link.setAttribute('aria-current', 'page');
@@ -118,12 +120,12 @@ function highlightActiveNav() {
    ------------------------------------------------------------------ */
 
 function initSearch() {
-  const searchInputs = document.querySelectorAll('.navbar-search input, .navbar-search-input');
+  const searchInputs = document.querySelectorAll('.navbar-search input, .navbar-search-input, #navbar-search-input');
 
   searchInputs.forEach(input => {
-    // Enter key → redirect
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
+        e.preventDefault();
         const query = input.value.trim();
         if (query) {
           navigateToSearch(query);
@@ -131,22 +133,22 @@ function initSearch() {
       }
     });
 
-    // Isi input dari URL param (untuk search-results.html)
     const q = getUrlParam('q');
     if (q) input.value = q;
   });
 }
 
 function navigateToSearch(query) {
-  // hitung path ke root dari halaman saat ini
-  const depth = window.location.pathname.split('/').length - 2;
-  const prefix = depth > 1 ? '../'.repeat(depth - 1) : '';
+  const path = window.location.pathname.replace(/\\/g, '/');
+  let searchPath = '';
 
-  // cari apakah kita sudah di dalam pages/
-  const inPages = window.location.pathname.includes('/pages/');
-  const searchPath = inPages
-    ? prefix + 'pages/discovery/search-results.html'
-    : 'pages/discovery/search-results.html';
+  if (path.includes('/pages/discovery/')) {
+    searchPath = 'search-results.html';
+  } else if (path.includes('/pages/')) {
+    searchPath = '../discovery/search-results.html';
+  } else {
+    searchPath = 'pages/discovery/search-results.html';
+  }
 
   window.location.href = `${searchPath}?q=${encodeURIComponent(query)}`;
 }
@@ -160,17 +162,18 @@ function initWishlistBadge() {
 }
 
 function updateWishlistBadge() {
-  const badge = document.querySelector('.wishlist-count-badge');
-  if (!badge) return;
+  const badges = document.querySelectorAll('.wishlist-count-badge');
+  if (!badges.length) return;
 
-  const count = getWishlist().length;
-  badge.textContent = count;
-  badge.style.display = count > 0 ? 'flex' : 'none';
+  const count = typeof getWishlist === 'function' ? getWishlist().length : 0;
+  badges.forEach(badge => {
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'inline-flex' : 'none';
+  });
 }
 
 /* ------------------------------------------------------------------
    GLOBAL WISHLIST BUTTON HANDLER
-   Tangkap klik pada .book-wishlist-btn di mana pun di halaman
    ------------------------------------------------------------------ */
 
 function initGlobalWishlistButtons() {
@@ -182,21 +185,25 @@ function initGlobalWishlistButtons() {
     e.stopPropagation();
 
     const bookId = parseInt(btn.dataset.bookId);
-    const added  = toggleWishlist(bookId);
+    if (isNaN(bookId)) return;
 
-    // update icon fill
-    const svg = btn.querySelector('path');
-    if (svg) svg.setAttribute('fill', added ? 'currentColor' : 'none');
+    const added = toggleWishlist(bookId);
+
+    const svg = btn.querySelector('svg');
+    if (svg) {
+      svg.setAttribute('fill', added ? 'currentColor' : 'none');
+    }
     btn.classList.toggle('active', added);
     btn.setAttribute('aria-label', added ? 'Hapus dari wishlist' : 'Tambah ke wishlist');
 
-    // notifikasi
-    const book = getBookById(bookId);
-    const bookName = book ? book.title : 'Buku';
-    showToast(
-      added ? `"${bookName}" ditambahkan ke wishlist` : `"${bookName}" dihapus dari wishlist`,
-      added ? 'success' : 'info'
-    );
+    if (typeof showToast === 'function') {
+      const book = typeof getBookById === 'function' ? getBookById(bookId) : null;
+      const bookName = book ? book.title : 'Buku';
+      showToast(
+        added ? `"${bookName}" ditambahkan ke wishlist` : `"${bookName}" dihapus dari wishlist`,
+        added ? 'success' : 'info'
+      );
+    }
 
     updateWishlistBadge();
   });
@@ -207,28 +214,27 @@ function initGlobalWishlistButtons() {
    ------------------------------------------------------------------ */
 
 function setFooterYear() {
-  const yearEl = document.querySelector('.footer-year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+  const yearEl = document.querySelectorAll('.footer-year');
+  const currentYear = new Date().getFullYear();
+  yearEl.forEach(el => {
+    el.textContent = currentYear;
+  });
 }
 
 /* ------------------------------------------------------------------
-   HELPER: getUrlParam (duplikat dari utils.js kalau utils belum load)
+   HELPERS
    ------------------------------------------------------------------ */
 
 function getUrlParam(key) {
   return new URLSearchParams(window.location.search).get(key);
 }
 
-/* ------------------------------------------------------------------
-   HELPER: getWishlist (nav.js butuh ini untuk badge)
-   Fungsi ini juga ada di utils.js: kalau utils sudah diload, ini
-   akan di-override. Aman karena same logic.
-   ------------------------------------------------------------------ */
-
 if (typeof getWishlist === 'undefined') {
   window.getWishlist = function() {
     try {
       return JSON.parse(localStorage.getItem('Charvlibrary_wishlist')) || [];
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   };
 }

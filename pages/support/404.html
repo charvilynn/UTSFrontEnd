@@ -73,7 +73,6 @@
       margin-bottom: var(--space-10);
     }
 
-    /* Quick search on 404 page */
     .nf-search-wrap {
       max-width: 400px;
       width: 100%;
@@ -101,8 +100,7 @@
       border-color: var(--color-accent);
       box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
     }
-
-    /* Popular links */
+    
     .nf-links {
       display: flex;
       gap: var(--space-2);
@@ -143,7 +141,6 @@
   <main>
     <div class="not-found-page">
 
-      <!-- Illustration -->
       <div class="nf-illustration" aria-hidden="true">
         <p class="nf-404">404</p>
         <div class="nf-book">
@@ -153,7 +150,6 @@
             <line x1="34" y1="38" x2="74" y2="38" stroke="#E5C99A" stroke-width="2"/>
             <line x1="34" y1="50" x2="74" y2="50" stroke="#E5C99A" stroke-width="2"/>
             <line x1="34" y1="62" x2="60" y2="62" stroke="#E5C99A" stroke-width="2"/>
-            <!-- Question mark -->
             <text x="42" y="90" font-family="serif" font-size="32" fill="#92400E" opacity="0.5">?</text>
           </svg>
         </div>
@@ -164,7 +160,6 @@
         Sepertinya kamu tersesat di antara rak-rak buku kami. Halaman yang kamu cari tidak ada atau sudah dipindahkan.
       </p>
 
-      <!-- Search on 404 -->
       <div class="nf-search-wrap">
         <svg class="nf-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input
@@ -201,14 +196,12 @@
   <script src="../../assets/js/data-books.js"></script>
   <script src="../../assets/js/utils.js"></script>
   <script>
-    // ── Baca reason dari URL param ──────────────────────────────────
     (function() {
       const params = new URLSearchParams(window.location.search);
       const reason = params.get('reason');
       const from   = params.get('from');
 
       if (reason) {
-        // Tampilkan pesan spesifik di bawah deskripsi utama
         const desc = document.querySelector('.nf-desc');
         if (desc) {
           const reasonEl = document.createElement('p');
@@ -227,7 +220,6 @@
         }
       }
 
-      // Tampilkan tombol "Kembali" kalau ada riwayat
       if (from && window.history.length > 1) {
         const actions = document.querySelector('.nf-actions');
         if (actions) {
@@ -245,7 +237,6 @@
       }
     })();
 
-    // ── Search dari halaman 404 ─────────────────────────────────────
     document.getElementById('nfSearchInput').addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         const q = e.target.value.trim();

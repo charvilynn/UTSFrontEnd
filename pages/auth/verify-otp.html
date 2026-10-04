@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Masukkan kode verifikasi yang dikirimkan ke emailmu.">
-  <title>Verifikasi OTP - Charvlibrary</title>
+  <title>Verifikasi Kode OTP - Charvlibrary</title>
   <link rel="stylesheet" href="../../assets/css/variables.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
@@ -53,6 +53,7 @@
     .verify-email-highlight {
       font-weight: var(--font-weight-semibold);
       color: var(--color-foreground);
+      word-break: break-all;
     }
 
     /* OTP inputs */
@@ -147,7 +148,7 @@
         <span class="navbar-brand-name">Charvlibrary</span>
       </a>
       <div style="margin-left:auto;">
-        <a href="register.html" class="btn btn-ghost btn-sm">← Kembali</a>
+        <a href="forgot-password.html" class="btn btn-ghost btn-sm" id="btnBack">← Kembali</a>
       </div>
     </div>
   </header>
@@ -157,7 +158,6 @@
   <div class="verify-page">
     <div class="verify-card">
 
-      <!-- Form state -->
       <div id="verifyFormState">
         <div class="verify-icon-wrap" aria-hidden="true">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -169,7 +169,7 @@
         <h1 class="verify-title">Cek Email Kamu</h1>
         <p class="verify-subtitle">
           Kami kirim kode 4 digit ke<br>
-          <span class="verify-email-highlight" id="targetEmail">email kamu</span>
+          <span class="verify-email-highlight" id="targetEmail">email@kamu.com</span>
         </p>
 
         <div class="otp-group" role="group" aria-label="Masukkan kode OTP 4 digit">
@@ -197,15 +197,14 @@
         </p>
       </div>
 
-      <!-- Success state -->
       <div class="verify-success" id="verifySuccess" aria-live="polite">
         <div class="verify-success-icon" aria-hidden="true">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
             <polyline points="20 6 9 17 4 12"/>
           </svg>
         </div>
-        <p style="font-family:var(--font-heading); font-size:var(--font-size-2xl);">Terverifikasi!</p>
-        <p style="color:var(--color-muted-foreground);">Akunmu sudah aktif. Mengalihkan ke onboarding...</p>
+        <p style="font-family:var(--font-heading); font-size:var(--font-size-2xl);" id="successTitle">Terverifikasi!</p>
+        <p style="color:var(--color-muted-foreground);" id="successDesc">Akunmu sudah aktif. Mengalihkan...</p>
       </div>
 
     </div>
@@ -215,17 +214,27 @@
   <script src="../../assets/js/utils.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const inputs    = [...document.querySelectorAll('.otp-input')];
-      const verifyBtn = document.getElementById('verifyBtn');
-      const resendBtn = document.getElementById('resendOtp');
-      const timerEl   = document.getElementById('otpTimer');
-      const countdown = document.getElementById('otpCountdown');
+      const inputs     = [...document.querySelectorAll('.otp-input')];
+      const verifyBtn  = document.getElementById('verifyBtn');
+      const resendBtn  = document.getElementById('resendOtp');
+      const timerEl    = document.getElementById('otpTimer');
+      const countdown  = document.getElementById('otpCountdown');
+      const btnBack    = document.getElementById('btnBack');
 
-      // Prefill email dari URL atau mock
-      const emailParam = new URLSearchParams(location.search).get('email') || 'email@kamu.com';
+      const urlParams  = new URLSearchParams(location.search);
+      const emailParam = urlParams.get('email') || 'email@kamu.com';
+      const fromParam  = urlParams.get('from');
+
       document.getElementById('targetEmail').textContent = emailParam;
 
-      // OTP input behaviour
+      if (btnBack) {
+        if (fromParam === 'forgot') {
+          btnBack.href = 'forgot-password.html';
+        } else {
+          btnBack.href = 'register.html';
+        }
+      }
+
       inputs.forEach((input, i) => {
         input.addEventListener('input', (e) => {
           const val = e.target.value.replace(/\D/g, '');
@@ -243,7 +252,6 @@
           }
         });
 
-        // Paste support
         input.addEventListener('paste', (e) => {
           e.preventDefault();
           const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 4);
@@ -263,23 +271,35 @@
         verifyBtn.disabled = !filled;
       }
 
-      // Verify
       verifyBtn.addEventListener('click', () => {
         verifyBtn.disabled = true;
         verifyBtn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;"></span> Memverifikasi...';
         document.getElementById('otpError').style.display = 'none';
 
         setTimeout(() => {
-          // Mock: kode apapun diterima
           document.getElementById('verifyFormState').style.display = 'none';
-          document.getElementById('verifySuccess').style.display = 'flex';
-          setTimeout(() => {
-            window.location.href = 'onboarding.html';
-          }, 1800);
+          const successEl = document.getElementById('verifySuccess');
+          successEl.style.display = 'flex';
+
+          const titleEl = document.getElementById('successTitle');
+          const descEl  = document.getElementById('successDesc');
+
+          if (fromParam === 'forgot') {
+            titleEl.textContent = 'Verifikasi Berhasil!';
+            descEl.textContent = 'Kode OTP terverifikasi. Mengalihkan ke halaman masuk...';
+            setTimeout(() => {
+              window.location.href = 'login.html';
+            }, 1500);
+          } else {
+            titleEl.textContent = 'Terverifikasi!';
+            descEl.textContent = 'Akunmu sudah aktif. Mengalihkan ke onboarding...';
+            setTimeout(() => {
+              window.location.href = 'onboarding.html';
+            }, 1500);
+          }
         }, 1000);
       });
 
-      // Countdown
       let sec = 120;
       const timer = setInterval(() => {
         sec--;

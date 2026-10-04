@@ -299,6 +299,24 @@ function showToast(message, type = 'info', duration = 3000) {
 }
 
 /* ==========================================================================
+   Helper Cover URL
+   ========================================================================== */
+
+/**
+ * Mengambil URL cover Open Library, dengan fallback ke Unsplash
+ * Menambahkan ?default=false agar Open Library menghasilkan HTTP 404 jika buku belum ada cover-nya
+ * @param {Object} book
+ */
+function getBookCover(book) {
+  if (!book) return 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';
+  let src = book.cover || book.coverFallback;
+  if (src && src.includes('covers.openlibrary.org') && !src.includes('default=false')) {
+    src += (src.includes('?') ? '&' : '?') + 'default=false';
+  }
+  return src || book.coverFallback;
+}
+
+/* ==========================================================================
    Render Book Card
    Satu fungsi untuk render card buku secara konsisten di semua halaman
    ========================================================================== */
@@ -310,8 +328,11 @@ function showToast(message, type = 'info', duration = 3000) {
 function renderBookCard(book, basePath = '') {
   const inWishlist = isInWishlist(book.id);
   const detailPath = basePath + 'pages/discovery/book-detail.html?id=' + book.id;
-  const coverSrc = book.coverFallback || book.cover;
-  const fallback = `this.onerror=null; this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80'`;
+  
+  // Ambil URL Open Library (dengan ?default=false)
+  const coverSrc = getBookCover(book);
+  const fallbackUrl = book.coverFallback || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80';
+  const fallback = `this.onerror=null; this.src='${fallbackUrl}'`;
 
   return `
     <article class="book-card fade-up" data-book-id="${book.id}">
@@ -321,6 +342,7 @@ function renderBookCard(book, basePath = '') {
             src="${coverSrc}"
             alt="Sampul buku ${book.title}"
             onerror="${fallback}"
+            loading="lazy"
           >
         </a>
         ${book.available
@@ -344,7 +366,7 @@ function renderBookCard(book, basePath = '') {
           <h3 class="book-title">${book.title}</h3>
         </a>
         <p class="book-author">${book.author}</p>
-        ${book.publisher ? `<p class="book-publisher" style="font-size:var(--font-size-xs);color:var(--color-muted-foreground);margin-top:-4px;">${book.publisher} · ${book.year}</p>` : ''}
+        ${book.publisher ? `<p class="book-publisher" style="font-size:var(--font-size-xs);color:var(--color-muted-foreground);margin-top:-4px;">${book.publisher} ·${book.year}</p>` : ''}
         <div class="book-rating">
           ${renderStars(book.rating)}
           <span class="book-rating-count">(${book.ratingCount.toLocaleString('id-ID')})</span>
@@ -353,7 +375,6 @@ function renderBookCard(book, basePath = '') {
     </article>
   `;
 }
-
 
 /**
  * Render skeleton card untuk loading state
@@ -381,7 +402,6 @@ function renderSkeletonCards(count = 8) {
    ========================================================================== */
 
 function initScrollReveal(selector = '.fade-up, .fade-in') {
-  // kalau user prefer reduced motion, langsung tampilin aja
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll(selector).forEach(el => {
       el.classList.add('visible');
@@ -394,7 +414,6 @@ function initScrollReveal(selector = '.fade-up, .fade-in') {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          // berhenti observe setelah tampil: performance
           observer.unobserve(entry.target);
         }
       });
@@ -420,8 +439,4 @@ function getUrlParam(key) {
    DOM Utilities
    ========================================================================== */
 
-/**
- * Shorthand querySelector
- */
-const $ = (selector, ctx = document) => ctx.querySelector(selector);
-const $$ = (selector, ctx = document) => [...ctx.querySelectorAll(selector)];
+const $ = (selector, ctx = document) => ctx.querySelector(selector); const $$ = (selector, ctx = document) => [...ctx.querySelectorAll(selector)];

@@ -1,15 +1,3 @@
-/**
- 
- Fitur:
- Floating particles di hero
- Scroll-reveal via Intersection Observer (dari utils.js)
- Parallax ringan pada hero background
- Featured books carousel (swipe + arrow + dots)
- Genre grid render dari data-books.js
- Recent books render
- Scroll-down button
- */
-
 document.addEventListener('DOMContentLoaded', () => {
   renderMarquee();    // infinite book cover scroll
   createParticles();
@@ -46,6 +34,9 @@ function renderMarquee() {
       const onerror  = fallback
         ? `this.onerror=null;this.src='${fallback}'`
         : `this.onerror=null;this.style.background='linear-gradient(135deg,#92400E,#D97706)'`;
+      const coverUrl = book.cover
+        ? (book.cover.includes('?') ? `${book.cover}&default=false` : `${book.cover}?default=false`)
+        : fallback;
       return `
         <a
           href="pages/discovery/book-detail.html?id=${book.id}"
@@ -55,7 +46,7 @@ function renderMarquee() {
         >
           <img
             class="marquee-cover"
-            src="${book.coverFallback || book.cover}"
+            src="${coverUrl}"
             alt="${book.title}"
             onerror="${onerror}"
             draggable="false"
@@ -388,4 +379,3 @@ function initQuoteCycle() {
     switchQuote(current);
   }, 5000);
 }
-
