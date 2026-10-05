@@ -271,11 +271,10 @@
 
         renderBookGrid('popularBooks', popular);
 
-        // Show content
         document.getElementById('loadingState').hidden = true;
         document.getElementById('recoContent').hidden = false;
         initScrollReveal();
-      }, 600); // mock skeleton delay
+      }, 600);
     });
 
     function renderBookGrid(containerId, books) {
@@ -284,7 +283,7 @@
         el.innerHTML = '<p style="color:var(--color-muted-foreground);font-size:var(--font-size-sm);">Tidak ada rekomendasi untuk saat ini.</p>';
         return;
       }
-      el.innerHTML = books.map(book => renderBookCard(book)).join('');
+      el.innerHTML = books.map(book => renderBookCard(book, '../../')).join('');
     }
   </script>
 </body>
